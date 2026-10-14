@@ -1,0 +1,13 @@
+{
+  "name":"@fountain-coach/teatro-edition",
+  "private":true,
+  "version":"1.0.0",
+  "type":"module",
+  "description":"Book-first Teatro source edition and Satzfunk hearing boundary",
+  "repository":{"type":"git","url":"git+https://github.com/Fountain-Coach/teatro.fountain.coach.git"},
+  "scripts":{
+    "build":"python3 scripts/build_first_hearing.py --fountain-source ../fountain.coach --satzfunk-source ../../Satzfunk",
+    "check":"python3 scripts/verify_first_hearing.py",
+    "browser":"node scripts/verify_teatro_browser.mjs"
+  }
+}

@@ -8,3 +8,16 @@
 - Do not reverse-copy derived estate HTML over the canonical source.
 - Publication needs typed exact-host EstatePublisher and independent public read-back.
 - Three editorial fronts only: Fountain Coach, First Reading, Teatro.
+
+## Book first, Stage second, Satzfunk provenance
+
+- The canonical Teatro root lands in a complete authored Linotype book,
+  mirroring /editions/first-hearing/, never the compiled stage application.
+- The original Csound stage remains accessible at /editions/stage/ and returns
+  to the reader without changing its original compiled JS.
+- All 22 paragraphs and the source score plate are exactly pinned to
+  Fountain-Coach/fountain.coach. Do not synthesize replacement prose.
+- Fountain-Coach/Satzfunk owns source-addressed Hear. An interactive Csound
+  stage is not a published spoken book or an authorized AI narration.
+- Use npm run build, npm run check, npm run browser before any promotion.
+- Status remains with legal footer, and GitHub is source authority.

@@ -1,0 +1,61 @@
+{
+  "schema": "teatro.fountain.press.first-hearing.v1",
+  "edition": "Teatro — An Unfinished Composition · First Hearing",
+  "publicationRole": "book-first-teatro-with-separately-accessible-csound-stage",
+  "canonical": "https://teatro.fountain.coach/editions/first-hearing/",
+  "stageEdition": "editions/stage/",
+  "owningRepository": "Fountain-Coach/teatro.fountain.coach",
+  "authoredSourceRepository": "Fountain-Coach/fountain.coach",
+  "authoredSourceCommit": "e8d34eb0e6317586a293052d46fcbc005efc7fd7",
+  "authoredSourceURL": "https://fountain.coach/essays/teatro-an-unfinished-composition/",
+  "authoredSourceSHA256": "5f77e58bbb59d0802d5b8b0ee48ecea1bbea7d44ebf4b73e3107363b7b95bad8",
+  "paragraphsSHA256": "2ab6fa84f8cd166a19535fa0ebe6e0755734bf9cfd379377c4ca15209f3b435c",
+  "originalParagraphs": 22,
+  "originalScorePlateSHA256": "226e3440690dd8cbeb331c4f3f62ee002fa0bc0e6007fcdf8431f1f578d115e2",
+  "readerSourceHTMLSHA256": "9f32ced72b27129163e242369ee11425d41dc219a291376e2b70b9ff86fa2a66",
+  "bookHTMLBeforeSatzfunkSHA256": "6acd813ac2b1c63ca76a289f2eb26a46b27d8a39877177ebafaae1c969c82d11",
+  "runtimeFiles": [
+    {
+      "name": "book.css",
+      "sha256": "56e6780326e06fe63b48f8bfa2f46076c814bbc25b807d9bcb5237748c319693"
+    },
+    {
+      "name": "book.js",
+      "sha256": "6bedbc449d3dad266c49b30fcc55df06b061e9ee1cf218d10636e223ca5cfa00"
+    },
+    {
+      "name": "book-boot.js",
+      "sha256": "c7fe0672a6697423d331670fe1c873d51399510a7f5b658b86c37a772d04a661"
+    },
+    {
+      "name": "reading-layout-policy.js",
+      "sha256": "f098b7faf814fc7faa027bc5a5b9a24969dc181064beebbe7a4597ba335f001b"
+    },
+    {
+      "name": "linotype-engine.js",
+      "sha256": "007370b5229070a87cab40fc0798c79fef36e6823d48c9c634df0c3126ecd7dc"
+    },
+    {
+      "name": "mobile-page-navigation.js",
+      "sha256": "fc5631543ec2269fcd536bafaf54c7f477a5d5253dbaf3296edcbc4402acd829"
+    },
+    {
+      "name": "mobile-page-navigation.css",
+      "sha256": "b485292a2ef38f02298f9b2a124706bd179fa9502e7188de6f463c85da578327"
+    },
+    {
+      "name": "essays.css",
+      "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
+    }
+  ],
+  "satzfunkSourceRepository": "Fountain-Coach/Satzfunk",
+  "satzfunkCommit": "fad70097c08a0b610af87d5e5a6fc1057f6adf3d",
+  "satzfunkAdapterSHA256": "1cd9f3b44561581da8917991bb33b5bffb872d0eda7d5e8d086e2a8a8b646339",
+  "hearingStatus": "not-yet-released",
+  "approvedNarration": false,
+  "stageAudio": "interactive-browser-csound-user-activated; not a spoken book",
+  "releaseStatus": "Git source candidate, public Teatro homepage unchanged",
+  "bookPath": "editions/first-hearing/",
+  "rootLanding": "book-mirrors-first-hearing",
+  "sourceMutation": false
+}
