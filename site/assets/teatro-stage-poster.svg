@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Teatro stage geometry: an open isometric room">
+<rect width="800" height="600" fill="#f3efe7"/>
+<g transform="translate(100 25) scale(.75)" fill="none" stroke="#8d8579" stroke-width="1.5" stroke-linejoin="round">
+<path d="M400 86 122 246v246l278 160 278-160V246L400 86Z"/>
+<path d="M122 246 400 406l278-160M400 406v246"/>
+<path d="M400 86v320M608 452v-82l32-18 32 18v82M608 452h64" opacity=".6"/>
+<path d="M238 332q55-31 110 0M276 360q45-25 86 0M452 292q54-27 103 0" stroke="#a17b5d" stroke-width="3"/>
+</g>
+</svg>

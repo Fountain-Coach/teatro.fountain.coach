@@ -6,16 +6,17 @@
   "repository": "Fountain-Coach/teatro.fountain.coach",
   "capturedAt": "2026-10-14T10:28:47Z",
   "publicationState": "source-candidate-book-first-teatro-first-hearing-not-publicly-deployed",
-  "fileCount": 43,
-  "indexPages": 4,
-  "sourceSha256Inventory": "729c36ef5e88824b55255b98ab7e16e07be9e63a7996aab852b8dab2782870b4",
+  "fileCount": 46,
+  "indexPages": 5,
+  "sourceSha256Inventory": "a07fd85a4aa17a3cca153018b486a55c6a8536f92d11cc35871992354762c324",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
   "baselineTag": "baseline-captured-20261014",
   "editorialIntent": "Three front doors with Company Status exclusively in mandatory footer legals; not publicly deployed.",
   "editorialLanding": "editions/first-hearing/",
-  "firstAudioSurface": "editions/stage/",
+  "firstAudioSurface": "editions/first-hearing/#book-live-stage",
   "stageAudioClaim": "browser-Csound on explicit interaction, not released narration",
-  "sourceAuthority": "Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)"
+  "sourceAuthority": "Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
+  "embeddedInteractiveScene": "editions/stage/embed/"
 }

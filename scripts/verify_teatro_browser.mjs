@@ -33,8 +33,30 @@ async function open(path,width,height,label){
   if(state!=='true')throw Error('Linotype not ready '+state+': '+await evalJS("document.body?.dataset.bookError||''")+': '+errors.join(';'));
   const shot="(() => {const sheet=document.querySelector('.linotype-stage .linotype-sheet')?.getBoundingClientRect();return {pages:Number(document.body.dataset.bookPageCount),mode:document.body.dataset.bookMode,folio:document.getElementById('book-page-count').textContent,images:document.querySelectorAll('#book-flow img').length,chapters:document.querySelectorAll('[data-book-chapter]').length,overflowX:document.documentElement.scrollWidth>innerWidth+1,overflowY:document.documentElement.scrollHeight>innerHeight+1,sheet:sheet?.toJSON(),stageLink:document.querySelector('.teatro-stage-link')?.getAttribute('href')}})()";
   const first=await evalJS(shot);
-  if(first.pages<7||first.pages>100||first.mode!==(width>=900?'spread':'single')||first.images!==1||first.chapters!==1||first.overflowX||first.overflowY||first.stageLink!=='/editions/stage/')
+  if(first.pages<7||first.pages>100||first.mode!==(width>=900?'spread':'single')||first.images!==2||first.chapters!==1||first.overflowX||first.overflowY||first.stageLink!=='#book-live-stage')
    throw Error('Bad book viewport '+JSON.stringify(first));
+  // Page turn must reach the real compiled renderer inside the paper.
+  await evalJS("document.querySelector('[data-teatro-scene-link]').click()");
+  let interactiveState='inactive';
+  for(let n=0;n<40;n++){
+   await pause(250);
+   interactiveState=await evalJS("document.body.dataset.teatroScene");
+   if(interactiveState==='active')break;
+  }
+  if(interactiveState!=='active')throw Error('Teatro scene leaf did not activate: '+interactiveState);
+  let scene=null;
+  for(let n=0;n<50;n++){
+   await pause(270);
+   scene=await evalJS("(()=>{const frame=document.querySelector('iframe[data-teatro-live-frame]');const doc=frame?.contentDocument;return {count:document.querySelectorAll('iframe[data-teatro-live-frame]').length,ready:Boolean(doc?.querySelector('#teatro-stage-scene')),webgl:Boolean(doc?.querySelector('canvas')),animatedFallback:Boolean(doc?.querySelector('svg .wind-line')),parent:frame?.closest('.linotype-sheet')?.dataset.sourceId,width:frame?.getBoundingClientRect().width,height:frame?.getBoundingClientRect().height}})()");
+   if(scene?.ready)break;
+  }
+  if(!scene?.ready||scene.count!==1||scene.width<100||scene.height<150||(!scene.webgl&&!scene.animatedFallback))
+   throw Error('No animated Teatro runtime inside book page '+JSON.stringify(scene));
+  console.log('PASSED EMBED',label,JSON.stringify(scene));
+  await evalJS("document.getElementById('book-next').click()");
+  await pause(500);
+  const released=await evalJS("({state:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length})");
+  if(released.state!=='inactive'||released.frames!==0)throw Error('Teatro runtime leaked past page turn '+JSON.stringify(released));
   const hearing=await evalJS('(()=>{document.getElementById("satzfunk-hear").click();return {hidden:document.getElementById("satzfunk-hearing-rail").hidden,expanded:document.getElementById("satzfunk-hear").getAttribute("aria-expanded")}})()');
   if(hearing.hidden||hearing.expanded!=='true')throw Error('Hearing rail did not open');
   for(let n=0;n<20;n++){await pause(140);if((await evalJS("document.getElementById('satzfunk-hearing-status').textContent")).includes('No author-approved'))break}

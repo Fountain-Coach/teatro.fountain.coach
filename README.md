@@ -37,3 +37,20 @@ run npm run check and npm run browser. Edition provenance is pinned in
 site/editions/first-hearing/edition.json, and site/ is inventoried by
 publication-files.sha256. This is a Git source candidate and WLAN staging
 edition. Live production HTTPS requires separate publishing authorization.
+
+
+## The executable plate belongs in the book
+
+The second plate of **Teatro — An Unfinished Composition** is a page inside
+the measured Linotype book, not a link out to the standalone Stage edition.
+The **Scene** rail takes the reader to that typeset leaf. The original compiled
+WebGL/Csound stage runtime loads only while the leaf is visible; leaving the
+leaf unloads its frame and releases its media/graphics lifetime. Audio remains
+explicitly user-activated, not an approved spoken recording.
+
+Runtime owner: `site/assets/index-CY5_5ULO.js`. The embedded chrome-free route
+`/editions/stage/embed/` is internal to the interactive plate. The full Stage
+edition survives at `/editions/stage/` for separate development. If WebGL
+is unavailable, the original runtime displays its moving isometric SVG
+fallback; the browser acceptance test reports which path was exercised.
+Build authoring is in `scripts/integrate_interactive_plate.py`.

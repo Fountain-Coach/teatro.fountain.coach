@@ -12,6 +12,7 @@ import json
 import re
 import shutil
 import subprocess
+from integrate_interactive_plate import integrate
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/"site"
@@ -154,6 +155,9 @@ def main(fountain,satzfunk):
  with (output_assets/"teatro.css").open("a") as css:
   css.write('.satzfunk-stage-note{font:12px/1.5 Iowan Old Style,Georgia,serif;text-align:center;color:var(--book-muted)}.satzfunk-stage-note a{text-underline-offset:3px}\n')
 
+ document=integrate(document,output_assets)
+ assert document.count('data-teatro-book-stage')==1
+
  # Domain root is *the edition*, not the app. An actual book remains
  # directly addressable even when its main landing changes later.
  edition_dir=SITE/BOOK;edition_dir.mkdir(parents=True,exist_ok=True)
@@ -166,7 +170,7 @@ def main(fountain,satzfunk):
  receipt={
   "schema":"teatro.fountain.press.first-hearing.v1",
   "edition":"Teatro — An Unfinished Composition · First Hearing",
-  "publicationRole":"book-first-teatro-with-separately-accessible-csound-stage",
+  "publicationRole":"book-first-with-page-embedded-interactive-WebGL-stage",
   "canonical":CANON,"stageEdition":"editions/stage/",
   "owningRepository":"Fountain-Coach/teatro.fountain.coach",
   "authoredSourceRepository":"Fountain-Coach/fountain.coach",
@@ -196,7 +200,8 @@ def main(fountain,satzfunk):
  manifest.update({
   "publicationState":"source-candidate-book-first-teatro-first-hearing-not-publicly-deployed",
   "editorialLanding":"editions/first-hearing/",
-  "firstAudioSurface":"editions/stage/",
+  "firstAudioSurface":"editions/first-hearing/#book-live-stage",
+  "embeddedInteractiveScene":"editions/stage/embed/",
   "stageAudioClaim":"browser-Csound on explicit interaction, not released narration",
   "sourceAuthority":"Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
   "fileCount":len(assetpaths),

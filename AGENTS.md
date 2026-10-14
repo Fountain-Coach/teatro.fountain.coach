@@ -21,3 +21,17 @@
   stage is not a published spoken book or an authorized AI narration.
 - Use npm run build, npm run check, npm run browser before any promotion.
 - Status remains with legal footer, and GitHub is source authority.
+
+
+## Interactive Teatro page (book composition authority)
+
+- The animated WebGL stage must appear **on a Linotype book leaf**. Do not
+  replace it with a toolbar exit, separate fullscreen site or static image.
+- Source the live scene from the original compiled Teatro renderer and its
+  existing Csound runtime. An SVG fallback is allowed only when WebGL is
+  unavailable, and must be reported as such in tests.
+- Treat the leaf as a bounded lifecycle: render on arrival, unload on exit,
+  and preserve the measured book layout, page-turning and all 22 essay
+  paragraphs. Do not autoplay audio or describe stage audio as narration.
+- `/editions/stage/` remains a secondary independent experience; the page
+  uses a chrome-free embed route in the same GitHub-owned repository.

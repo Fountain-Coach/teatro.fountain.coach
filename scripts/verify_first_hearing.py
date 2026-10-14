@@ -35,7 +35,11 @@ def main():
   assert 'data-edition-id="teatro-first-hearing"' in book
   assert 'id="book-viewport"' in book and 'id="book-page-atlas"' in book
   assert 'https://fountain.coach/essays/'+SLUG+'/' in book
-  assert 'href="/editions/stage/"' in book
+  assert 'href="#book-live-stage" data-teatro-scene-link' in book
+  assert book.count('data-teatro-book-stage')==1
+  assert book.count('class="book-art-leaf"')==1
+  assert "frame-src 'self'" in book
+  assert 'src="/assets/linotype/teatro-stage-page.js"' in book
   assert 'data-legal-role="company-status"' in book
   assert 'https://teatro.fountain.coach/editions/first-hearing/' in book
   assert book.count('data-estate-id=')==3
@@ -55,6 +59,11 @@ def main():
  assert 'data-teatro-stage-return' in stage
  assert 'href="/editions/first-hearing/"' in stage
  assert 'data-legal-role="company-status"' in stage
+ embed=(SITE/"editions/stage/embed/index.html").read_text()
+ assert 'src="/assets/index-CY5_5ULO.js"' in embed
+ assert '<div id="root"></div>' in embed
+ assert '.teatro-sidebar-disclosure{display:none!important}' in embed
+ assert "createElement('iframe')" in (SITE/"assets/linotype/teatro-stage-page.js").read_text()
  assert not (SITE/"editions/first-hearing/hearings.json").exists()
  assert not (SITE/"hearings.json").exists()
  js=(SITE/"assets/satzfunk/satzfunk-book.mjs").read_text()

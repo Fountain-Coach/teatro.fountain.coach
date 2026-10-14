@@ -1,7 +1,7 @@
 {
   "schema": "teatro.fountain.press.first-hearing.v1",
   "edition": "Teatro — An Unfinished Composition · First Hearing",
-  "publicationRole": "book-first-teatro-with-separately-accessible-csound-stage",
+  "publicationRole": "book-first-with-page-embedded-interactive-WebGL-stage",
   "canonical": "https://teatro.fountain.coach/editions/first-hearing/",
   "stageEdition": "editions/stage/",
   "owningRepository": "Fountain-Coach/teatro.fountain.coach",

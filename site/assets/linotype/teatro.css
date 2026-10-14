@@ -5,3 +5,21 @@
 .book-cover .subedition-title{font-size:clamp(28px,5vw,50px)}
 @media(max-width:700px){.teatro-stage-link{font-size:9px;padding:6px 4px}.book-tools button{padding:5px!important}}
 .satzfunk-stage-note{font:12px/1.5 Iowan Old Style,Georgia,serif;text-align:center;color:var(--book-muted)}.satzfunk-stage-note a{text-underline-offset:3px}
+
+/* The executable illustration is a bound, paginated leaf, not a site exit. */
+.linotype-plate[data-source-id="work-teatro-an-unfinished-composition"]:has([data-teatro-book-stage]) .linotype-area {
+  display:flex;flex-direction:column;min-height:0;
+}
+.linotype-plate:has([data-teatro-book-stage]) .linotype-image-frame{width:100%;height:100%;min-height:0;flex:1;}
+.linotype-plate:has([data-teatro-book-stage]) .linotype-image-frame figure{
+  width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;
+  min-height:0;aspect-ratio:auto!important;display:flex;flex-direction:column;padding:12px;gap:10px;
+}
+.linotype-plate .teatro-scene-window{position:relative;min-height:0;min-width:0;flex:1 1 auto;width:100%;overflow:hidden;background:#f3efe7}
+.linotype-plate .teatro-scene-window img{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain}
+.linotype-plate .teatro-scene-window iframe{position:absolute;inset:0;border:0;width:100%;height:100%;background:#f3efe7;}
+.linotype-plate [data-teatro-book-stage] figcaption{flex:0 0 auto;font-size:9px;line-height:1.45;letter-spacing:.035em}
+.book-flow .teatro-book-scene{margin:1.6rem auto;border:1px solid #c6bbaa;padding:1rem}
+.book-flow .teatro-scene-window{min-height:60vh;display:flex;justify-content:center;}
+.book-flow .teatro-scene-window img{width:100%;height:auto;max-height:70vh;object-fit:contain}
+@media print {.teatro-scene-window iframe{display:none!important}}

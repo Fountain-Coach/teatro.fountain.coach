@@ -170,6 +170,12 @@ document.querySelectorAll("[data-book-toc-target]").forEach(link=>link.addEventL
  seek(id);
  viewport.focus({preventScroll:true});
 }));
+document.querySelectorAll('[data-teatro-scene-link]').forEach(link=>link.addEventListener('click',event=>{
+ event.preventDefault();
+ if(contents.open)contents.close();
+ const index=engine.leaves.findIndex(item=>Boolean(item.el.querySelector('[data-teatro-book-stage]')));
+ if(index>=0)turn(index,{animate:true,velocity:.45});
+}));
 previous?.addEventListener("click",()=>turn(engine.prev(),{animate:true,velocity:.55}));
 next?.addEventListener("click",()=>turn(engine.next(),{animate:true,velocity:.55}));
 document.addEventListener("keydown",event=>{
