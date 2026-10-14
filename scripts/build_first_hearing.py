@@ -194,6 +194,13 @@ def main(fountain,satzfunk,press,stage_source):
     "teatro-an-unfinished-composition",
     "semantic-compilation-the-archive-is-not-the-edition",
     "reframe-and-the-business-value-of-the-estate"]
+ # Main estate shelf was agreed as precisely three parent editions.
+ # Individual essays belong to Fountain Coach's nested Essays reader,
+ # and the separate Teatro Stage is part of Teatro, not another book.
+ brand=fountain/"site/assets/fountain-coach-logo-transparent.png"
+ assert brand.is_file()
+ assert sha(brand.read_bytes())=="8c5fad1c3db56138d5959da75991dc8034a0be537ce46da6ffcc0d9655e7f729"
+ shutil.copyfile(brand,collections/"fountain-coach-logo-transparent.png")
  books=[]
  solstice_source=ROOT.parent/"solstice.fountain.coach"
  solstice_reader=solstice_source/"site/editions/first-reading/index.html"
@@ -201,9 +208,24 @@ def main(fountain,satzfunk,press,stage_source):
  assert solstice_reader.is_file() and solstice_image.is_file()
  assert sha(solstice_image.read_bytes())=="b0e6cf8252aca0da83a9b0bfbdbb3f57b88c826e8b85ac5a89f43b23bad98876"
  shutil.copyfile(solstice_image,collections/"first-reading.jpg")
+ # Fountain Coach's visual cover is taken from its existing essay
+ # source, not a generated placeholder or a second website logo.
+ essay=fountain_manifest["essays"][2]
+ original_art=fountain/"site/essays"/essay["id"]/essay["images"][0]["path"]
+ assert original_art.is_file() and sha(original_art.read_bytes())==essay["images"][0]["sha256"]
+ fountain_art=collections/("fountain-coach-edition"+original_art.suffix)
+ shutil.copyfile(original_art,fountain_art)
+ books.append({
+    "id":"fountain-coach", "title":"Fountain Coach",
+    "author":"Benedikt Eickhoff","edition":"FOUNTAIN COACH · ESSAYS",
+    "reader":"https://fountain.coach/editions/essays/",
+    "cover_image":"/assets/bookshelf/"+fountain_art.name,
+    "source_revision":git_sha(fountain),"host":"fountain",
+    "status":"wlan-proof"
+ })
  books.append({
     "id":"first-reading", "title":"First Reading — Solstice",
-    "author":"Benedikt Eickhoff","edition":"FIRST READING · 30 WORKS",
+    "author":"Benedikt Eickhoff","edition":"FIRST READING",
     "reader":"https://works.benedikt-eickhoff.de/solstice/editions/first-reading/",
     "cover_image":"/assets/bookshelf/first-reading.jpg",
     "source_revision":git_sha(solstice_source),"host":"solstice",
@@ -213,40 +235,18 @@ def main(fountain,satzfunk,press,stage_source):
     "id":"teatro-first-hearing",
     "title":"Teatro — An Unfinished Composition",
     "author":"Benedikt Eickhoff",
-    "edition":"FIRST HEARING · EDITION 01",
+    "edition":"TEATRO · FIRST HEARING",
     "reader":"/editions/first-hearing/",
     "cover_image":"/assets/edition/"+SCORE,
     "source_revision":git_sha(fountain),"host":"teatro","status":"wlan-proof"
  })
- first=fountain_manifest["essays"][0]
- books.append({
-    "id":"essays-collection","title":"Essays — Collected Edition",
-    "author":"Benedikt Eickhoff","edition":"ESSAYS · THREE COMPLETE WORKS",
-    "reader":"https://fountain.coach/editions/essays/",
-    "cover_image":"/assets/edition/"+SCORE,
-    "source_revision":git_sha(fountain),"host":"fountain",
-    "status":"wlan-proof"
- })
- for item in fountain_manifest["essays"]:
-    original_art=fountain/"site/essays"/item["id"]/item["images"][0]["path"]
-    assert original_art.is_file() and sha(original_art.read_bytes())==item["images"][0]["sha256"]
-    admitted=collections/(item["id"]+original_art.suffix)
-    shutil.copyfile(original_art,admitted)
-    books.append({
-        "id":"essay-"+item["id"],"title":item["title"],
-        "author":"Benedikt Eickhoff",
-        "edition":"ESSAY · STANDALONE EDITION",
-        "reader":"https://fountain.coach/"+item["editionPath"],
-        "cover_image":"/assets/bookshelf/"+admitted.name,
-        "source_revision":git_sha(fountain),"host":"fountain",
-        "status":"wlan-proof"
-    })
- assert len(books)==6
+ assert [b["id"] for b in books]==["fountain-coach","first-reading","teatro-first-hearing"]
  shelf=render_bookshelf(
-  title="The Teatro bookshelf",
-  imprint="TEATRO · FOUNTAIN COACH",
+  title="Fountain Coach",
+  imprint="Fountain Coach",
   books=books,
-  css_url="/assets/linotype/bookshelf.css")
+  css_url="/assets/linotype/bookshelf.css",
+  logo_url="/assets/bookshelf/fountain-coach-logo-transparent.png")
  assert 'src="/assets/edition/'+SCORE+'"' in shelf
  assert 'data-linotype-state="bookshelf"' in shelf
  (SITE/"index.html").write_text(shelf)

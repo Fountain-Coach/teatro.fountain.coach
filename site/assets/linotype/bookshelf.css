@@ -1,87 +1,36 @@
-/* Same Linotype paper, palette, type, measure and folio conventions; shelf state,
-   not a marketing homepage or a second application. */
-:root{color-scheme:light;--shelf-ink:#2b2721;--shelf-muted:#847e74;--shelf-paper:#f6f2ea;
---shelf-outer:#dfd9ce;--shelf-rule:#ccc3b5;--shelf-accent:#8e785a}
+/* Source-owned open-hand/spring logo plus three image-only editions. */
+:root{color-scheme:light;--paper:#f6f2ea;--outer:#dfd9ce;--ink:#292520;--rule:#d6cfc2}
 *{box-sizing:border-box}
-html{min-height:100%;background:var(--shelf-outer)}
-body.bookshelf-state{margin:0;min-height:100svh;background:var(--shelf-outer);
-color:var(--shelf-ink);font-family:"Iowan Old Style",Baskerville,Georgia,serif;
-display:grid;grid-template-rows:auto minmax(0,1fr) auto}
-.book-skip{position:absolute;transform:translateY(-130%);z-index:3}
-.book-skip:focus{transform:none;background:var(--shelf-paper);padding:10px}
-.bookshelf-toolbar,.bookshelf-pagination{background:var(--shelf-paper);
-display:flex;justify-content:space-between;align-items:center;gap:12px;
-min-height:61px;padding:12px clamp(20px,4vw,60px);
-font:600 11px/1.4 ui-monospace,"Courier New",monospace;letter-spacing:.09em}
-.bookshelf-toolbar{border-bottom:1px solid var(--shelf-rule)}
-.bookshelf-pagination{justify-content:center;gap:clamp(16px,6vw,110px);
-border-top:1px solid var(--shelf-rule);color:var(--shelf-muted)}
-.bookshelf-toolbar-state{color:var(--shelf-accent)}
-/* A library table of cover thumbnails, not promotional cards. */
-.bookshelf-main{display:flex;align-items:flex-start;justify-content:center;min-width:0;
-padding:clamp(14px,2.4vw,30px)}
-.bookshelf-paper{background:var(--shelf-paper);width:min(100%,950px);
-min-height:calc(100svh - 170px);padding:clamp(22px,3vw,36px);
-box-shadow:0 7px 20px #372a1912;display:flex;flex-direction:column}
-.bookshelf-paper-head,.bookshelf-paper-foot{display:flex;align-items:center;
-justify-content:space-between;gap:16px;border-bottom:1px solid var(--shelf-rule);
-padding-bottom:10px;font:600 10px/1.4 ui-monospace,"Courier New",monospace;
-letter-spacing:.11em;color:var(--shelf-muted)}
-.bookshelf-paper-foot{border-top:1px solid var(--shelf-rule);border-bottom:0;
-margin-top:auto;padding:13px 0 0}
-.bookshelf-paper h1{font:400 clamp(24px,3vw,32px)/1.15 "Iowan Old Style",Baskerville,Georgia,serif;
-letter-spacing:-.02em;margin:18px 0 25px}
+html{min-height:100%;background:var(--outer)}
+body.bookshelf-state{margin:0;min-height:100svh;color:var(--ink);
+background:var(--outer);font-family:"Iowan Old Style",Georgia,serif}
+.book-skip{position:absolute;transform:translateY(-150%);z-index:4;background:var(--paper);color:var(--ink);padding:10px}
+.book-skip:focus{transform:translateY(0)}
+.bookshelf-main{min-height:100svh;display:flex;justify-content:center;align-items:center;padding:clamp(14px,3vw,36px)}
+.bookshelf-paper{width:min(100%,970px);min-height:min(85svh,690px);background:var(--paper);
+box-shadow:0 7px 20px #372a1912;padding:clamp(24px,5vw,56px);
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(32px,5vw,58px)}
+.bookshelf-brand{display:grid;place-items:center;flex:none}
+.bookshelf-brand img{display:block;width:clamp(88px,10vw,128px);height:auto;aspect-ratio:1;object-fit:contain}
 .bookshelf-books{display:grid;grid-template-columns:repeat(3,minmax(0,185px));
-justify-content:center;gap:clamp(12px,2.4vw,24px);
-padding:0;margin:0 auto 22px;list-style:none;width:100%}
+justify-content:center;align-items:start;gap:clamp(14px,3vw,32px);list-style:none;padding:0;margin:0;width:100%}
 .shelf-item{min-width:0}
-.shelf-book{display:block;position:relative;color:inherit;text-decoration:none;
-width:100%;max-width:185px;outline-offset:4px}
-.shelf-book:focus-visible{outline:2px solid var(--shelf-accent)}
-.shelf-cover{aspect-ratio:.73;background:#f7f2e8;min-width:0;width:100%;
-padding:8% 8% 6%;gap:8px;box-shadow:1px 5px 12px #352c271b;
-border:1px solid #d6cfc2;display:flex;flex-direction:column;overflow:hidden}
-.shelf-cover-kicker,.shelf-cover-author{font:600 clamp(6px,.7vw,9px)/1.25 ui-monospace,"Courier New",monospace;
-color:var(--shelf-muted);letter-spacing:.05em}
-.shelf-cover-kicker{height:2.5em}
-.shelf-cover-title{font:400 clamp(12px,1.4vw,19px)/1.09 "Iowan Old Style",Baskerville,Georgia,serif;
-letter-spacing:-.025em;overflow-wrap:break-word;min-height:3.25em;
-max-height:4.35em;overflow:hidden}
-.shelf-cover-image{flex:1;min-height:36px;border-top:1px solid var(--shelf-rule);
-border-bottom:1px solid var(--shelf-rule);display:grid;place-items:center;
-background:#f3eee4;overflow:hidden}
-.shelf-cover-image img{width:100%;height:100%;min-height:0;object-fit:contain;
-filter:grayscale(.18)}
-.shelf-cover-author{height:1.4em;overflow:hidden}
+.shelf-book{display:block;width:100%;color:inherit;text-decoration:none;outline-offset:5px}
+.shelf-book:focus-visible{outline:2px solid var(--ink)}
+.shelf-cover{display:grid;place-items:center;width:100%;aspect-ratio:.73;overflow:hidden;
+background:#f7f2e8;border:1px solid var(--rule);padding:9%;box-shadow:1px 5px 12px #352c271b}
+.shelf-cover img{display:block;width:100%;height:100%;min-width:0;min-height:0;object-fit:contain}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){
-.shelf-cover{transition:box-shadow .2s ease}
+.shelf-cover{transition:box-shadow .18s ease}
 .shelf-book:hover .shelf-cover{box-shadow:1px 6px 17px #352c2735}
 }
 @media(max-width:600px){
-.bookshelf-toolbar,.bookshelf-pagination{min-height:50px;padding:10px 15px;font-size:9px}
-.bookshelf-main{padding:10px}.bookshelf-paper{padding:18px 14px;min-height:calc(100svh - 115px)}
-.bookshelf-paper h1{font-size:24px;margin:14px 0 19px}
-.bookshelf-books{grid-template-columns:repeat(2,minmax(0,160px));gap:16px 13px}
-.shelf-cover-title{font-size:clamp(12px,3.4vw,17px)}
-.shelf-cover-kicker,.shelf-cover-author{font-size:clamp(6px,1.7vw,8px)}
+.bookshelf-main{padding:12px;align-items:flex-start}
+.bookshelf-paper{min-height:calc(100svh - 24px);padding:30px 22px;justify-content:flex-start;gap:35px}
+.bookshelf-brand img{width:104px}
+.bookshelf-books{grid-template-columns:repeat(2,minmax(0,175px));gap:18px}
+.shelf-item:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:calc((100% - 18px)/2)}
 }
-@media(min-width:601px) and (max-height:850px){
-.bookshelf-main{padding:15px 24px}
-.bookshelf-paper{padding:20px 36px;min-height:0}
-.bookshelf-paper h1{margin:12px 0 18px;font-size:26px}
-.bookshelf-books{grid-template-columns:repeat(3,minmax(0,155px));gap:15px 22px}
-.shelf-cover-title{font-size:15px}
-}
-@media print{.bookshelf-toolbar,.bookshelf-pagination{display:none}
-.bookshelf-paper{box-shadow:none}}
-/* Landscape tablets should display the entire bookshelf leaf and folio
-   without making the reader scroll to find the bottom book navigation. */
-@media(min-width:650px) and (max-height:850px){
- .bookshelf-main{padding:18px 24px}
- .bookshelf-paper{min-height:0;padding:29px 45px}
- .bookshelf-paper h1{margin-top:18px}
- .bookshelf-intro{margin-bottom:10px}
- .bookshelf-books{margin-bottom:12px;gap:15px}
- .shelf-cover{max-width:205px}
- .shelf-item-caption{margin-top:8px}
-}
+@media(max-width:360px){.bookshelf-paper{padding:22px 15px}.bookshelf-books{gap:13px}
+.shelf-item:last-child:nth-child(odd){width:calc((100% - 13px)/2)}}
+@media print{.bookshelf-main{min-height:0;padding:0}.bookshelf-paper{min-height:0;box-shadow:none}}

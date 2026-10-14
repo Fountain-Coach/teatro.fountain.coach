@@ -6,9 +6,9 @@
   "repository": "Fountain-Coach/teatro.fountain.coach",
   "capturedAt": "2026-10-14T10:28:47Z",
   "publicationState": "source-candidate-Linotype-bookshelf-first-hearing-not-publicly-deployed",
-  "fileCount": 57,
+  "fileCount": 59,
   "indexPages": 5,
-  "sourceSha256Inventory": "34ac7fc83674b45dac0b3e37ba71065899ebd796fc59e8341be0f78d5c24b647",
+  "sourceSha256Inventory": "ff5475264b3eaaf54955e3129329620c373d5943f3dc36f02eb124d74ebc3c13",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
@@ -22,6 +22,13 @@
   "sceneComposition": "authored-paragraph-anchored-mixed-media",
   "bookshelfBooks": [
     {
+      "id": "fountain-coach",
+      "status": "wlan-proof",
+      "reader": "https://fountain.coach/editions/essays/",
+      "host": "fountain",
+      "art": "/assets/bookshelf/fountain-coach-edition.png"
+    },
+    {
       "id": "first-reading",
       "status": "public-live",
       "reader": "https://works.benedikt-eickhoff.de/solstice/editions/first-reading/",
@@ -34,34 +41,6 @@
       "reader": "/editions/first-hearing/",
       "host": "teatro",
       "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
-    },
-    {
-      "id": "essays-collection",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/",
-      "host": "fountain",
-      "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
-    },
-    {
-      "id": "essay-teatro-an-unfinished-composition",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/teatro-an-unfinished-composition/",
-      "host": "fountain",
-      "art": "/assets/bookshelf/teatro-an-unfinished-composition.svg"
-    },
-    {
-      "id": "essay-semantic-compilation-the-archive-is-not-the-edition",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/semantic-compilation-the-archive-is-not-the-edition/",
-      "host": "fountain",
-      "art": "/assets/bookshelf/semantic-compilation-the-archive-is-not-the-edition.svg"
-    },
-    {
-      "id": "essay-reframe-and-the-business-value-of-the-estate",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/reframe-and-the-business-value-of-the-estate/",
-      "host": "fountain",
-      "art": "/assets/bookshelf/reframe-and-the-business-value-of-the-estate.png"
     }
   ]
 }

@@ -105,29 +105,47 @@ def main():
  assert root==(SITE/"editions/index.html").read_text()
  assert root!=(SITE/"editions/first-hearing/index.html").read_text()
  assert 'data-linotype-state="bookshelf"' in root
- assert 'data-book-count="6"' in root
+ assert 'data-book-count="3"' in root
  assert 'id="book-viewport"' not in root
- assert root.count('class="shelf-book"')==6
- assert root.count('class="shelf-cover"')==6
+ assert root.count('class="shelf-book"')==3
+ assert root.count('class="shelf-cover"')==3
  assert 'class="shelf-miniature"' not in root
  assert 'href="/editions/first-hearing/"' in root
  assert 'https://fountain.coach/editions/essays/' in root
  assert 'https://works.benedikt-eickhoff.de/solstice/editions/first-reading/' in root
- assert root.count('data-preview-host="fountain"')==4
+ assert root.count('data-preview-host="fountain"')==1
  assert root.count('data-preview-host="solstice"')==1
  assert root.count('data-preview-host="teatro"')==1
  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
+ assert root.count('class="bookshelf-brand"')==1
+ assert root.count('src="/assets/bookshelf/fountain-coach-logo-transparent.png"')==1
+ assert 'class="bookshelf-toolbar"' not in root
+ assert 'class="bookshelf-pagination"' not in root
+ assert 'class="bookshelf-paper-head"' not in root
+ assert 'class="bookshelf-paper-foot"' not in root
+ assert 'class="shelf-cover-kicker"' not in root
+ assert 'class="shelf-cover-title"' not in root
+ assert '<h1' not in root
+ assert 'BOOKSHELF</span>' not in root
+ assert '06 / 06' not in root
+ assert root.count('class="shelf-cover"')==3
+ assert root.count('class="shelf-book"')==3
+ assert root.count('class="shelf-cover"')==root.count('<span class="shelf-cover"')
+ assert not any(x in root for x in ['EDITION 01</span>','SOURCE 31','3 BOOKS','30 WORKS</span>'])
+ assert sha((SITE/"assets/bookshelf/fountain-coach-logo-transparent.png").read_bytes())=="8c5fad1c3db56138d5959da75991dc8034a0be537ce46da6ffcc0d9655e7f729"
+
  assert 'teatro-stage' not in root
  assert 'governance-constitution' not in root and 'book-of-reframe' not in root
- assert root.count('data-release-status="wlan-proof"')==5
+ assert root.count('data-release-status="wlan-proof"')==2
  assert root.count('data-release-status="public-live"')==1
  assert 'class="shelf-item-caption"' not in root
  assert 'class="shelf-item-detail"' not in root
  assert 'class="shelf-item-revision"' not in root
  assert 'class="bookshelf-intro"' not in root
- assert root.count('class="shelf-book"')==root.count('class="shelf-cover"')==6
+ assert root.count('class="shelf-book"')==root.count('class="shelf-cover"')==3
  manifest_all=json.loads((ROOT/"edition.json").read_text())
- assert len(manifest_all["bookshelfBooks"])==6
+ assert len(manifest_all["bookshelfBooks"])==3
+ assert [b["id"] for b in manifest_all["bookshelfBooks"]]==["fountain-coach","first-reading","teatro-first-hearing"]
  for row in manifest_all["bookshelfBooks"]:
   assert (SITE/row["art"].lstrip("/")).is_file(),row["id"]
  assert (SITE/"assets/linotype/bookshelf.css").is_file()

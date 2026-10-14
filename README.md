@@ -340,3 +340,22 @@ accessible edition identities and retained canonical/source status
 metadata. The approved original Teatro v16 book, the five
 other source-addressed readers, and the disposable WLAN
 cross-domain link projection remain unchanged.
+
+## R20 — return to the three agreed parent editions
+
+The author corrected the six-cover proofreading state: the
+estate-level Bookshelf has exactly **Fountain Coach, First Reading
+and Teatro**, not separate nested essays displayed as peers.
+One actual, online Fountain Coach open-hand-and-spring logo
+(`assets/fountain-coach-logo-transparent.png`, SHA-256
+`8c5fad1c3db56138d5959da75991dc8034a0be537ce46da6ffcc0d9655e7f729`)
+stands alone over three *image-only* links. No numerals, counters,
+imprint titles, book nameplates, navigation rail or footer in
+the shelf state. The linked reading experiences remain the
+Fountain Coach collected Essays, First Reading and the
+author-acknowledged v16 Teatro First Hearing.
+
+The first two edition source URLs belong to their own domains
+and are translated to neighboring WLAN origins only by the
+disposable Estate staging projection. The Teatro reader itself,
+its WebGL/CSound scene and original text have not changed.

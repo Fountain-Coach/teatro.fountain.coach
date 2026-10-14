@@ -205,3 +205,14 @@ reader. No labels beneath, status chips, source hashes, secondary
 links, card presentation or tilted miniature. Distinguish the two
 Teatro editions *within* their actual covers and accessible identity.
 The six source owners and the accepted v16 reader remain intact.
+
+## R20 — no title and no number on Bookshelf
+
+The author reconfirmed precisely Fountain Coach, First Reading,
+Teatro as top-level editions. Reuse the **actual online PNG**
+Fountain Coach open hand and spring as the only visible branding.
+Show exactly three image-only link targets; do not add titles,
+counts, numbered chapter/edition labels, footer, a website rail
+or the earlier nested Essays as top-level items. Accessible
+book identities stay in aria-label / edition metadata. Do
+not change the v16 approved reading experience.

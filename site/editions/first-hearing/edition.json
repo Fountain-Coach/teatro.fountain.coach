@@ -48,7 +48,7 @@
       "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
     }
   ],
-  "fountainPressCommit": "29fb26db6ebd0aa3efb86fdfcc519f1fcb1e2b82",
+  "fountainPressCommit": "2caacf16238735f80a00c241f9db8cd527508fdc",
   "sceneAnchorId": "teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId": "teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement": "inside-authored-prose",
@@ -73,6 +73,13 @@
   "rootLanding": "bookshelf-mirrors-editions",
   "bookshelfBooks": [
     {
+      "id": "fountain-coach",
+      "status": "wlan-proof",
+      "reader": "https://fountain.coach/editions/essays/",
+      "host": "fountain",
+      "art": "/assets/bookshelf/fountain-coach-edition.png"
+    },
+    {
       "id": "first-reading",
       "status": "public-live",
       "reader": "https://works.benedikt-eickhoff.de/solstice/editions/first-reading/",
@@ -85,34 +92,6 @@
       "reader": "/editions/first-hearing/",
       "host": "teatro",
       "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
-    },
-    {
-      "id": "essays-collection",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/",
-      "host": "fountain",
-      "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
-    },
-    {
-      "id": "essay-teatro-an-unfinished-composition",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/teatro-an-unfinished-composition/",
-      "host": "fountain",
-      "art": "/assets/bookshelf/teatro-an-unfinished-composition.svg"
-    },
-    {
-      "id": "essay-semantic-compilation-the-archive-is-not-the-edition",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/semantic-compilation-the-archive-is-not-the-edition/",
-      "host": "fountain",
-      "art": "/assets/bookshelf/semantic-compilation-the-archive-is-not-the-edition.svg"
-    },
-    {
-      "id": "essay-reframe-and-the-business-value-of-the-estate",
-      "status": "wlan-proof",
-      "reader": "https://fountain.coach/editions/essays/reframe-and-the-business-value-of-the-estate/",
-      "host": "fountain",
-      "art": "/assets/bookshelf/reframe-and-the-business-value-of-the-estate.png"
     }
   ],
   "sourceMutation": false
