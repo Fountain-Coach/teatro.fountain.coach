@@ -164,3 +164,26 @@ The book-end and source provenance furniture are neutral publication
 notes instead of external navigation links. The original 22-paragraph
 essay, score, its provenance SHA and Csound/MIDI2/Ear authorities are
 unchanged. Actual iPad writer acceptance is still required.
+
+
+## R15 — split player, Contents and one transport authority
+
+The author rejected the centered set of unrelated top icons. Fountain
+Press now positions a **Play/Pause + parameter-disclosure triangle +
+live Ear glyph at the top-left**, with the separate Contents side-rail
+icon at the **top-right**. The expanded Csound control panel remains
+inside viewport bounds. Its Ear icon replaces volume-like bars and
+scales subtly and proportionally with real RMS observations. On
+silence/Stop it returns to a stable resting size, and reduced-motion
+preferences are honored.
+
+The author also requires reciprocity: activating the **source-anchored
+Teatro Play** on the book page both mounts the original live puppet
+*and* requests the same audible book player; activating the global
+book Play while the Teatro leaf is visible mounts the original
+scene. The top Pause stops the actual sound and releases the
+embedded renderer. Only one transport state and one Ear/MIDI2 source
+plane exist; the score does not create an independent playback
+engine. The HTTP WLAN continues to disclose Web Audio preview,
+while the secure-origin test witnesses original Csound/Ear.
+No new narration, physical MIDI2 port or publishing authority is implied.

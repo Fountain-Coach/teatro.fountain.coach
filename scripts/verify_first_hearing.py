@@ -38,6 +38,9 @@ def main():
   assert 'class="book-legal"' not in book
   assert '<a href="/editions/">' not in book
   assert book.count('id="book-media-toggle"')==1
+  assert book.count('class="book-ear-icon"')==1
+  assert 'class="book-ear-meter"' not in book
+  assert book.index('id="book-media-toggle"')<book.index('id="book-media-settings"')<book.index('class="book-ear-icon"')
   assert book.count('id="book-toc-button"')==1
   assert 'aria-haspopup="dialog">Contents</button>' not in book
   assert '<svg viewBox="0 0 24 24"' in book

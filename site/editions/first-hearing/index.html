@@ -34,8 +34,12 @@
 
   <div class="book-tools"><section class="book-media-control" id="book-media-control" data-ear="idle" data-player="stopped" aria-label="Teatro media player">
 <button type="button" id="book-media-toggle" aria-pressed="false" aria-label="Play book sound">▶</button>
-<span class="book-ear-meter" role="img" aria-label="Ear signal monitor"></span>
 <button type="button" id="book-media-settings" aria-expanded="false" aria-controls="book-media-details" aria-label="Sound parameters and Ear">⌄</button>
+<span class="book-ear-icon" role="img" aria-label="Ear idle — no audio output" style="--ear-scale:.84">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M6 10a6 6 0 0 1 12 0c0 3-1.7 4.4-3.7 6.2C13 17.4 12.5 18.1 12.5 20a3 3 0 0 1-6 0"/>
+<path d="M9 10a3 3 0 0 1 6 0c0 1.6-.7 2.3-1.9 3.3"/>
+</svg></span>
 <div id="book-media-details" hidden>
 <div class="book-player-head"><strong>TEATRO · PLAYER</strong><span id="book-audio-source">Instrument ready</span></div>
 <p class="book-player-status" id="book-media-status" role="status">Ready to listen</p>

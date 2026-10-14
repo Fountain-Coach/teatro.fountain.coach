@@ -17,6 +17,14 @@ async function open(path,width,height,label){
   if(v.result.exceptionDetails)throw Error(JSON.stringify(v.result.exceptionDetails));
   return v.result.result.value;
  };
+ const userClick=async selector=>{
+  const rect=await evalJS("document.querySelector("+JSON.stringify(selector)+")?.getBoundingClientRect().toJSON()");
+  if(!rect||rect.width<5||rect.height<5)throw Error('Cannot activate visible UI '+selector);
+  const x=rect.x+rect.width/2,y=rect.y+rect.height/2;
+  await cmd('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',clickCount:1});
+  await cmd('Input.dispatchMouseEvent',{type:'mouseReleased',x,y,button:'left',clickCount:1});
+ };
+
  try{
   await cmd('Runtime.enable');await cmd('Page.enable');await cmd('Network.setCacheDisabled',{cacheDisabled:true});
   await cmd('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:width<600});
@@ -33,10 +41,13 @@ async function open(path,width,height,label){
   if(state!=='true')throw Error('Linotype not ready '+state+': '+await evalJS("document.body?.dataset.bookError||''")+': '+errors.join(';'));
   const shot="(() => {const sheet=document.querySelector('.linotype-stage .linotype-sheet')?.getBoundingClientRect();return {pages:Number(document.body.dataset.bookPageCount),mode:document.body.dataset.bookMode,folio:document.getElementById('book-page-count').textContent,images:document.querySelectorAll('#book-flow img').length,chapters:document.querySelectorAll('[data-book-chapter]').length,overflowX:document.documentElement.scrollWidth>innerWidth+1,overflowY:document.documentElement.scrollHeight>innerHeight+1,sheet:sheet?.toJSON(),player:!!document.getElementById('book-media-toggle'),oldScene:!!document.querySelector('.teatro-stage-link'),oldHearing:!!document.getElementById('satzfunk-hearing-rail')}})()";
   const first=await evalJS(shot);
-  const bookFurniture=await evalJS("(()=>{const header=document.querySelector('.book-toolbar'),footer=document.querySelector('.book-pagination'),tools=document.querySelector('.book-tools'),player=document.querySelector('#book-media-toggle'),scene=document.querySelector('#book-flow [data-teatro-scene-play] img');const h=header?.getBoundingClientRect(),t=tools?.getBoundingClientRect(),f=footer?.getBoundingClientRect();return {header:header?.classList.contains('book-reading-controls'),footer:footer?.classList.contains('book-reading-pagination'),externalHeaderLinks:header?.querySelectorAll('a').length,externalFooterLinks:footer?.querySelectorAll('a').length,websiteLabels:!!document.querySelector('.book-back,.edition-rail,.book-legal'),appearance:!!document.querySelector('#book-type-button,#book-appearance,#book-font-value'),toolbarCenter:t&&h?Math.abs((t.left+t.right)/2-(h.left+h.right)/2):999,pagination:!!footer.querySelector('#book-prev,#book-next,#book-page-count'),stageIconSrc:scene?.getAttribute('src'),stageIconCss:scene?getComputedStyle(scene).width:null}})()");
+  const bookFurniture=await evalJS("(()=>{const header=document.querySelector('.book-toolbar'),footer=document.querySelector('.book-pagination'),tools=document.querySelector('.book-tools'),player=document.querySelector('#book-media-toggle'),scene=document.querySelector('#book-flow [data-teatro-scene-play] img');const h=header?.getBoundingClientRect(),t=tools?.getBoundingClientRect(),f=footer?.getBoundingClientRect();return {header:header?.classList.contains('book-reading-controls'),footer:footer?.classList.contains('book-reading-pagination'),externalHeaderLinks:header?.querySelectorAll('a').length,externalFooterLinks:footer?.querySelectorAll('a').length,websiteLabels:!!document.querySelector('.book-back,.edition-rail,.book-legal'),appearance:!!document.querySelector('#book-type-button,#book-appearance,#book-font-value'),playerLeft:player&&h?player.getBoundingClientRect().left-h.left:999,tocRight:header.querySelector('#book-toc-button')&&h?h.right-header.querySelector('#book-toc-button').getBoundingClientRect().right:999,discloseBeside:!!header.querySelector('#book-media-settings'),earLogo:!!header.querySelector('.book-ear-icon svg'),oldBars:!!header.querySelector('.book-ear-meter'),pagination:!!footer.querySelector('#book-prev,#book-next,#book-page-count'),stageIconSrc:scene?.getAttribute('src'),stageIconCss:scene?getComputedStyle(scene).width:null}})()");
   if(!bookFurniture.header||!bookFurniture.footer||bookFurniture.externalHeaderLinks||
      bookFurniture.externalFooterLinks||bookFurniture.websiteLabels||bookFurniture.appearance||
-     bookFurniture.toolbarCenter>3||!bookFurniture.pagination||
+     bookFurniture.playerLeft<0||bookFurniture.playerLeft>55||
+     bookFurniture.tocRight<0||bookFurniture.tocRight>55||
+     !bookFurniture.discloseBeside||!bookFurniture.earLogo||bookFurniture.oldBars||
+     !bookFurniture.pagination||
      bookFurniture.stageIconSrc!=='/assets/teatro-play.svg')
      throw Error('R14 book-only centered navigation invalid '+JSON.stringify(bookFurniture));
   console.log('PASSED R14 BOOK FURNITURE',label,JSON.stringify(bookFurniture));
@@ -57,6 +68,8 @@ async function open(path,width,height,label){
     if(await evalJS("document.body.dataset.teatroScene==='ready'"))break;
     await pause(100);
   }
+  const playerLoad=await evalJS("({bus:!!window.FountainBookMidi2,transport:document.getElementById('book-media-control')?.dataset.player,ready:document.body.dataset.teatroScene})");
+  console.log('R15 PLAYER LOAD',label,playerLoad);
   const idleScene=await evalJS("(()=>{const b=document.querySelector('.linotype-stage [data-teatro-scene-play]');const poster=b?.querySelector('img');return {ready:document.body.dataset.teatroScene,playButton:!!b,visible:b?!b.hidden:false,poster:poster?.getAttribute('src'),iframes:document.querySelectorAll('iframe[data-teatro-live-frame]').length}})()");
   const idleIcon=await evalJS("(()=>{const button=document.querySelector('.linotype-stage [data-teatro-scene-play]'),icon=button?.querySelector('img'),paper=button?.closest('.linotype-sheet');return {iconWidth:icon?.getBoundingClientRect().width,iconHeight:icon?.getBoundingClientRect().height,paperWidth:paper?.getBoundingClientRect().width}})()");
   if(!idleIcon.iconWidth||idleIcon.iconWidth>42||idleIcon.iconWidth<(height<650?12:18)||
@@ -66,7 +79,18 @@ async function open(path,width,height,label){
   if(idleScene.ready!=='ready'||!idleScene.playButton||!idleScene.visible||
      idleScene.poster!=='/assets/teatro-play.svg'||idleScene.iframes)
       throw Error('R13 idle scene must show a real play triangle '+JSON.stringify(idleScene));
-  await evalJS("document.querySelector('.linotype-stage [data-teatro-scene-play]').click()");
+  // The page's Play is a real audio request, not a silent stage-entry.
+  await userClick('.linotype-stage [data-teatro-scene-play]');
+  let audible=null;
+  for(let n=0;n<55;n++){
+    await pause(120);
+    audible=await evalJS("(()=>{const c=document.getElementById('book-media-control'),i=c.querySelector('.book-ear-icon');return {mode:c.dataset.player,ear:c.dataset.ear,rms:Number(c.dataset.earRms||0),scale:parseFloat(i?.style.getPropertyValue('--ear-scale'))||0,aria:i?.getAttribute('aria-label'),pressed:document.getElementById('book-media-toggle')?.getAttribute('aria-pressed')}})()");
+    if(['preview','csound'].includes(audible?.mode)&&audible?.ear==='witnessed')break;
+  }
+  if(!['preview','csound'].includes(audible?.mode)||audible.ear!=='witnessed'||
+      audible.rms<=0.0001||audible.scale<=.84||audible.pressed!=='true')
+    throw Error('R15 page Play did not start measured sound/Ear '+JSON.stringify(audible));
+  console.log('PASSED R15 PAGE TO AUDIO',label,JSON.stringify(audible));
   let interactiveState='inactive';
   for(let n=0;n<40;n++){
    await pause(250);
@@ -111,6 +135,28 @@ async function open(path,width,height,label){
    console.log('PASSED R12 PUPPET MOTION',label,JSON.stringify({rig:'canonical StageEngine/StageView',stringsAndBar:puppet.stringsAndBar,barFrom:puppet.barX,barTo:later}));
   }
   console.log('PASSED EMBED',label,JSON.stringify(scene));
+  // Top-level pause must stop audio and reset the embedded scene/Play.
+  await userClick('#book-media-toggle');
+  let stopped=null;
+  for(let n=0;n<35;n++){
+   await pause(100);
+   stopped=await evalJS("(()=>{const c=document.getElementById('book-media-control');return {mode:c.dataset.player,scene:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length,iconScale:document.querySelector('.book-ear-icon')?.style.getPropertyValue('--ear-scale'),pagePlay:!!document.querySelector('.linotype-stage [data-teatro-scene-play]:not([hidden])')}})()");
+   if(stopped?.mode==='stopped'&&stopped?.frames===0&&stopped.pagePlay)break;
+  }
+  if(stopped?.mode!=='stopped'||stopped.frames!==0||!stopped.pagePlay||stopped.iconScale!=='.84')
+   throw Error('R15 top Pause did not stop audio and release stage '+JSON.stringify(stopped));
+  // Vice versa: starting at the header while on the scene leaf mounts the
+  // same real puppet and the same actual Ear-analyzed sound.
+  await userClick('#book-media-toggle');
+  let topStarted=null;
+  for(let n=0;n<65;n++){
+   await pause(120);
+   topStarted=await evalJS("(()=>{const c=document.getElementById('book-media-control');return {mode:c.dataset.player,ear:c.dataset.ear,scene:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length}})()");
+   if(topStarted.scene==='active'&&topStarted.frames===1&&topStarted.ear==='witnessed')break;
+  }
+  if(topStarted?.scene!=='active'||topStarted.frames!==1||topStarted.ear!=='witnessed')
+   throw Error('R15 top Play did not activate Teatro media '+JSON.stringify(topStarted));
+  console.log('PASSED R15 TOP TO STAGE',label,JSON.stringify(topStarted));
   await evalJS("document.getElementById('book-next').click()");
   let released=null;
   for(let i=0;i<25;i++){
@@ -120,6 +166,11 @@ async function open(path,width,height,label){
   }
   if(released?.state!=='inactive'||released.frames!==0)
     throw Error('Teatro runtime leaked after page-turn completion '+JSON.stringify(released));
+  // Global audio belongs to the book, independent of which leaf is active.
+  const ongoing=await evalJS("document.getElementById('book-media-control').dataset.player");
+  if(!['csound','preview'].includes(ongoing))throw Error('Book transport stopped on a page turn');
+  await userClick('#book-media-toggle');
+  await pause(160);
   const player=await evalJS("(()=>{const btn=document.getElementById('book-media-settings');btn.click();return {detailOpen:!document.getElementById('book-media-details').hidden,inputs:document.querySelectorAll('[data-book-sound-parameter]').length,bus:!!window.FountainBookMidi2,ear:!!document.getElementById('book-ear-status')}})()");
   if(!player.detailOpen||player.inputs!==4||!player.bus||!player.ear)throw Error('Book media/player not mounted '+JSON.stringify(player));
   await evalJS("document.getElementById('player-wind').value='.25';document.getElementById('player-wind').dispatchEvent(new Event('input',{bubbles:true}))");
@@ -152,6 +203,7 @@ async function open(path,width,height,label){
  }finally{ws.close();await fetch(chrome+'/json/close/'+target.id).catch(()=>{})}
 }
 for(const [label,width,height] of [['iPad landscape',1180,820],['iPad portrait',820,1180],['phone portrait',390,844],['phone landscape',844,390],['desktop',1366,900]]){
+ if(process.env.R15_PROFILE&&label!==process.env.R15_PROFILE)continue;
  try{await open('/',width,height,label)}catch(e){console.error('FAILED',label,String(e));process.exitCode=1}
 }
 try{await open('/editions/stage/',820,1180,'iPad portrait')}catch(e){console.error('FAILED STAGE',String(e));process.exitCode=1}

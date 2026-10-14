@@ -30,8 +30,24 @@ def main():
   assert book.count('data-book-chapter=')==1
   assert book.count('data-book-toc-target=')==2
   assert book.count('src="/assets/edition/')==1
-  assert book.count('aria-current="page"')==1
+  assert book.count('aria-current="page"')==0
+  assert 'class="book-toolbar book-reading-controls"' in book
+  assert 'class="book-pagination book-reading-pagination"' in book
+  assert 'class="book-back"' not in book
+  assert 'class="edition-rail"' not in book
+  assert 'class="book-legal"' not in book
+  assert '<a href="/editions/">' not in book
   assert book.count('id="book-media-toggle"')==1
+  assert book.count('class="book-ear-icon"')==1
+  assert 'class="book-ear-meter"' not in book
+  assert book.index('id="book-media-toggle"')<book.index('id="book-media-settings"')<book.index('class="book-ear-icon"')
+  assert book.count('id="book-toc-button"')==1
+  assert 'aria-haspopup="dialog">Contents</button>' not in book
+  assert '<svg viewBox="0 0 24 24"' in book
+  assert 'id="book-type-button"' not in book
+  assert 'id="book-appearance"' not in book
+  assert 'id="book-font-larger"' not in book
+  assert 'id="book-font-smaller"' not in book
   assert book.count('id="book-media-settings"')==1
   assert book.count('id="book-ear-status"')==1
   assert book.count('data-book-sound-parameter=')==4
@@ -44,9 +60,12 @@ def main():
   assert 'href="/assets/linotype/book-player.css"' in book
   assert 'data-edition-id="teatro-first-hearing"' in book
   assert 'id="book-viewport"' in book and 'id="book-page-atlas"' in book
-  assert 'https://fountain.coach/essays/'+SLUG+'/' in book
+  assert 'PUBLISHED SOURCE · FOUNTAIN.COACH / TEATRO' in book
   assert 'id="book-live-stage"' in book
   assert book.count('data-teatro-book-stage')==1
+  assert book.count('data-teatro-scene-play')==1
+  assert 'src="/assets/teatro-play.svg"' in book
+  assert 'src="/assets/teatro-stage-poster.svg"' not in book
   assert book.count('class="book-art-leaf"')==0
   assert 'data-press-media="spatial-scene"' in book
   assert 'data-keep-with-anchor="previous"' in book
@@ -64,9 +83,9 @@ def main():
 
   assert "frame-src 'self'" in book
   assert 'src="/assets/linotype/teatro-stage-page.js"' in book
-  assert 'data-legal-role="company-status"' in book
+  assert 'data-legal-role="company-status"' not in book
   assert 'https://teatro.fountain.coach/editions/first-hearing/' in book
-  assert book.count('data-estate-id=')==3
+  assert book.count('data-estate-id=')==0
   assert book.count('data-book-chapter="'+SLUG+'"')==1
   assert 'meta name="satzfunk-source-sha256"' in book
   assert manifest["bookHTMLBeforeSatzfunkSHA256"] in book
@@ -81,6 +100,10 @@ def main():
  assert manifest["scenePlacement"]=="inside-authored-prose"
  assert "mediaWithAnchor(" in (SITE/"assets/linotype/linotype-engine.js").read_text()
  assert (SITE/"assets/linotype/mixed-media.css").is_file()
+ assert (SITE/"assets/teatro-play.svg").is_file()
+ assert 'book-atlas-title' not in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
+ assert 'cloneNode(true)' not in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
+ assert 'book-atlas-identity' in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
  stage=(SITE/"editions/stage/index.html").read_text()
  assert 'src="/assets/index-CY5_5ULO.js"' in stage and 'id="root"' in stage
  assert 'data-teatro-stage-return' in stage
@@ -123,27 +146,3 @@ def main():
  assert len(files)==obj["fileCount"]
  print("TEATRO_EDITION_ACCEPTED",len(files),"source files, book first, stage secondary")
 if __name__=="__main__":main()
-
-## R13 thumbnail identity and default media affordance
-
-Phone atlas cells must not duplicate or miniature-reflow the full page
-DOM, overlay a long running title, or show giant broken text. Give each
-actual composed page a stable short-form visual identity: authentic
-source plate, score triangle, or restrained prose line-pattern and folio.
-Keep the full page/source title in the accessible button label. The
-book's spatial media idle poster is a **playable triangle** with a real
-button and keyboard/touch action, never a random reminiscence photo or
-a static cube illustration. Entering media mounts the canonical stage;
-exiting the page releases it and returns to the Play state. Mobile UX
-requires portrait and landscape browser proof and writer visual review.
-
-## R14 — no website chrome within the Linotype book
-
-Treat the book as an independent reading room. Do not restore:
-external estate/edition links in the header, company/legal links in the
-bottom pagination, Aa font resizing, modal Contents or oversized Play
-posters. Controls are center-aligned and the paper dominates.
-Contents is a **side rail in the layout grid**, never an overlay.
-Only publisher-owned furniture changes; the essay's original
-paragraphs and original Teatro score remain untouched. Preserve
-Csound, Ear, MIDI2 event mappings and resource lifetime.

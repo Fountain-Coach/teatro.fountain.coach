@@ -684,12 +684,13 @@ html.book-hydrating body.book-app::after {
 
 /* R14: book furniture, not a website. No external directory/navigation
    chrome in the reading room; controls form a balanced central instrument. */
-.book-toolbar.book-reading-controls{display:flex;align-items:center;justify-content:center;
-  min-height:57px;gap:0;padding:7px max(12px,env(safe-area-inset-left))
-  7px max(12px,env(safe-area-inset-right))}
-.book-reading-controls .book-tools{display:flex;align-items:center;justify-content:center;
-  gap:14px;flex:none}
-.book-reading-controls #book-toc-button{margin:0}
+.book-toolbar.book-reading-controls{display:flex;align-items:center;justify-content:stretch;
+  min-height:57px;gap:0;padding:7px max(18px,env(safe-area-inset-left))
+  7px max(18px,env(safe-area-inset-right))}
+.book-reading-controls .book-tools{display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex:1 1 100%;width:100%;min-width:0}
+.book-reading-controls .book-media-control{margin-right:auto}
+.book-reading-controls #book-toc-button{margin-left:auto;flex:0 0 auto}
 .book-pagination.book-reading-pagination{display:flex;justify-content:center;align-items:center;
   gap:clamp(10px,3vw,36px);min-height:60px;padding:8px max(10px,env(safe-area-inset-left))
   8px max(10px,env(safe-area-inset-right))}

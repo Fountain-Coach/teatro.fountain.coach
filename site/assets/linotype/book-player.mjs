@@ -8,6 +8,7 @@ const disclose=document.getElementById('book-media-settings');
 const details=document.getElementById('book-media-details');
 const message=document.getElementById('book-media-status');
 const earText=document.getElementById('book-ear-status');
+const earIcon=document.querySelector('.book-ear-icon');
 const sourceText=document.getElementById('book-audio-source');
 const midiText=document.getElementById('book-midi-debug');
 const sourceDigest=document.querySelector('meta[name="satzfunk-source-sha256"]')?.content;
@@ -23,6 +24,10 @@ const changeMode=next=>{
  mode=next; control.dataset.player=next; toggle.setAttribute('aria-pressed',String(next!=='stopped'));
  toggle.textContent=next==='stopped'?'▶':'Ⅱ';
  toggle.setAttribute('aria-label',next==='stopped'?'Play book sound':'Pause book sound');
+ // One transport authority for the book and any currently visible Teatro score.
+ window.dispatchEvent(new CustomEvent('fountain:book:transport',{
+   detail:{playing:next!=='stopped',source:'book:player'}
+ }));
 };
 disclose.addEventListener('click',()=>{
  details.hidden=!details.hidden;
@@ -49,6 +54,13 @@ function observe(level,source){
  if(!Number.isFinite(raw)||raw<0)return;
  const value=bound(raw*8);
  const witnessed=raw>0.0001;
+ // Ear size follows actual RMS; the non-linear mapping remains bounded
+ // (0.84–1.22), so near-silent instrument output remains legible.
+ const intensity=bound(Math.sqrt(raw)*5);
+ earIcon?.style.setProperty('--ear-scale',(0.84+intensity*.38).toFixed(3));
+ earIcon?.setAttribute('aria-label',witnessed?
+   'Ear: measured audio output, intensity '+Math.round(intensity*100)+' percent':
+   'Ear: listening, no measured output');
  control.dataset.ear=witnessed?'witnessed':'silent';
  control.dataset.earRms=raw.toFixed(6);
  control.dataset.earSource=source;
@@ -147,6 +159,8 @@ async function play(){
 }
 async function stop(){
  changeMode('stopped');cancelAnimationFrame(raf);control.dataset.ear='idle';
+ earIcon?.style.setProperty('--ear-scale','.84');
+ earIcon?.setAttribute('aria-label','Ear idle — no audio output');
  bus.publish(bus.controllers.transport,0,'book:player');
  if(csound){const host=csound;csound=null;await host.stop().catch(e=>report(e.message))}
  if(audio){
@@ -155,6 +169,11 @@ async function stop(){
  }
  report('Ready to listen');earText.textContent='Ear · idle';
 }
+// Page score and global transport address precisely the same instrument.
+window.addEventListener('fountain:book:play-request',event=>{
+ if(event.detail?.source!=='teatro:spatial-score'||mode!=='stopped'||toggle.disabled)return;
+ void play();
+});
 toggle.addEventListener('click',()=>{if(mode==='stopped')void play();else void stop()});
 window.addEventListener('pagehide',()=>{void stop();bus.dispose()});
 window.addEventListener('fountain:book:position',event=>{

@@ -22,6 +22,8 @@ function sync(){
  }
  const windowEl=leaf.querySelector('.press-media-stage');
  if(!windowEl)return;
+ if(!requested && document.getElementById('book-media-control')?.dataset.player!=='stopped')
+   requested=true;
  if(!requested){
    document.body.dataset.teatroScene='ready';
    return; // paper carries an actionable player triangle, never a room poster
@@ -51,6 +53,20 @@ stage.addEventListener('click',event=>{
  if(!active?.contains(button))return;
  requested=true;
  schedule();
+ // This synchronous gesture must also request audible output; on an
+ // ordinary HTTP WLAN the explicit Web Audio preview is disclosed.
+ window.dispatchEvent(new CustomEvent('fountain:book:play-request',{
+   detail:{source:'teatro:spatial-score'}
+ }));
+});
+window.addEventListener('fountain:book:transport',event=>{
+ if(event.detail?.source!=='book:player')return;
+ if(event.detail.playing){
+   if(activeLeaf())requested=true;
+   schedule();
+ }else{
+   release();
+ }
 });
 const observer=new MutationObserver(schedule);
 observer.observe(stage,{childList:true,subtree:false});
