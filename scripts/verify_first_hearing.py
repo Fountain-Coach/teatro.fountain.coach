@@ -148,6 +148,10 @@ def main():
  assert [b["id"] for b in manifest_all["bookshelfBooks"]]==["fountain-coach","first-reading","teatro-first-hearing"]
  for row in manifest_all["bookshelfBooks"]:
   assert (SITE/row["art"].lstrip("/")).is_file(),row["id"]
+ shelf_css=(SITE/"assets/linotype/bookshelf.css").read_text()
+ assert 'background:transparent;' in shelf_css
+ assert 'box-shadow:none;' in shelf_css
+ assert 'background:var(--paper);' not in shelf_css
  assert (SITE/"assets/linotype/bookshelf.css").is_file()
  assert (SITE/"editions/first-hearing/index.html").is_file()
  assert manifest["scenePlacement"]=="inside-authored-prose"
