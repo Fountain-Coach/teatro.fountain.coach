@@ -47,7 +47,12 @@ async function open(path,width,height,label){
     const shelf=await evalJS("(()=>{const b=document.body,l=[...document.querySelectorAll('.shelf-book')],images=[...document.querySelectorAll('.shelf-book img')];return {state:b.dataset.linotypeState,count:Number(b.dataset.bookCount),links:l.map(a=>a.getAttribute('href')),miniatures:document.querySelectorAll('.shelf-miniature').length,covers:document.querySelectorAll('.shelf-cover').length,images:images.length,sourceImages:images.map(i=>i.getAttribute('src')),imageLoaded:images.every(i=>i.complete&&i.naturalWidth>0),viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth,hasBookFlow:!!document.getElementById('book-flow'),hasFakeBooks:!!document.querySelector('[data-book-id=governance-constitution],[data-book-id=book-of-reframe]'),bookIds:l.map(a=>a.parentElement.dataset.bookId)}})()");
     if(shelf.state!=='bookshelf'||shelf.count!==6||shelf.links.length!==6||
       !shelf.links.includes('/editions/first-hearing/')||
-      !shelf.links.includes('https://works.benedikt-eickhoff.de/solstice/editions/first-reading/')||
+      !shelf.links.includes(base.includes('192.168.8.249:8182')?
+        'http://192.168.8.249:8181/editions/first-reading/':
+        'https://works.benedikt-eickhoff.de/solstice/editions/first-reading/')||
+      !shelf.links.includes(base.includes('192.168.8.249:8182')?
+        'http://192.168.8.249:8180/editions/essays/':
+        'https://fountain.coach/editions/essays/')||
       shelf.miniatures!==0||shelf.covers!==6||shelf.images!==6||!shelf.imageLoaded||
       shelf.hasBookFlow||shelf.hasFakeBooks||new Set(shelf.bookIds).size!==6||shelf.scrollWidth>shelf.viewportWidth+2||
       shelf.sourceImages.some(src=>!src.startsWith('/assets/bookshelf/')&&src!=='/assets/edition/teatro-score-memory-vector-human-condition.svg'))
