@@ -207,7 +207,15 @@ def main(fountain,satzfunk,press,stage_source):
  solstice_image=solstice_source/"site/assets/edition/post-2025-12-22-b0e6cf8252aca0da.jpg"
  assert solstice_reader.is_file() and solstice_image.is_file()
  assert sha(solstice_image.read_bytes())=="b0e6cf8252aca0da83a9b0bfbdbb3f57b88c826e8b85ac5a89f43b23bad98876"
- shutil.copyfile(solstice_image,collections/"first-reading.jpg")
+ # The original JPEG remains immutable in its Solstice source owner. The
+ # alpha-only, line-preserving derivative is committed by Teatro for the
+ # bookshelf presentation; white JPEG paper must not overlay cover paper.
+ transparent_art=ROOT/"assets/derived/first-reading-ink.png"
+ transparent_bytes=transparent_art.read_bytes()
+ assert sha(transparent_bytes)=="274dab8c594e399585fa5238364f25e95fc7ffa3808eaef872de406ec79f745f"
+ assert transparent_bytes[:8]==b"\x89PNG\r\n\x1a\n" and transparent_bytes[25] in (4,6), "Cover drawing must carry actual alpha"
+ shutil.copyfile(transparent_art,collections/"first-reading-ink.png")
+ (collections/"first-reading.jpg").unlink(missing_ok=True)
  # Fountain Coach's visual cover is taken from its existing essay
  # source, not a generated placeholder or a second website logo.
  essay=fountain_manifest["essays"][2]
@@ -227,7 +235,7 @@ def main(fountain,satzfunk,press,stage_source):
     "id":"first-reading", "title":"First Reading — Solstice",
     "author":"Benedikt Eickhoff","edition":"FIRST READING",
     "reader":"https://works.benedikt-eickhoff.de/solstice/editions/first-reading/",
-    "cover_image":"/assets/bookshelf/first-reading.jpg",
+    "cover_image":"/assets/bookshelf/first-reading-ink.png",
     "source_revision":git_sha(solstice_source),"host":"solstice",
     "status":"public-live"
  })

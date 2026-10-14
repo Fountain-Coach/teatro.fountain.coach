@@ -9,9 +9,9 @@ background:var(--outer);font-family:"Iowan Old Style",Georgia,serif}
 .bookshelf-main{min-height:100svh;display:flex;justify-content:center;align-items:center;padding:clamp(14px,3vw,36px)}
 .bookshelf-paper{width:min(100%,970px);min-height:min(85svh,690px);background:transparent;
 box-shadow:none;padding:clamp(24px,5vw,56px);
-display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(32px,5vw,58px)}
-.bookshelf-brand{display:flex;flex-direction:column;align-items:flex-start;align-self:center;flex:none;gap:4px;
-width:min(100%,calc(555px + var(--shelf-gap) + var(--shelf-gap)))}
+display:grid;grid-template-columns:minmax(88px,128px) minmax(0,1fr);align-items:start;
+align-content:center;column-gap:var(--shelf-gap)}
+.bookshelf-brand{display:flex;flex-direction:column;align-items:flex-start;align-self:start;gap:4px;min-width:0}
 .bookshelf-brand img{display:block;width:clamp(88px,10vw,128px);height:auto;aspect-ratio:1;object-fit:contain}
 .bookshelf-wordmark{font:500 10px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.14em;white-space:nowrap}
 .bookshelf-books{display:grid;grid-template-columns:repeat(3,minmax(0,185px));
@@ -28,7 +28,8 @@ background:#f7f2e8;border:1px solid var(--rule);padding:9%;box-shadow:1px 5px 12
 }
 @media(max-width:600px){
 .bookshelf-main{padding:12px;align-items:flex-start}
-.bookshelf-paper{min-height:calc(100svh - 24px);padding:30px 22px;justify-content:flex-start;gap:35px}
+.bookshelf-paper{min-height:calc(100svh - 24px);padding:30px 22px;grid-template-columns:minmax(0,1fr);
+align-content:start;row-gap:35px}
 .bookshelf-brand{width:100%}
 .bookshelf-brand img{width:104px}
 .bookshelf-books{grid-template-columns:repeat(2,minmax(0,175px));gap:18px}

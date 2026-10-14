@@ -48,7 +48,7 @@
       "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
     }
   ],
-  "fountainPressCommit": "cd1cb6f882c7f46b37ce65d9935887d8cbf6ba50",
+  "fountainPressCommit": "62119346ecad012dcfb6e9c4fb8ba503ad8b738b",
   "sceneAnchorId": "teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId": "teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement": "inside-authored-prose",
@@ -84,7 +84,7 @@
       "status": "public-live",
       "reader": "https://works.benedikt-eickhoff.de/solstice/editions/first-reading/",
       "host": "solstice",
-      "art": "/assets/bookshelf/first-reading.jpg"
+      "art": "/assets/bookshelf/first-reading-ink.png"
     },
     {
       "id": "teatro-first-hearing",
