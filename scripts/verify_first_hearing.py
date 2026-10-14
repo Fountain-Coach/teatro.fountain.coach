@@ -152,14 +152,19 @@ def main():
   assert (SITE/row["art"].lstrip("/")).is_file(),row["id"]
  shelf_css=(SITE/"assets/linotype/bookshelf.css").read_text()
  assert 'background:transparent;' in shelf_css
- assert 'box-shadow:none;' in shelf_css
+ assert 'box-shadow:none' in shelf_css
  assert 'background:var(--paper);' not in shelf_css
  ink=SITE/"assets/bookshelf/first-reading-ink.png"
  assert ink.is_file() and sha(ink.read_bytes())=="274dab8c594e399585fa5238364f25e95fc7ffa3808eaef872de406ec79f745f"
  assert ink.read_bytes()[25] in (4,6),"First Reading artwork must have real PNG alpha"
  assert 'src="/assets/bookshelf/first-reading-ink.png"' in root
- assert '.bookshelf-paper{width:min(100%,970px)' in shelf_css
- assert 'grid-template-columns:minmax(88px,128px) minmax(0,1fr)' in shelf_css
+ assert '.bookshelf-paper{width:min(100%,980px)' in shelf_css
+ assert 'grid-template-columns:repeat(4,minmax(0,185px))' in shelf_css
+ assert 'grid-template-columns:repeat(2,minmax(0,185px))' in shelf_css
+ assert root.count('<li class="shelf-item"')==3
+ assert root.count('<ul class="bookshelf-books">')==1
+ assert root.count('</li>')==3
+ assert root.index('class="bookshelf-brand"')<root.index('data-book-id="fountain-coach"')<root.index('data-book-id="first-reading"')<root.index('data-book-id="teatro-first-hearing"')
  assert 'transform:translateY(-16.95652174%)' in shelf_css
  assert (SITE/"assets/linotype/bookshelf.css").is_file()
  assert (SITE/"editions/first-hearing/index.html").is_file()
