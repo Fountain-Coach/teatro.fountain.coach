@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 170" role="img" aria-labelledby="title">
-<title id="title">Start the interactive Teatro score</title>
-<rect width="240" height="170" fill="#f3efe7"/>
-<circle cx="120" cy="85" r="38" fill="none" stroke="#777065" stroke-width="1.7"/>
-<path d="M111 67 L111 103 L140 85 Z" fill="#292623"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+<title id="title">Play the interactive Teatro spatial score</title>
+<circle cx="32" cy="32" r="28" fill="none" stroke="#777065" stroke-width="1.65"/>
+<path d="M27 20 L27 44 L46 32 Z" fill="#292623"/>
 </svg>

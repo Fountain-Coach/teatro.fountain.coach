@@ -33,6 +33,13 @@ async function open(path,width,height,label){
   if(state!=='true')throw Error('Linotype not ready '+state+': '+await evalJS("document.body?.dataset.bookError||''")+': '+errors.join(';'));
   const shot="(() => {const sheet=document.querySelector('.linotype-stage .linotype-sheet')?.getBoundingClientRect();return {pages:Number(document.body.dataset.bookPageCount),mode:document.body.dataset.bookMode,folio:document.getElementById('book-page-count').textContent,images:document.querySelectorAll('#book-flow img').length,chapters:document.querySelectorAll('[data-book-chapter]').length,overflowX:document.documentElement.scrollWidth>innerWidth+1,overflowY:document.documentElement.scrollHeight>innerHeight+1,sheet:sheet?.toJSON(),player:!!document.getElementById('book-media-toggle'),oldScene:!!document.querySelector('.teatro-stage-link'),oldHearing:!!document.getElementById('satzfunk-hearing-rail')}})()";
   const first=await evalJS(shot);
+  const bookFurniture=await evalJS("(()=>{const header=document.querySelector('.book-toolbar'),footer=document.querySelector('.book-pagination'),tools=document.querySelector('.book-tools'),player=document.querySelector('#book-media-toggle'),scene=document.querySelector('#book-flow [data-teatro-scene-play] img');const h=header?.getBoundingClientRect(),t=tools?.getBoundingClientRect(),f=footer?.getBoundingClientRect();return {header:header?.classList.contains('book-reading-controls'),footer:footer?.classList.contains('book-reading-pagination'),externalHeaderLinks:header?.querySelectorAll('a').length,externalFooterLinks:footer?.querySelectorAll('a').length,websiteLabels:!!document.querySelector('.book-back,.edition-rail,.book-legal'),appearance:!!document.querySelector('#book-type-button,#book-appearance,#book-font-value'),toolbarCenter:t&&h?Math.abs((t.left+t.right)/2-(h.left+h.right)/2):999,pagination:!!footer.querySelector('#book-prev,#book-next,#book-page-count'),stageIconSrc:scene?.getAttribute('src'),stageIconCss:scene?getComputedStyle(scene).width:null}})()");
+  if(!bookFurniture.header||!bookFurniture.footer||bookFurniture.externalHeaderLinks||
+     bookFurniture.externalFooterLinks||bookFurniture.websiteLabels||bookFurniture.appearance||
+     bookFurniture.toolbarCenter>3||!bookFurniture.pagination||
+     bookFurniture.stageIconSrc!=='/assets/teatro-play.svg')
+     throw Error('R14 book-only centered navigation invalid '+JSON.stringify(bookFurniture));
+  console.log('PASSED R14 BOOK FURNITURE',label,JSON.stringify(bookFurniture));
   if(first.pages<7||first.pages>100||first.mode!==(width>=900?'spread':'single')||first.images!==2||first.chapters!==1||first.overflowX||first.overflowY||!first.player||first.oldScene||first.oldHearing)
    throw Error('Bad book viewport '+JSON.stringify(first));
   // Mobile atlas shows a bounded source-derived map: never giant wrapping
@@ -46,7 +53,16 @@ async function open(path,width,height,label){
   }
   // Page turn must reach the real compiled renderer inside the paper.
   await evalJS("window.dispatchEvent(new CustomEvent('fountain:book:seek',{detail:{mediaId:'book-live-stage'}}))");
+  for(let n=0;n<20;n++){
+    if(await evalJS("document.body.dataset.teatroScene==='ready'"))break;
+    await pause(100);
+  }
   const idleScene=await evalJS("(()=>{const b=document.querySelector('.linotype-stage [data-teatro-scene-play]');const poster=b?.querySelector('img');return {ready:document.body.dataset.teatroScene,playButton:!!b,visible:b?!b.hidden:false,poster:poster?.getAttribute('src'),iframes:document.querySelectorAll('iframe[data-teatro-live-frame]').length}})()");
+  const idleIcon=await evalJS("(()=>{const button=document.querySelector('.linotype-stage [data-teatro-scene-play]'),icon=button?.querySelector('img'),paper=button?.closest('.linotype-sheet');return {iconWidth:icon?.getBoundingClientRect().width,iconHeight:icon?.getBoundingClientRect().height,paperWidth:paper?.getBoundingClientRect().width}})()");
+  if(!idleIcon.iconWidth||idleIcon.iconWidth>42||idleIcon.iconWidth<(height<650?12:18)||
+      idleIcon.iconWidth>idleIcon.paperWidth*.17)
+    throw Error('Play triangle disproportionate to paper '+JSON.stringify(idleIcon));
+  console.log('PASSED R14 BALANCED PLAY',label,JSON.stringify(idleIcon));
   if(idleScene.ready!=='ready'||!idleScene.playButton||!idleScene.visible||
      idleScene.poster!=='/assets/teatro-play.svg'||idleScene.iframes)
       throw Error('R13 idle scene must show a real play triangle '+JSON.stringify(idleScene));
@@ -96,9 +112,14 @@ async function open(path,width,height,label){
   }
   console.log('PASSED EMBED',label,JSON.stringify(scene));
   await evalJS("document.getElementById('book-next').click()");
-  await pause(500);
-  const released=await evalJS("({state:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length})");
-  if(released.state!=='inactive'||released.frames!==0)throw Error('Teatro runtime leaked past page turn '+JSON.stringify(released));
+  let released=null;
+  for(let i=0;i<25;i++){
+    await pause(150);
+    released=await evalJS("({state:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length,motion:document.body.dataset.turnMotion})");
+    if(released?.state==='inactive'&&released.frames===0)break;
+  }
+  if(released?.state!=='inactive'||released.frames!==0)
+    throw Error('Teatro runtime leaked after page-turn completion '+JSON.stringify(released));
   const player=await evalJS("(()=>{const btn=document.getElementById('book-media-settings');btn.click();return {detailOpen:!document.getElementById('book-media-details').hidden,inputs:document.querySelectorAll('[data-book-sound-parameter]').length,bus:!!window.FountainBookMidi2,ear:!!document.getElementById('book-ear-status')}})()");
   if(!player.detailOpen||player.inputs!==4||!player.bus||!player.ear)throw Error('Book media/player not mounted '+JSON.stringify(player));
   await evalJS("document.getElementById('player-wind').value='.25';document.getElementById('player-wind').dispatchEvent(new Event('input',{bubbles:true}))");
@@ -113,8 +134,19 @@ async function open(path,width,height,label){
   await pause(150);
   const after=await evalJS("document.getElementById('book-page-count').textContent");
   if(before===after)throw Error('Page turn did not advance');
+  const positionBefore=await evalJS("({anchor:document.querySelector('.linotype-stage .linotype-sheet')?.dataset.sourceId,page:document.getElementById('book-page-count').textContent})");
   await evalJS("document.getElementById('book-toc-button').click()");
-  if(!await evalJS("document.getElementById('book-contents').open"))throw Error('Contents did not open');
+  await pause(600);
+  const rail=await evalJS("(()=>{const r=document.getElementById('book-contents-rail'),m=document.getElementById('book-pages'),shell=m?.parentElement,b=document.getElementById('book-toc-button'),v=document.getElementById('book-viewport'),h=document.querySelector('.linotype-stage .linotype-sheet');let a=m?.getBoundingClientRect(),c=r?.getBoundingClientRect();return {visible:!r?.hidden,isModal:!!document.querySelector('dialog[open]'),expanded:b?.getAttribute('aria-expanded'),icon:!!b?.querySelector('svg'),text:b?.textContent.trim(),appearance:!!document.getElementById('book-appearance'),fontControls:document.querySelectorAll('#book-font-smaller,#book-font-larger,#book-type-button').length,sideBySide:a&&c?a.right<=c.left+2:false,railWidth:c?.width,readingWidth:a?.width,source:h?.dataset.sourceId,paperWidth:h?.getBoundingClientRect().width,viewportWidth:v?.clientWidth,overflow:document.documentElement.scrollWidth>innerWidth+2,grid:shell?.classList.contains('has-contents')}})()");
+  if(!rail.visible||rail.isModal||rail.expanded!=='true'||!rail.icon||rail.text||rail.appearance||
+     rail.fontControls||!rail.sideBySide||!rail.grid||rail.railWidth<125||rail.readingWidth<110||rail.overflow)
+    throw Error('R14 non-overlay contents rail invalid '+JSON.stringify(rail));
+  console.log('PASSED R14 CONTENTS RAIL',label,JSON.stringify(rail));
+  await evalJS("document.getElementById('book-toc-button').click()");
+  await pause(420);
+  const closed=await evalJS("(()=>{const r=document.getElementById('book-contents-rail');return {hidden:r.hidden,expanded:document.getElementById('book-toc-button').getAttribute('aria-expanded'),flex:document.querySelector('.book-reading-shell').classList.contains('has-contents')}})()");
+  if(!closed.hidden||closed.expanded!=='false'||closed.flex)
+    throw Error('Contents rail did not close '+JSON.stringify(closed));
   if(errors.length)throw Error('JS errors: '+errors.join(';'));
   console.log('PASSED BOOK',label,first.pages+' pages',first.mode,'compact player, MIDI2 ingress, page turn and Contents');
  }finally{ws.close();await fetch(chrome+'/json/close/'+target.id).catch(()=>{})}

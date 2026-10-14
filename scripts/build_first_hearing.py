@@ -113,7 +113,7 @@ def main(fountain,satzfunk,press,stage_source):
               "mobile-page-navigation.css","essays.css"]:
   raw=((press/"runtime"/name) if name in {
         "linotype-engine.js","mobile-page-navigation.js",
-        "mobile-page-navigation.css"} else source_assets/name).read_bytes()
+        "mobile-page-navigation.css","book.js","book.css"} else source_assets/name).read_bytes()
   (output_assets/name).write_bytes(raw)
   runtime.append({"name":name,"sha256":sha(raw)})
  (output_assets/"teatro.css").write_text(

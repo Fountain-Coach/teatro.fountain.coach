@@ -17,11 +17,11 @@
   "runtimeFiles": [
     {
       "name": "book.css",
-      "sha256": "56e6780326e06fe63b48f8bfa2f46076c814bbc25b807d9bcb5237748c319693"
+      "sha256": "2c505d542db02ba8f769361c6e39b02a9177791c8083591bd131ee6cc66ab8b0"
     },
     {
       "name": "book.js",
-      "sha256": "6bedbc449d3dad266c49b30fcc55df06b061e9ee1cf218d10636e223ca5cfa00"
+      "sha256": "931687173607bd04fa2a422047a363d5c973d73a63b2360bb546b5dd7e408e56"
     },
     {
       "name": "book-boot.js",
@@ -48,7 +48,7 @@
       "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
     }
   ],
-  "fountainPressCommit": "1c03e6be84b0855f2f7f7a31b21e0ed7e78103a3",
+  "fountainPressCommit": "4012388e4d64913da75c02103eb46d824fe9fb35",
   "sceneAnchorId": "teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId": "teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement": "inside-authored-prose",

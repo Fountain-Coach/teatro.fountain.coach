@@ -30,8 +30,21 @@ def main():
   assert book.count('data-book-chapter=')==1
   assert book.count('data-book-toc-target=')==2
   assert book.count('src="/assets/edition/')==1
-  assert book.count('aria-current="page"')==1
+  assert book.count('aria-current="page"')==0
+  assert 'class="book-toolbar book-reading-controls"' in book
+  assert 'class="book-pagination book-reading-pagination"' in book
+  assert 'class="book-back"' not in book
+  assert 'class="edition-rail"' not in book
+  assert 'class="book-legal"' not in book
+  assert '<a href="/editions/">' not in book
   assert book.count('id="book-media-toggle"')==1
+  assert book.count('id="book-toc-button"')==1
+  assert 'aria-haspopup="dialog">Contents</button>' not in book
+  assert '<svg viewBox="0 0 24 24"' in book
+  assert 'id="book-type-button"' not in book
+  assert 'id="book-appearance"' not in book
+  assert 'id="book-font-larger"' not in book
+  assert 'id="book-font-smaller"' not in book
   assert book.count('id="book-media-settings"')==1
   assert book.count('id="book-ear-status"')==1
   assert book.count('data-book-sound-parameter=')==4
@@ -44,7 +57,7 @@ def main():
   assert 'href="/assets/linotype/book-player.css"' in book
   assert 'data-edition-id="teatro-first-hearing"' in book
   assert 'id="book-viewport"' in book and 'id="book-page-atlas"' in book
-  assert 'https://fountain.coach/essays/'+SLUG+'/' in book
+  assert 'PUBLISHED SOURCE · FOUNTAIN.COACH / TEATRO' in book
   assert 'id="book-live-stage"' in book
   assert book.count('data-teatro-book-stage')==1
   assert book.count('data-teatro-scene-play')==1
@@ -67,9 +80,9 @@ def main():
 
   assert "frame-src 'self'" in book
   assert 'src="/assets/linotype/teatro-stage-page.js"' in book
-  assert 'data-legal-role="company-status"' in book
+  assert 'data-legal-role="company-status"' not in book
   assert 'https://teatro.fountain.coach/editions/first-hearing/' in book
-  assert book.count('data-estate-id=')==3
+  assert book.count('data-estate-id=')==0
   assert book.count('data-book-chapter="'+SLUG+'"')==1
   assert 'meta name="satzfunk-source-sha256"' in book
   assert manifest["bookHTMLBeforeSatzfunkSHA256"] in book

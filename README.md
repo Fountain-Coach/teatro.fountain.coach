@@ -144,3 +144,23 @@ top-rail media player remains the book-wide Csound/Ear instrument;
 the per-page triangle enters the authored spatial score, not a second
 narration rail. This remains a visual candidate pending actual phone
 Safari writer acceptance; the R12 Csound/MIDI2 gates are independent.
+
+## R14 — Linotype is a book, not a website
+
+The author's iPad portrait screenshot showed a grossly overscaled Play
+image and website-like header/footer navigation. The editor has rejected
+that furniture. The Teatro book now consumes Fountain Press fixed
+typography and adjacent Contents rail `4012388`. No Aa, percentage
+resizing, modal Contents, estate edition links, edition-directory
+header or company/legal footer links. The Play affordance inside the
+authored spatial-score block is scaled as a small book control (roughly
+26–36 CSS px before paper fitting), not as a giant poster.
+
+The visible book furniture is centered: the live book media transport,
+Ear, a contents icon, and previous/progress/next at the bottom.
+Contents opens as a reflowing column next to the live page, never
+covering it; the current source anchor and leaf offset survive.
+The book-end and source provenance furniture are neutral publication
+notes instead of external navigation links. The original 22-paragraph
+essay, score, its provenance SHA and Csound/MIDI2/Ear authorities are
+unchanged. Actual iPad writer acceptance is still required.

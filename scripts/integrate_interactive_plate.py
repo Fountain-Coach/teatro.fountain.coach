@@ -163,6 +163,51 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
       '<body class="book-app" data-edition-id="teatro-first-hearing" '
       'data-edition-running-title="TEATRO · FIRST HEARING" '
       'data-edition-imprint="TEATRO · FOUNTAIN COACH">')
+    # Book-only reading room: remove outward website/chrome navigation
+    # from BOTH furniture edges, leaving the source essay unmodified.
+    document=re.sub(r'<a class="book-back"[^>]*>.*?</a>', '', document, count=1,flags=re.S)
+    document=re.sub(r'<nav class="edition-rail"[^>]*>.*?</nav>', '', document,count=1,flags=re.S)
+    document=re.sub(r'<nav class="book-legal"[^>]*>.*?</nav>', '', document,count=1,flags=re.S)
+    document=document.replace('<header class="book-toolbar">',
+      '<header class="book-toolbar book-reading-controls" aria-label="Reading and listening controls">')
+    document=document.replace('<footer class="book-pagination" aria-label="Book pagination">',
+      '<footer class="book-pagination book-reading-pagination" aria-label="Book pagination">')
+    # The authored essay stays untouched; only publisher-owned metadata
+    # furniture and the publication end-link become neutral book notation.
+    document=re.sub(r'<a (?:[^>]*?)href="https://fountain.coach/essays/teatro-an-unfinished-composition/"(?:[^>]*)>PUBLISHED SOURCE ↗</a>',
+       'PUBLISHED SOURCE · FOUNTAIN.COACH / TEATRO',document,count=1)
+    document=re.sub(r'<a href="/editions/">Teatro editions →</a>',
+       'TEATRO · FIRST HEARING',document,count=1)
+    assert '<nav class="book-legal"' not in document
+    assert '<nav class="edition-rail"' not in document
+    assert '<a class="book-back"' not in document
+    assert 'href="https://fountain.coach/essays/' not in document
+    assert '<a href="/editions/">' not in document
+    document=document.replace('<span>Previous</span></button>',
+                              '</button>')
+    document=document.replace('<span>Next</span><span aria-hidden="true">→</span></button>',
+                              '<span aria-hidden="true">→</span></button>')
+    assert 'class="book-back"' not in document
+    assert 'class="edition-rail"' not in document
+    assert 'class="book-legal"' not in document
+    assert 'class="book-reading-controls"' in document or 'book-reading-controls' in document
+    # Editorial paper typography is fixed at 100%; no font resizing on
+    # any device or separately persisted size state. Theme configuration
+    # is also removed with the obsolete appearance dialog.
+    document=re.sub(r'<button type="button" id="book-type-button"[^>]*>.*?</button>','',document)
+    document=re.sub(r'<dialog id="book-appearance".*?</dialog>\s*','',document,flags=re.S)
+    assert 'id="book-type-button"' not in document
+    assert 'id="book-font-smaller"' not in document
+    assert 'id="book-appearance"' not in document
+    document=document.replace(
+      '<button type="button" id="book-toc-button" aria-label="Open table of contents" aria-haspopup="dialog">Contents</button>',
+      '<button type="button" id="book-toc-button" aria-label="Show contents side rail" '
+      'aria-expanded="false" aria-controls="book-contents-rail">'
+      '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" '
+      'stroke-width="1.55" stroke-linecap="round" aria-hidden="true">'
+      '<path d="M5 5.5h14M5 10.5h14M5 15.5h14M5 20h14"/>'
+      '<path d="M2 5.5h.01M2 10.5h.01M2 15.5h.01"/></svg></button>')
+    assert 'aria-haspopup="dialog">Contents</button>' not in document
     # Reframe R12: unified media affordance, no obsolete hearing rail.
     document=document.replace(
       '<div class="book-tools"><a class="teatro-stage-link" href="/editions/stage/" aria-label="Open the live Teatro stage, where interactive sound can be activated">Stage ↗</a>',
@@ -192,8 +237,10 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
  border:0;background:transparent;width:100%;height:100%;display:grid;place-items:center;
  cursor:pointer;touch-action:manipulation}
 .press-media-stage .teatro-scene-play[hidden]{display:none!important}
-.press-media-stage .teatro-scene-play img{position:static;width:100%;height:100%;
- max-width:100%;max-height:100%;object-fit:contain}
+.press-media-stage .teatro-scene-play img{position:static;
+ width:clamp(26px,calc(var(--sheet-w) * .065),36px)!important;
+ height:clamp(26px,calc(var(--sheet-w) * .065),36px)!important;
+ max-width:none;max-height:none;object-fit:contain}
 .press-media-stage .teatro-scene-play:focus-visible{outline:2px solid var(--book-accent);
  outline-offset:-4px}
 @media print{.press-media-stage .teatro-scene-play{display:grid!important}}
@@ -207,7 +254,7 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
     assert contents.count(needle)==1
     contents=contents.replace(needle,'''document.querySelectorAll('[data-teatro-scene-link]').forEach(link=>link.addEventListener('click',event=>{
  event.preventDefault();
- if(contents.open)contents.close();
+ if(!sideContents.hidden)setContentsOpen(false);
  const index=engine.leaves.findIndex(item=>Boolean(item.el.querySelector('[data-teatro-book-stage]')));
  if(index>=0)turn(index,{animate:true,velocity:.45});
 }));

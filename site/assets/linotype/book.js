@@ -1,4 +1,4 @@
-/* Solstice Essays: paginated Linotype print-proof reading surface.
+/* Solstice First Reading: paginated Linotype print-proof reading surface.
    Normal HTML is the source-of-truth fallback without JS.
 */
 (() => {
@@ -21,11 +21,10 @@ const pageCount=document.getElementById("book-page-count");
 const locationLabel=document.getElementById("book-location");
 const progress=document.getElementById("book-progress-fill");
 const contents=document.getElementById("book-contents");
-const appearance=document.getElementById("book-appearance");
-const radios=[...document.querySelectorAll('input[name="book-theme"]')];
 const anchors=[...source.querySelectorAll("[id^='book-'],[id^='work-']")].filter(n=>n.classList.contains("book-cover")||n.classList.contains("book-preface")||n.classList.contains("book-chapter")||n.classList.contains("book-end"));
-const STORAGE="fountain.essays.linotype.v1."+(document.body.dataset.editionId||"essays");
-let fontSize=100,theme="paper",ready=false;
+const STORAGE="fountain-press."+String(document.body.dataset.editionId||"first-reading")+".linotype.v1";
+const fontSize=100;
+let ready=false;
 let resizeRaf=0;
 let resizeTimer=0;
 let acceptedPlace={anchor:"book-cover",offset:0};
@@ -34,7 +33,7 @@ let dragSession=null;
 let pendingFontReflow=false;
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 function store(){
- try{localStorage.setItem(STORAGE,JSON.stringify({fontSize,theme,anchor:engine.currentChapter(),leaf:engine.current,pageWithin:engine.current-(engine.positions.get(engine.currentChapter())||0),span:engine.pages}))}catch{}
+ try{localStorage.setItem(STORAGE,JSON.stringify({anchor:engine.currentChapter(),leaf:engine.current,pageWithin:engine.current-(engine.positions.get(engine.currentChapter())||0),span:engine.pages}))}catch{}
 }
 function restore(){
  try{return JSON.parse(localStorage.getItem(STORAGE)||"{}")}catch{return {}}
@@ -44,7 +43,7 @@ function titleFor(id){
  if(id==="book-preface")return "The edition";
  if(id==="book-end")return "End of edition";
  const node=document.getElementById(id);
- return node?.querySelector("h2")?.textContent||"Essays";
+ return node?.querySelector("h2")?.textContent||"First Reading";
 }
 function update(){
  const first=engine.current;
@@ -131,7 +130,7 @@ function compose({anchor=null,offset=0}={}){
  const old=engine.currentChapter();
  try{
    body.classList.add("linotype-boot");
-   engine.compose(fontSize/100);
+   engine.compose(1);
    const desired=anchor||old;
    const index=engine.positions.get(desired);
    const target=(index??0)+Math.max(0,offset);
@@ -154,28 +153,73 @@ function compose({anchor=null,offset=0}={}){
    ready=false;
  }
 }
-function open(dialog){
- if(contents.open)contents.close();
- if(appearance.open)appearance.close();
- dialog.showModal();
+// Contents is an adjacent navigation column, never a modal or screen overlay.
+// Create the shared shell once; the existing book-main retains its original
+// physical pagination + phone atlas under the same DOM node.
+const main=document.getElementById("book-pages");
+const tocButton=document.getElementById("book-toc-button");
+const readingShell=document.createElement("div");
+readingShell.className="book-reading-shell";
+main.before(readingShell);
+readingShell.append(main);
+contents.classList.remove("book-dialog","book-contents-dialog");
+contents.classList.add("book-contents-rail");
+contents.setAttribute("role","complementary");
+contents.setAttribute("aria-label","Table of contents");
+contents.removeAttribute("aria-modal");
+const sideContents=document.createElement("aside");
+sideContents.id="book-contents-rail";
+sideContents.className="book-contents-rail";
+sideContents.setAttribute("aria-labelledby","book-contents-title");
+sideContents.hidden=true;
+while(contents.firstChild)sideContents.append(contents.firstChild);
+contents.replaceWith(sideContents);
+readingShell.append(sideContents);
+const appearance=document.getElementById("book-appearance");
+appearance?.remove();
+document.getElementById("book-type-button")?.remove();
+const tocIcon='<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" aria-hidden="true"><path d="M5 5.5h14M5 10.5h14M5 15.5h14M5 20h14"/><path d="M2 5.5h.01M2 10.5h.01M2 15.5h.01"/></svg>';
+tocButton.textContent="";
+tocButton.insertAdjacentHTML("beforeend",tocIcon);
+tocButton.setAttribute("aria-label","Show contents side rail");
+tocButton.removeAttribute("aria-haspopup");
+tocButton.setAttribute("aria-controls","book-contents-rail");
+tocButton.setAttribute("aria-expanded","false");
+function recomposeForRail(){
+ if(!ready)return;
+ const anchor=engine.currentChapter();
+ const offset=engine.current-(engine.positions.get(anchor)||0);
+ requestAnimationFrame(()=>compose({anchor,offset}));
 }
-document.getElementById("book-toc-button")?.addEventListener("click",()=>open(contents));
-document.getElementById("book-type-button")?.addEventListener("click",()=>open(appearance));
-document.querySelectorAll("[data-close-dialog]").forEach(button=>button.addEventListener("click",()=>button.closest("dialog")?.close()));
-for(const dialog of [contents,appearance])dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()});
+function setContentsOpen(open){
+ const next=Boolean(open);
+ if(!next===sideContents.hidden)return;
+ sideContents.hidden=!next;
+ readingShell.classList.toggle("has-contents",next);
+ tocButton.setAttribute("aria-expanded",String(next));
+ tocButton.setAttribute("aria-label",next?"Hide contents side rail":"Show contents side rail");
+ document.body.dataset.contentsRail=next?"open":"closed";
+ recomposeForRail();
+}
+tocButton?.addEventListener("click",()=>setContentsOpen(sideContents.hidden));
+sideContents.querySelectorAll("[data-close-dialog]").forEach(button=>button.addEventListener("click",()=>setContentsOpen(false)));
+document.addEventListener("keydown",event=>{
+ if(event.key==="Escape"&&!sideContents.hidden){
+   event.preventDefault();setContentsOpen(false);tocButton.focus();
+ }
+});
 document.querySelectorAll("[data-book-toc-target]").forEach(link=>link.addEventListener("click",event=>{
  const target=link.dataset.bookTocTarget;
  const id=target==="cover"?"book-cover":target==="preface"?"book-preface":target==="vergil"?"book-vergil":"work-"+target;
  if(!ready||!engine.positions.has(id))return;
  event.preventDefault();
- contents.close();
  history.replaceState(null,"","#"+id);
  seek(id);
  viewport.focus({preventScroll:true});
 }));
 document.querySelectorAll('[data-teatro-scene-link]').forEach(link=>link.addEventListener('click',event=>{
  event.preventDefault();
- if(contents.open)contents.close();
+ if(!sideContents.hidden)setContentsOpen(false);
  const index=engine.leaves.findIndex(item=>Boolean(item.el.querySelector('[data-teatro-book-stage]')));
  if(index>=0)turn(index,{animate:true,velocity:.45});
 }));
@@ -192,7 +236,7 @@ window.addEventListener('fountain:book:seek',event=>{
 previous?.addEventListener("click",()=>turn(engine.prev(),{animate:true,velocity:.55}));
 next?.addEventListener("click",()=>turn(engine.next(),{animate:true,velocity:.55}));
 document.addEventListener("keydown",event=>{
- if(!ready||contents.open||appearance.open||event.altKey||event.metaKey||event.ctrlKey)return;
+ if(!ready||event.altKey||event.metaKey||event.ctrlKey)return;
  if(["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName)||
     document.activeElement?.closest("#book-page-atlas"))return;
  if(["ArrowRight","PageDown"," "].includes(event.key)){event.preventDefault();turn(engine.next(),{animate:true,velocity:.7});}
@@ -377,7 +421,7 @@ function acceptDrag(session,velocity){
 }
 let gesture=null;
 viewport.addEventListener("touchstart",event=>{
- if(!ready||contents.open||appearance.open)return;
+ if(!ready)return;
  if(event.touches.length!==1){
    gesture=null;
    cancelDrag({animateBack:true});
@@ -469,20 +513,6 @@ viewport.addEventListener("touchend",event=>{
 // scroll with no drag overlay. Flush only after the gesture callback returns.
 viewport.addEventListener("touchend",()=>queueMicrotask(processFontReflow),{passive:true});
 viewport.addEventListener("touchcancel",()=>queueMicrotask(processFontReflow),{passive:true});
-function setFont(n){
- const nextSize=clamp(n,85,145);
- if(nextSize===fontSize)return;
- const anchor=engine.currentChapter();
- const offset=engine.current-(engine.positions.get(anchor)||0);
- fontSize=nextSize;
- document.getElementById("book-font-value").value=fontSize+"%";
- compose({anchor,offset});
-}
-document.getElementById("book-font-smaller")?.addEventListener("click",()=>setFont(fontSize-10));
-document.getElementById("book-font-larger")?.addEventListener("click",()=>setFont(fontSize+10));
-for(const input of radios)input.addEventListener("change",()=>{
- if(input.checked){theme=input.value;body.dataset.bookTheme=theme;store();}
-});
 window.addEventListener("resize",()=>{
  // The viewport dimensions and the orientation media queries must agree before
  // remeasuring paper. A delayed stable check also recovers a transient fallback.
@@ -512,11 +542,7 @@ window.addEventListener("hashchange",()=>{
  if(ready&&engine.positions.has(id))seek(id);
 });
 const prefs=restore();
-fontSize=clamp(Number(prefs.fontSize)||100,85,145);
-theme=prefs.theme==="night"?"night":"paper";
-body.dataset.bookTheme=theme;
-radios.find(r=>r.value===theme).checked=true;
-document.getElementById("book-font-value").value=fontSize+"%";
+body.dataset.bookTheme="paper";
 const hash=decodeURIComponent(location.hash.slice(1));
 const requested=hash&&document.getElementById(hash)?hash:prefs.anchor||"book-cover";
 // The first visible leaf must already have its final font, image and viewport

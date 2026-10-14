@@ -632,3 +632,74 @@ html.book-hydrating body.book-app::after {
   html.book-hydrating body.book-app .book-pagination {visibility:visible}
   html.book-hydrating body.book-app::after {display:none}
 }
+
+
+/* Fountain Press: no invented illustration required for technical chapters. */
+.linotype-opener .book-chapter-heading{display:block;min-width:0;max-width:100%;text-wrap:balance;}
+.linotype-opener:not(:has(.linotype-image-frame)) .book-chapter-heading{
+  padding-top:clamp(24px,6vh,62px);
+}
+.book-prose .press-subhead{font-weight:600;font-family:"Iowan Old Style",Palatino,Georgia,serif;
+  font-size:1.11em;line-height:1.45;letter-spacing:-.015em;margin:1.1em 0 .55em;}
+.book-prose .press-list-item{padding-left:1em;position:relative}
+.book-prose .press-list-item::before{content:"—";position:absolute;left:0;color:var(--book-muted)}
+
+/* Typography-first technical chapter: real prose starts on the opener. */
+.linotype-opener:not(:has(.linotype-image-frame)) .linotype-area{display:block}
+.linotype-opener:not(:has(.linotype-image-frame)) .book-chapter-heading{margin:0 0 1.5em;padding:0}
+.linotype-opener:not(:has(.linotype-image-frame)) .linotype-area>p{font:inherit;line-height:1.55;margin:0 0 .95em}
+
+/* R14: stable author-set page typography and true adjacent contents. */
+#book-type-button,.book-type-row,.book-adjust,.book-appearance-dialog{display:none!important}
+.book-reading-shell{display:grid;grid-template-columns:minmax(0,1fr);width:100%;min-width:0;
+  align-items:stretch;background:var(--book-outer)}
+.book-reading-shell.has-contents{grid-template-columns:minmax(0,1fr) clamp(230px,25vw,330px)}
+.book-reading-shell .book-main{min-width:0;width:100%;margin:0}
+.book-contents-rail{min-width:0;min-height:0;padding:20px 18px;background:var(--book-paper);
+  border-left:1px solid var(--book-rule);overflow:auto;overscroll-behavior:contain}
+.book-contents-rail[hidden]{display:none!important}
+.book-contents-rail .book-dialog-head{align-items:center;gap:10px}
+.book-contents-rail .book-dialog-head h2{font-size:clamp(20px,2.3vw,28px)}
+.book-contents-rail .book-dialog-head button{width:36px;height:36px;display:grid;place-items:center;cursor:pointer}
+.book-contents-rail nav{display:block;max-height:none;overflow:visible;margin-top:16px}
+.book-contents-rail .book-toc-list a{grid-template-columns:2rem minmax(0,1fr);gap:.4rem;
+  padding:.85rem .1rem}
+.book-contents-rail .book-toc-list .toc-voice{display:none}
+.book-contents-rail .toc-title{font-size:.96rem;line-height:1.28;overflow-wrap:break-word}
+#book-toc-button{display:grid;place-items:center;width:38px;height:38px;padding:7px;
+  border-radius:3px;color:var(--book-ink)}
+#book-toc-button[aria-expanded="true"]{background:var(--book-outer);border-color:var(--book-rule)}
+@media(max-width:650px){
+  .book-reading-shell.has-contents{grid-template-columns:minmax(0,1fr) clamp(134px,36vw,225px)}
+  .book-contents-rail{padding:11px 9px}
+  .book-contents-rail .book-dialog-head h2{font-size:18px}
+  .book-contents-rail .book-dialog-head small{font-size:8px}
+  .book-contents-rail .book-toc-list a{grid-template-columns:1.2rem minmax(0,1fr);gap:4px}
+  .book-contents-rail .toc-number{font-size:9px}
+  .book-contents-rail .toc-title{font-size:13px}
+}
+@media print{.book-contents-rail,#book-toc-button{display:none!important}
+ .book-reading-shell{display:block}}
+
+
+/* R14: book furniture, not a website. No external directory/navigation
+   chrome in the reading room; controls form a balanced central instrument. */
+.book-toolbar.book-reading-controls{display:flex;align-items:center;justify-content:center;
+  min-height:57px;gap:0;padding:7px max(12px,env(safe-area-inset-left))
+  7px max(12px,env(safe-area-inset-right))}
+.book-reading-controls .book-tools{display:flex;align-items:center;justify-content:center;
+  gap:14px;flex:none}
+.book-reading-controls #book-toc-button{margin:0}
+.book-pagination.book-reading-pagination{display:flex;justify-content:center;align-items:center;
+  gap:clamp(10px,3vw,36px);min-height:60px;padding:8px max(10px,env(safe-area-inset-left))
+  8px max(10px,env(safe-area-inset-right))}
+.book-reading-pagination .book-progress{width:clamp(110px,27vw,275px);flex:0 1 auto}
+.book-reading-pagination #book-prev,.book-reading-pagination #book-next{
+  min-width:36px;min-height:38px;padding:4px 7px;display:grid;place-items:center;
+  justify-self:auto;font-size:1.2rem}
+@media(max-width:600px){
+ .book-toolbar.book-reading-controls{min-height:48px;padding:5px 9px}
+ .book-reading-controls .book-tools{gap:9px}
+ .book-pagination.book-reading-pagination{gap:10px;min-height:52px}
+ .book-reading-pagination .book-progress{width:clamp(105px,40vw,225px)}
+}

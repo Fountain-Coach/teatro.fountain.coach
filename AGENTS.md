@@ -136,3 +136,14 @@ button and keyboard/touch action, never a random reminiscence photo or
 a static cube illustration. Entering media mounts the canonical stage;
 exiting the page releases it and returns to the Play state. Mobile UX
 requires portrait and landscape browser proof and writer visual review.
+
+## R14 — no website chrome within the Linotype book
+
+Treat the book as an independent reading room. Do not restore:
+external estate/edition links in the header, company/legal links in the
+bottom pagination, Aa font resizing, modal Contents or oversized Play
+posters. Controls are center-aligned and the paper dominates.
+Contents is a **side rail in the layout grid**, never an overlay.
+Only publisher-owned furniture changes; the essay's original
+paragraphs and original Teatro score remain untouched. Preserve
+Csound, Ear, MIDI2 event mappings and resource lifetime.
