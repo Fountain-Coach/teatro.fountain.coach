@@ -193,7 +193,7 @@ No new narration, physical MIDI2 port or publishing authority is implied.
 WLAN Web Audio preview and the actual Csound AudioWorklet have different
 RMS magnitude ranges. Ear's small 0.84–1.22 proportional logo-scale
 maps source-declared RMS against bounded per-source ceilings
-(0.30 Web Audio preview, 0.025 Csound), then takes a square root. This
+(0.60 Web Audio preview, 0.025 Csound), then takes a square root. This
 preserves actual signal dynamics in both modes without falsely showing
 the preview at maximum volume all the time. The same normalized,
 bounded level is emitted on the local MIDI2 UMP Ear channel, and its

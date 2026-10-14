@@ -62,7 +62,7 @@ function observe(level,source){
  // RMS ranges differ greatly between the genuine Csound worklet and the
  // HTTP-only Web Audio preview. Calibrate each known source instead of
  // saturating every preview sample at 100 percent.
- const ceiling=source==='teatro-web-audio-preview'?0.30:0.025;
+ const ceiling=source==='teatro-web-audio-preview'?0.60:0.025;
  const value=bound(raw/ceiling);
  const witnessed=raw>0.0001;
  // Bounded 0.84–1.22; the square root makes quiet Csound audible visually

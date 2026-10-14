@@ -48,7 +48,7 @@
       "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
     }
   ],
-  "fountainPressCommit": "dd72832eb8b03f87f4be661d733168eb0e9fbb58",
+  "fountainPressCommit": "45e28c7f2d235147aa1c21623083e6e89b3bee2a",
   "sceneAnchorId": "teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId": "teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement": "inside-authored-prose",
