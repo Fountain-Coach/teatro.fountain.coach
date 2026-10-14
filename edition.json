@@ -5,10 +5,13 @@
   "publicationRoot": "site/",
   "repository": "Fountain-Coach/teatro.fountain.coach",
   "capturedAt": "2026-10-14T10:28:47Z",
-  "publicationState": "verified-live-publication-baseline",
+  "publicationState": "source-candidate-three-front-navigation-not-publicly-deployed",
   "fileCount": 27,
   "indexPages": 1,
-  "sourceSha256Inventory": "2259138028d6aecfaff516e1431f05833573137656ffe85bdd6979cd9cf8dbf0",
+  "sourceSha256Inventory": "ae9421ca48b062f66f81bcff1b90d4c99c30dea0ecef44007c972e176d2e72bf",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
-  "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback"
+  "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
+  "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
+  "baselineTag": "baseline-captured-20261014",
+  "editorialIntent": "Exactly three editorial front links: Fountain Coach, First Reading at its existing working public URL, Teatro. Technical and legal references remain under supporting/navigation/footer roles."
 }
