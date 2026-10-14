@@ -146,3 +146,14 @@ def main():
  assert len(files)==obj["fileCount"]
  print("TEATRO_EDITION_ACCEPTED",len(files),"source files, book first, stage secondary")
 if __name__=="__main__":main()
+
+## R16 — Ear nested under Csound controls
+
+Do not restore a separate top-row Ear icon or meter. Keep Play/Pause
+and disclosure top-left; the measured output now colors the Play
+circle subtly. Ear's real logo belongs inside the progressive
+parameter panel, replacing only its redundant word label while
+preserving explicit accessible measured-state text. The halo is
+driven by source-calibrated Ear RMS and resets on Stop. Honor reduced
+motion, keep the original stage and MIDI2 event sources unchanged,
+and verify all five responsive layouts plus actual Csound/Ear.

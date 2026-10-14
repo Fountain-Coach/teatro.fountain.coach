@@ -201,3 +201,30 @@ witnessed/silent state agrees with the genuine measured RMS threshold.
 The canonical unmodified Csound/Teatro stage is retained. The book
 fallback viewport is allowed to complete its async initialization
 before release acceptance is measured; no mock visual is substituted.
+
+## R16 — measured Play ring and Ear inside parameter disclosure
+
+The author's iPad screenshot showed an extra Ear glyph in the top
+toolbar and the word “Ear” repeated inside the large disclosure.
+The author requests a quieter, more coherent instrument:
+
+- Top-left retains only Play/Pause and the small parameter disclosure;
+  top-right Contents continues to open the adjacent rail.
+- The Play/Pause **circle** gains a modest measured output-driven
+  color fill/ring. The source's existing normalized, witnessed RMS
+  controls the bounded color and halo variables. No fake meter or
+  ungoverned decorative timer is involved.
+- The Ear SVG moves **inside** the parameter disclosure, in the
+  measured-listening status line, replacing the spelled-out “Ear”.
+  The live text is “idle”, “listening” or “signal witnessed · RMS …”,
+  so the symbol supplies the visual identity while the status remains
+  intelligible and accessible.
+- Stop resets the Play circle and leaves the Ear signal mark idle.
+  Reduced-motion preferences disable the easing transition.
+- The original page-score Play, same shared instrument,
+  Csound/Ear worklet and MIDI2 UMP observations remain unchanged.
+
+The regression confirms the actual Play circle computed color
+changes in response to audio (not merely a CSS variable changing),
+reduced-motion computes to `0s`, Ear has no top-toolbar instance,
+and the full R12–R15 source and browser tests still pass.

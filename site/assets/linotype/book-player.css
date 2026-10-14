@@ -2,19 +2,28 @@
 .book-media-control{display:flex;align-items:center;gap:5px;position:relative;min-width:0}
 .book-media-control button{min-width:34px;min-height:34px;padding:5px!important;cursor:pointer;color:var(--book-ink);border:0!important;background:none}
 .book-media-control button[aria-pressed="true"]{color:var(--book-accent)}
-.book-media-control #book-media-toggle{border:1px solid var(--book-rule)!important;border-radius:50%;width:36px;height:36px;display:grid;place-items:center}
-/* Ear is the measured output logo, not simulated volume bars. Its
-   bounded scale is set by live RMS samples, never by a decorative timer. */
-.book-media-control .book-ear-icon{display:grid;place-items:center;flex:0 0 23px;
-  height:31px;width:23px;overflow:visible;color:var(--book-muted);opacity:.68;
-  transform:scale(var(--ear-scale,.86));transform-origin:50% 50%;
-  transition:transform 115ms ease-out,opacity 115ms ease-out,color 115ms ease-out;
-  pointer-events:none}
-.book-media-control .book-ear-icon svg{width:23px;height:23px;display:block;overflow:visible}
-.book-media-control[data-ear="witnessed"] .book-ear-icon{color:var(--book-ink);opacity:1}
-.book-media-control[data-ear="idle"] .book-ear-icon{transform:scale(.84);opacity:.48}
+.book-media-control #book-media-toggle{
+ border:1px solid color-mix(in srgb,var(--book-ink) calc(14% + var(--play-fill,0%)),var(--book-rule))!important;
+ border-radius:50%;width:36px;height:36px;display:grid;place-items:center;
+ background:color-mix(in srgb,var(--book-accent) var(--play-fill,0%),var(--book-paper));
+ box-shadow:0 0 0 var(--play-halo,0px)
+   color-mix(in srgb,var(--book-accent) var(--play-halo-tint,0%),transparent);
+ transition:background-color 180ms ease-out,border-color 180ms ease-out,
+  box-shadow 180ms ease-out;
+}
+/* Ear is an instrument observation in the progressive parameter
+   panel, not a third global transport button. */
+.book-media-control .book-ear-status{display:flex;align-items:center;gap:8px;
+ min-height:28px}
+.book-media-control .book-ear-icon{display:grid;place-items:center;flex:0 0 21px;
+ height:22px;width:21px;color:var(--book-ink)}
+.book-media-control .book-ear-icon svg{display:block;width:21px;height:21px}
+.book-media-control .book-ear-status #book-ear-reading{font:inherit;
+ color:var(--book-muted);font-variant-numeric:tabular-nums}
+.book-media-control[data-ear="idle"] .book-ear-icon{opacity:.45}
+.book-media-control[data-ear="witnessed"] .book-ear-icon{opacity:1}
 @media(prefers-reduced-motion:reduce){
-  .book-media-control .book-ear-icon{transition:none}
+ .book-media-control #book-media-toggle{transition:none}
 }
 .book-media-control #book-media-details[hidden]{display:none!important}
 .book-media-control #book-media-details{position:absolute;left:0;right:auto;top:calc(100% + 12px);width:min(318px,calc(100vw - 24px));max-height:min(65svh,500px);overflow:auto;background:var(--book-paper);border:1px solid var(--book-rule);box-shadow:0 9px 18px #16120c24;z-index:20;padding:15px 17px;font-family:system-ui,sans-serif}

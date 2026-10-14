@@ -39,6 +39,11 @@ def main():
   assert '<a href="/editions/">' not in book
   assert book.count('id="book-media-toggle"')==1
   assert book.count('class="book-ear-icon"')==1
+  assert 'id="book-ear-reading"' in book
+  assert 'class="book-player-status book-ear-status" id="book-ear-status"' in book
+  assert book.index('id="book-media-details"') < book.index('class="book-ear-icon"')
+  assert book.count('id="book-ear-status"')==1
+  assert '<p class="book-player-status" id="book-ear-status">Ear · idle</p>' not in book
   assert 'class="book-ear-meter"' not in book
   assert book.index('id="book-media-toggle"')<book.index('id="book-media-settings"')<book.index('class="book-ear-icon"')
   assert book.count('id="book-toc-button"')==1

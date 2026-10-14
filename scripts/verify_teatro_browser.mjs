@@ -41,12 +41,12 @@ async function open(path,width,height,label){
   if(state!=='true')throw Error('Linotype not ready '+state+': '+await evalJS("document.body?.dataset.bookError||''")+': '+errors.join(';'));
   const shot="(() => {const sheet=document.querySelector('.linotype-stage .linotype-sheet')?.getBoundingClientRect();return {pages:Number(document.body.dataset.bookPageCount),mode:document.body.dataset.bookMode,folio:document.getElementById('book-page-count').textContent,images:document.querySelectorAll('#book-flow img').length,chapters:document.querySelectorAll('[data-book-chapter]').length,overflowX:document.documentElement.scrollWidth>innerWidth+1,overflowY:document.documentElement.scrollHeight>innerHeight+1,sheet:sheet?.toJSON(),player:!!document.getElementById('book-media-toggle'),oldScene:!!document.querySelector('.teatro-stage-link'),oldHearing:!!document.getElementById('satzfunk-hearing-rail')}})()";
   const first=await evalJS(shot);
-  const bookFurniture=await evalJS("(()=>{const header=document.querySelector('.book-toolbar'),footer=document.querySelector('.book-pagination'),tools=document.querySelector('.book-tools'),player=document.querySelector('#book-media-toggle'),scene=document.querySelector('#book-flow [data-teatro-scene-play] img');const h=header?.getBoundingClientRect(),t=tools?.getBoundingClientRect(),f=footer?.getBoundingClientRect();return {header:header?.classList.contains('book-reading-controls'),footer:footer?.classList.contains('book-reading-pagination'),externalHeaderLinks:header?.querySelectorAll('a').length,externalFooterLinks:footer?.querySelectorAll('a').length,websiteLabels:!!document.querySelector('.book-back,.edition-rail,.book-legal'),appearance:!!document.querySelector('#book-type-button,#book-appearance,#book-font-value'),playerLeft:player&&h?player.getBoundingClientRect().left-h.left:999,tocRight:header.querySelector('#book-toc-button')&&h?h.right-header.querySelector('#book-toc-button').getBoundingClientRect().right:999,discloseBeside:!!header.querySelector('#book-media-settings'),earLogo:!!header.querySelector('.book-ear-icon svg'),oldBars:!!header.querySelector('.book-ear-meter'),pagination:!!footer.querySelector('#book-prev,#book-next,#book-page-count'),stageIconSrc:scene?.getAttribute('src'),stageIconCss:scene?getComputedStyle(scene).width:null}})()");
+  const bookFurniture=await evalJS("(()=>{const header=document.querySelector('.book-toolbar'),footer=document.querySelector('.book-pagination'),tools=document.querySelector('.book-tools'),player=document.querySelector('#book-media-toggle'),scene=document.querySelector('#book-flow [data-teatro-scene-play] img');const h=header?.getBoundingClientRect(),t=tools?.getBoundingClientRect(),f=footer?.getBoundingClientRect();return {header:header?.classList.contains('book-reading-controls'),footer:footer?.classList.contains('book-reading-pagination'),externalHeaderLinks:header?.querySelectorAll('a').length,externalFooterLinks:footer?.querySelectorAll('a').length,websiteLabels:!!document.querySelector('.book-back,.edition-rail,.book-legal'),appearance:!!document.querySelector('#book-type-button,#book-appearance,#book-font-value'),playerLeft:player&&h?player.getBoundingClientRect().left-h.left:999,tocRight:header.querySelector('#book-toc-button')&&h?h.right-header.querySelector('#book-toc-button').getBoundingClientRect().right:999,discloseBeside:!!header.querySelector('#book-media-settings'),topEar:!!header.querySelector('#book-media-control > .book-ear-icon'),panelEar:!!document.querySelector('#book-media-details #book-ear-status .book-ear-icon svg'),oldBars:!!header.querySelector('.book-ear-meter'),pagination:!!footer.querySelector('#book-prev,#book-next,#book-page-count'),stageIconSrc:scene?.getAttribute('src'),stageIconCss:scene?getComputedStyle(scene).width:null}})()");
   if(!bookFurniture.header||!bookFurniture.footer||bookFurniture.externalHeaderLinks||
      bookFurniture.externalFooterLinks||bookFurniture.websiteLabels||bookFurniture.appearance||
      bookFurniture.playerLeft<0||bookFurniture.playerLeft>55||
      bookFurniture.tocRight<0||bookFurniture.tocRight>55||
-     !bookFurniture.discloseBeside||!bookFurniture.earLogo||bookFurniture.oldBars||
+     !bookFurniture.discloseBeside||bookFurniture.topEar||!bookFurniture.panelEar||bookFurniture.oldBars||
      !bookFurniture.pagination||
      bookFurniture.stageIconSrc!=='/assets/teatro-play.svg')
      throw Error('R14 book-only centered navigation invalid '+JSON.stringify(bookFurniture));
@@ -79,18 +79,30 @@ async function open(path,width,height,label){
   if(idleScene.ready!=='ready'||!idleScene.playButton||!idleScene.visible||
      idleScene.poster!=='/assets/teatro-play.svg'||idleScene.iframes)
       throw Error('R13 idle scene must show a real play triangle '+JSON.stringify(idleScene));
+  const idlePlayColor=await evalJS("getComputedStyle(document.getElementById('book-media-toggle')).backgroundColor");
   // The page's Play is a real audio request, not a silent stage-entry.
   await userClick('.linotype-stage [data-teatro-scene-play]');
   let audible=null;
   for(let n=0;n<55;n++){
     await pause(120);
-    audible=await evalJS("(()=>{const c=document.getElementById('book-media-control'),i=c.querySelector('.book-ear-icon');return {mode:c.dataset.player,ear:c.dataset.ear,rms:Number(c.dataset.earRms||0),scale:parseFloat(i?.style.getPropertyValue('--ear-scale'))||0,aria:i?.getAttribute('aria-label'),pressed:document.getElementById('book-media-toggle')?.getAttribute('aria-pressed')}})()");
+    audible=await evalJS("(()=>{const c=document.getElementById('book-media-control'),b=document.getElementById('book-media-toggle'),i=c.querySelector('#book-ear-status .book-ear-icon');return {mode:c.dataset.player,ear:c.dataset.ear,rms:Number(c.dataset.earRms||0),level:Number(c.dataset.playerLevel||0),halo:parseFloat(b.style.getPropertyValue('--play-halo'))||0,fill:parseFloat(b.style.getPropertyValue('--play-fill'))||0,aria:i?.getAttribute('aria-label'),pressed:b.getAttribute('aria-pressed')}})()");
     if(['preview','csound'].includes(audible?.mode)&&audible?.ear==='witnessed')break;
   }
   if(!['preview','csound'].includes(audible?.mode)||audible.ear!=='witnessed'||
-      audible.rms<=0.0001||audible.scale<=.84||audible.scale>=1.221||
+      audible.rms<=0.0001||audible.level<=0||audible.level>=1||
+      audible.halo<=0||audible.halo>3||audible.fill<=0||audible.fill>13||
       audible.pressed!=='true')
     throw Error('R15 page Play did not start measured sound/Ear '+JSON.stringify(audible));
+  await pause(250);
+  const colorAfterSound=await evalJS("getComputedStyle(document.getElementById('book-media-toggle')).backgroundColor");
+  if(!idlePlayColor||!colorAfterSound||idlePlayColor===colorAfterSound)
+    throw Error('R16 Play ring color did not respond to measured RMS '+JSON.stringify({idlePlayColor,colorAfterSound}));
+  await cmd('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  const reducedMotion=await evalJS("getComputedStyle(document.getElementById('book-media-toggle')).transitionDuration");
+  await cmd('Emulation.setEmulatedMedia',{features:[]});
+  if(!reducedMotion.split(',').every(part=>Number.parseFloat(part)===0))
+    throw Error('R16 reduced-motion preference was not honored '+reducedMotion);
+  console.log('PASSED R16 PLAY COLOR AND REDUCED MOTION',label,JSON.stringify({idlePlayColor,colorAfterSound,reducedMotion}));
   console.log('PASSED R15 PAGE TO AUDIO',label,JSON.stringify(audible));
   let interactiveState='inactive';
   for(let n=0;n<40;n++){
@@ -149,10 +161,10 @@ async function open(path,width,height,label){
   let stopped=null;
   for(let n=0;n<35;n++){
    await pause(100);
-   stopped=await evalJS("(()=>{const c=document.getElementById('book-media-control');return {mode:c.dataset.player,scene:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length,iconScale:document.querySelector('.book-ear-icon')?.style.getPropertyValue('--ear-scale'),pagePlay:!!document.querySelector('.linotype-stage [data-teatro-scene-play]:not([hidden])')}})()");
+   stopped=await evalJS("(()=>{const c=document.getElementById('book-media-control');return {mode:c.dataset.player,scene:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length,level:c.dataset.playerLevel,fill:document.getElementById('book-media-toggle').style.getPropertyValue('--play-fill'),halo:document.getElementById('book-media-toggle').style.getPropertyValue('--play-halo'),pagePlay:!!document.querySelector('.linotype-stage [data-teatro-scene-play]:not([hidden])')}})()");
    if(stopped?.mode==='stopped'&&stopped?.frames===0&&stopped.pagePlay)break;
   }
-  if(stopped?.mode!=='stopped'||stopped.frames!==0||!stopped.pagePlay||stopped.iconScale!=='.84')
+  if(stopped?.mode!=='stopped'||stopped.frames!==0||!stopped.pagePlay||stopped.level!=='0'||stopped.fill!=='0%'||stopped.halo!=='0px')
    throw Error('R15 top Pause did not stop audio and release stage '+JSON.stringify(stopped));
   // Vice versa: starting at the header while on the scene leaf mounts the
   // same real puppet and the same actual Ear-analyzed sound.
@@ -180,6 +192,10 @@ async function open(path,width,height,label){
   if(!['csound','preview'].includes(ongoing))throw Error('Book transport stopped on a page turn');
   await userClick('#book-media-toggle');
   await pause(160);
+  const earPanel=await evalJS("(()=>{const r=document.getElementById('book-ear-status'),i=r?.querySelector('.book-ear-icon svg'),t=document.getElementById('book-ear-reading');return {icon:!!i,inside:!!i?.closest('#book-media-details'),reading:t?.textContent,top:!!document.querySelector('#book-media-control > .book-ear-icon')}})()");
+  if(!earPanel.icon||!earPanel.inside||earPanel.top||!earPanel.reading)
+    throw Error('R16 Ear must live inside parameters '+JSON.stringify(earPanel));
+  console.log('PASSED R16 EAR IN PANEL',label,JSON.stringify(earPanel));
   const player=await evalJS("(()=>{const btn=document.getElementById('book-media-settings');btn.click();return {detailOpen:!document.getElementById('book-media-details').hidden,inputs:document.querySelectorAll('[data-book-sound-parameter]').length,bus:!!window.FountainBookMidi2,ear:!!document.getElementById('book-ear-status')}})()");
   if(!player.detailOpen||player.inputs!==4||!player.bus||!player.ear)throw Error('Book media/player not mounted '+JSON.stringify(player));
   await evalJS("document.getElementById('player-wind').value='.25';document.getElementById('player-wind').dispatchEvent(new Event('input',{bubbles:true}))");

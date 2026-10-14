@@ -7,8 +7,8 @@ const toggle=document.getElementById('book-media-toggle');
 const disclose=document.getElementById('book-media-settings');
 const details=document.getElementById('book-media-details');
 const message=document.getElementById('book-media-status');
-const earText=document.getElementById('book-ear-status');
-const earIcon=document.querySelector('.book-ear-icon');
+const earText=document.getElementById('book-ear-reading');
+const earIcon=document.querySelector('#book-media-details .book-ear-icon');
 const sourceText=document.getElementById('book-audio-source');
 const midiText=document.getElementById('book-midi-debug');
 const sourceDigest=document.querySelector('meta[name="satzfunk-source-sha256"]')?.content;
@@ -20,6 +20,13 @@ const names={wind:'wind_mix',turbulence:'turbulence_mix',head:'head_mix',voice:'
 let mode='stopped',audio=null,csound=null,raf=0,lastEar=0,lastMotion=0;
 const bound=v=>Math.max(0,Math.min(1,Number(v)||0));
 const report=text=>{message.textContent=text};
+function resetTransportVisual(){
+ control.dataset.playerLevel='0';
+ toggle.style.setProperty('--play-fill','0%');
+ toggle.style.setProperty('--play-halo','0px');
+ toggle.style.setProperty('--play-halo-tint','0%');
+ earIcon?.style.setProperty('--ear-scale','.84');
+}
 const changeMode=next=>{
  mode=next; control.dataset.player=next; toggle.setAttribute('aria-pressed',String(next!=='stopped'));
  toggle.textContent=next==='stopped'?'▶':'Ⅱ';
@@ -61,7 +68,12 @@ function observe(level,source){
  // Bounded 0.84–1.22; the square root makes quiet Csound audible visually
  // without flattening the louder preview into a permanent maximum.
  const intensity=Math.sqrt(value);
- earIcon?.style.setProperty('--ear-scale',(0.84+intensity*.38).toFixed(3));
+ // Animate the transport circle itself, using the exact level witnessed
+ // by Ear. This never implies audio if there is no measured output.
+ control.dataset.playerLevel=intensity.toFixed(3);
+ toggle.style.setProperty('--play-fill',Math.round(intensity*13)+'%');
+ toggle.style.setProperty('--play-halo',(intensity*3).toFixed(2)+'px');
+ toggle.style.setProperty('--play-halo-tint',Math.round(intensity*17)+'%');
  earIcon?.setAttribute('aria-label',witnessed?
    'Ear: measured audio output, intensity '+Math.round(intensity*100)+' percent':
    'Ear: listening, no measured output');
@@ -70,7 +82,7 @@ function observe(level,source){
  control.dataset.earSource=source;
  if(witnessed&&source==='teatro-csound-ear-worklet')
   control.dataset.earWorkletWitnesses=String(1+Number(control.dataset.earWorkletWitnesses||0));
- earText.textContent=witnessed?('Ear · signal witnessed · RMS '+raw.toFixed(4)):'Ear · listening';
+ earText.textContent=witnessed?('signal witnessed · RMS '+raw.toFixed(4)):'listening';
  const now=performance.now();
  if(now-lastEar>180){
   lastEar=now;
@@ -158,12 +170,12 @@ async function play(){
   }
   watchEar();
   bus.publish(bus.controllers.transport,1,'book:player');
- }catch(e){changeMode('stopped');report('Audio unavailable: '+e.message)}
+ }catch(e){changeMode('stopped');resetTransportVisual();report('Audio unavailable: '+e.message)}
  finally{toggle.disabled=false}
 }
 async function stop(){
  changeMode('stopped');cancelAnimationFrame(raf);control.dataset.ear='idle';
- earIcon?.style.setProperty('--ear-scale','.84');
+ resetTransportVisual();
  earIcon?.setAttribute('aria-label','Ear idle — no audio output');
  bus.publish(bus.controllers.transport,0,'book:player');
  if(csound){const host=csound;csound=null;await host.stop().catch(e=>report(e.message))}
@@ -171,7 +183,7 @@ async function stop(){
   const instance=audio;audio=null;instance.noise.stop();instance.osc.stop();
   await instance.context.close().catch(()=>{});
  }
- report('Ready to listen');earText.textContent='Ear · idle';
+ report('Ready to listen');earText.textContent='idle';
 }
 // Page score and global transport address precisely the same instrument.
 window.addEventListener('fountain:book:play-request',event=>{
