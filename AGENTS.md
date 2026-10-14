@@ -196,3 +196,12 @@ reachable today; other labels say WLAN PROOF. No WebGL Stage or
 governance domain as fictitious book. Git stores canonical URLs;
 disposable Estate staging maps trusted book links to ports 8180/8181.
 Preserve the author's accepted v16 direct book URL and runtime.
+
+## R19 — bookshelf equals thumbnail table
+
+The author rejected repeated links/text under each book. Preserve
+a grid of cover thumbnails only: one cover == one link to its exact
+reader. No labels beneath, status chips, source hashes, secondary
+links, card presentation or tilted miniature. Distinguish the two
+Teatro editions *within* their actual covers and accessible identity.
+The six source owners and the accepted v16 reader remain intact.

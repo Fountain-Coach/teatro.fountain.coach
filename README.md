@@ -326,3 +326,17 @@ paths on iPad. Teatro First Hearing remains at its internal direct
 route; its accepted v16 reader and original scene are untouched.
 The external HTTPS essay/Teatro reader URLs were checked and are
 currently not public (HTTP 404); the shelf is not a public launch.
+
+## R19 — covers-only table, no duplicated links
+
+After reviewing R18, the author rejected the cluttered structure
+where each cover was followed by repeated title, edition metadata
+and an additional link. Teatro's root now presents six compact,
+upright book-cover thumbnails in the Fountain Press Linotype
+bookshelf state. There is **nothing beneath a cover**; the entire
+cover is its one actionable link. The grid is three by two on iPad,
+two columns on phones, with original source artwork, unique
+accessible edition identities and retained canonical/source status
+metadata. The approved original Teatro v16 book, the five
+other source-addressed readers, and the disposable WLAN
+cross-domain link projection remain unchanged.

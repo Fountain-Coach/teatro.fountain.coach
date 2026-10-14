@@ -119,7 +119,13 @@ def main():
  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
  assert 'teatro-stage' not in root
  assert 'governance-constitution' not in root and 'book-of-reframe' not in root
- assert root.count('WLAN PROOF')==5 and root.count('PUBLIC READING')==1
+ assert root.count('data-release-status="wlan-proof"')==5
+ assert root.count('data-release-status="public-live"')==1
+ assert 'class="shelf-item-caption"' not in root
+ assert 'class="shelf-item-detail"' not in root
+ assert 'class="shelf-item-revision"' not in root
+ assert 'class="bookshelf-intro"' not in root
+ assert root.count('class="shelf-book"')==root.count('class="shelf-cover"')==6
  manifest_all=json.loads((ROOT/"edition.json").read_text())
  assert len(manifest_all["bookshelfBooks"])==6
  for row in manifest_all["bookshelfBooks"]:

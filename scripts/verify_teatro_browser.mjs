@@ -44,7 +44,7 @@ async function open(path,width,height,label){
       await pause(100);
       if(await evalJS("[...document.querySelectorAll('.shelf-book img')].every(i=>i.complete&&i.naturalWidth>0)"))break;
     }
-    const shelf=await evalJS("(()=>{const b=document.body,l=[...document.querySelectorAll('.shelf-book')],images=[...document.querySelectorAll('.shelf-book img')];return {state:b.dataset.linotypeState,count:Number(b.dataset.bookCount),links:l.map(a=>a.getAttribute('href')),miniatures:document.querySelectorAll('.shelf-miniature').length,covers:document.querySelectorAll('.shelf-cover').length,images:images.length,sourceImages:images.map(i=>i.getAttribute('src')),imageLoaded:images.every(i=>i.complete&&i.naturalWidth>0),viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth,hasBookFlow:!!document.getElementById('book-flow'),hasFakeBooks:!!document.querySelector('[data-book-id=governance-constitution],[data-book-id=book-of-reframe]'),bookIds:l.map(a=>a.parentElement.dataset.bookId)}})()");
+    const shelf=await evalJS("(()=>{const b=document.body,l=[...document.querySelectorAll('.shelf-book')],images=[...document.querySelectorAll('.shelf-book img')];return {state:b.dataset.linotypeState,count:Number(b.dataset.bookCount),links:l.map(a=>a.getAttribute('href')),miniatures:document.querySelectorAll('.shelf-miniature').length,covers:document.querySelectorAll('.shelf-cover').length,images:images.length,sourceImages:images.map(i=>i.getAttribute('src')),imageLoaded:images.every(i=>i.complete&&i.naturalWidth>0),viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth,hasBookFlow:!!document.getElementById('book-flow'),hasFakeBooks:!!document.querySelector('[data-book-id=governance-constitution],[data-book-id=book-of-reframe]'),bookIds:l.map(a=>a.parentElement.dataset.bookId),extraCaptions:document.querySelectorAll('.shelf-item-caption,.shelf-item-detail,.shelf-item-revision').length,rootTitle:!!document.querySelector('.bookshelf-paper h1')}})()");
     if(shelf.state!=='bookshelf'||shelf.count!==6||shelf.links.length!==6||
       !shelf.links.includes('/editions/first-hearing/')||
       !shelf.links.includes(base.includes('192.168.8.249:8182')?
@@ -54,7 +54,8 @@ async function open(path,width,height,label){
         'http://192.168.8.249:8180/editions/essays/':
         'https://fountain.coach/editions/essays/')||
       shelf.miniatures!==0||shelf.covers!==6||shelf.images!==6||!shelf.imageLoaded||
-      shelf.hasBookFlow||shelf.hasFakeBooks||new Set(shelf.bookIds).size!==6||shelf.scrollWidth>shelf.viewportWidth+2||
+      shelf.hasBookFlow||shelf.hasFakeBooks||shelf.extraCaptions!==0||!shelf.rootTitle||
+      new Set(shelf.bookIds).size!==6||shelf.scrollWidth>shelf.viewportWidth+2||
       shelf.sourceImages.some(src=>!src.startsWith('/assets/bookshelf/')&&src!=='/assets/edition/teatro-score-memory-vector-human-condition.svg'))
       throw Error('R17 source-bound Bookshelf state invalid '+JSON.stringify(shelf));
     console.log('PASSED R17 BOOKSHELF',label,JSON.stringify(shelf));
