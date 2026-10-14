@@ -54,3 +54,15 @@ edition survives at `/editions/stage/` for separate development. If WebGL
 is unavailable, the original runtime displays its moving isometric SVG
 fallback; the browser acceptance test reports which path was exercised.
 Build authoring is in `scripts/integrate_interactive_plate.py`.
+
+## The current page is not yet the final Teatro / Reframe UX
+
+Author-observed WLAN v6 on 14 October 2026 is **UX rejected**, even though
+the original WebGL runtime is embedded, responsive page-count tests pass,
+and the SVG fallback animates. A large frame and inconsistent running
+matter are not literary composition. The governing next product journey
+is [Reframe Scenario 012](https://github.com/Fountain-Coach/Reframe/blob/main/scenarios/012-linotype-book-as-reframe-workspace.md):
+actual text, scene, score and editorial margin become one paginated,
+source-addressed working book. Fountain Press owns paper composition;
+Reframe owns writer identity, revisions and persistence; Teatro owns its
+original scene runtime and instruments. No writer UX acceptance is claimed.

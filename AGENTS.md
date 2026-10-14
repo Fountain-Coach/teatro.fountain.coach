@@ -35,3 +35,18 @@
   paragraphs. Do not autoplay audio or describe stage audio as narration.
 - `/editions/stage/` remains a secondary independent experience; the page
   uses a chrome-free embed route in the same GitHub-owned repository.
+
+## UX rejected: Reframe Scenario R12 overrides iframe-complete claims
+
+Product scenario:
+https://github.com/Fountain-Coach/Reframe/blob/main/scenarios/012-linotype-book-as-reframe-workspace.md
+
+The 2026-10-14 WLAN v6 embedded scene was seen on an actual iPad and
+**rejected for visual composition**: near full-leaf box, Solstice/Essays
+chrome, no credible relation between prose and moving space, and no Reframe
+writer journey. The current compiled renderer/fallback and scene lifecycle
+can be retained as technical implementation evidence, not an accepted UX.
+Further implementation must be scenario-driven, use Fountain Press
+semantic mixed-media composition and Reframe's existing stable anchors,
+editorial margin and Store. Do not add another standalone experience,
+unadmitted microphone/audio authority or fictional narrator.
