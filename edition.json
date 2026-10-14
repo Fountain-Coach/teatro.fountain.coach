@@ -8,7 +8,7 @@
   "publicationState": "source-candidate-book-first-teatro-first-hearing-not-publicly-deployed",
   "fileCount": 43,
   "indexPages": 4,
-  "sourceSha256Inventory": "55b91c02a623e8c2d51390edb5e4d49c88cbc286b42de62c7140863789745646",
+  "sourceSha256Inventory": "729c36ef5e88824b55255b98ab7e16e07be9e63a7996aab852b8dab2782870b4",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
