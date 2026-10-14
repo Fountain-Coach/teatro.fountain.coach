@@ -5,3 +5,14 @@
 .book-cover .subedition-title{font-size:clamp(28px,5vw,50px)}
 @media(max-width:700px){.teatro-stage-link{font-size:9px;padding:6px 4px}.book-tools button{padding:5px!important}}
 .satzfunk-stage-note{font:12px/1.5 Iowan Old Style,Georgia,serif;text-align:center;color:var(--book-muted)}.satzfunk-stage-note a{text-underline-offset:3px}
+
+/* The visual default is the canonical play triangle, never a stage illustration. */
+.press-media-stage .teatro-scene-play{position:absolute;inset:0;margin:0;padding:0!important;
+ border:0;background:transparent;width:100%;height:100%;display:grid;place-items:center;
+ cursor:pointer;touch-action:manipulation}
+.press-media-stage .teatro-scene-play[hidden]{display:none!important}
+.press-media-stage .teatro-scene-play img{position:static;width:100%;height:100%;
+ max-width:100%;max-height:100%;object-fit:contain}
+.press-media-stage .teatro-scene-play:focus-visible{outline:2px solid var(--book-accent);
+ outline-offset:-4px}
+@media print{.press-media-stage .teatro-scene-play{display:grid!important}}

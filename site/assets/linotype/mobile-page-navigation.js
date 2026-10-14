@@ -208,19 +208,44 @@ class MobilePageAtlas {
       const paper=document.createElement("span");
       paper.className="book-atlas-paper";
       paper.style.width=paperW+"px";paper.style.height=paperH+"px";
-      const miniature=leaf.el.cloneNode(true);
-      miniature.classList.add("book-atlas-miniature");
+      // The atlas is a map of the actual composed leaf, not a tiny DOM clone
+      // with an overlaid giant title. Stable plate identity comes from source
+      // media; prose is represented by bounded composition marks.
+      const art=leaf.el.querySelector(".linotype-area img:not([hidden])");
+      const isScore=Boolean(leaf.el.querySelector("[data-press-media]"));
+      const kind=isScore?"score":art?"plate":leaf.type==="cover"?"cover":"text";
+      button.dataset.atlasKind=kind;
+      paper.dataset.atlasKind=kind;
+      const miniature=document.createElement("span");
+      miniature.className="book-atlas-identity";
       miniature.setAttribute("aria-hidden","true");
-      miniature.querySelectorAll("[id]").forEach(el=>el.removeAttribute("id"));
-      miniature.querySelectorAll("a").forEach(a=>a.removeAttribute("href"));
-      miniature.style.width=this.engine.css.width+"px";
-      miniature.style.height=this.engine.css.height+"px";
-      miniature.style.transform="scale("+scale+")";
+      if(isScore){
+        const tri=document.createElement("span");
+        tri.className="book-atlas-play-glyph";
+        miniature.append(tri);
+      }else if(art){
+        const picture=document.createElement("img");
+        // Actual source asset, not a random or generated illustration.
+        picture.src=art.currentSrc||art.getAttribute("src")||"";
+        picture.alt="";
+        picture.decoding="async";
+        picture.loading="lazy";
+        picture.className="book-atlas-art";
+        miniature.append(picture);
+      }else{
+        const sourceLines=[...leaf.el.querySelectorAll(".linotype-area h1,.linotype-area h2,.linotype-area p")];
+        const lines=sourceLines.length?sourceLines:[leaf.el];
+        for(let line=0;line<Math.min(11,Math.max(5,lines.length*3));line++){
+          const text=lines[Math.floor(line/3)%lines.length]?.textContent?.trim()||"";
+          const value=text.length?text.codePointAt(line%text.length):line*7+19;
+          const ink=document.createElement("span");
+          ink.className="book-atlas-ink-line";
+          ink.style.width=(line%3===2?44+value%30:68+value%26)+"%";
+          miniature.append(ink);
+        }
+      }
       paper.append(miniature);
-      const heading=document.createElement("span");
-      heading.className="book-atlas-title";
-      heading.textContent=title;
-      paper.append(heading);
+      button.title=title;
       const folio=document.createElement("span");
       folio.className="book-atlas-folio";folio.textContent=String(i+1).padStart(3,"0");
       button.append(paper,folio);

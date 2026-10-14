@@ -123,3 +123,24 @@ def main():
  assert len(files)==obj["fileCount"]
  print("TEATRO_EDITION_ACCEPTED",len(files),"source files, book first, stage secondary")
 if __name__=="__main__":main()
+
+## R13 — mobile atlas identity and semantic Play default
+
+Phone thumbnail navigation is a **compact source-addressed page map**,
+not a clone of the entire Linotype sheet with a giant text title overlay.
+Fountain Press `mobile-page-navigation.js` derives a bounded page mark
+from the actually composed leaf: source plate imagery when present,
+an interactive-score triangle when present, otherwise measured paper
+lines and a stable folio. Every button retains its complete source
+title via an accessible label. Neither full prose, iframe, arbitrary
+representative photo nor miniature scripts are duplicated into the atlas.
+
+The Teatro spatial score now shows a canonical right-facing **Play**
+triangle until its reader deliberately activates the real animated
+Teatro renderer inside that very page. The former static cube poster
+has been removed entirely. Leaving the page releases the original
+stage runtime, and returning restores the Play affordance. The normal
+top-rail media player remains the book-wide Csound/Ear instrument;
+the per-page triangle enters the authored spatial score, not a second
+narration rail. This remains a visual candidate pending actual phone
+Safari writer acceptance; the R12 Csound/MIDI2 gates are independent.

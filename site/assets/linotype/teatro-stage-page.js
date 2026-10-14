@@ -6,11 +6,12 @@
 const viewport=document.querySelector('#book-viewport');
 const stage=viewport?.querySelector('.linotype-stage');
 if(!viewport||!stage)return;
-let mounted=null, lastWindow=null, pending=false;
+let mounted=null, lastWindow=null, pending=false, requested=false;
 const activeLeaf=()=>[...stage.children].find(sheet=>sheet.matches?.('.linotype-sheet')&&sheet.querySelector('[data-teatro-book-stage]'));
 function release(){
  if(mounted){mounted.removeAttribute('src');mounted.remove();mounted=null;}
- if(lastWindow){const poster=lastWindow.querySelector('img');if(poster)poster.hidden=false;lastWindow=null;}
+ if(lastWindow){const play=lastWindow.querySelector('[data-teatro-scene-play]');if(play)play.hidden=false;lastWindow=null;}
+ requested=false;
  document.body.dataset.teatroScene='inactive';
 }
 function sync(){
@@ -21,8 +22,11 @@ function sync(){
  }
  const windowEl=leaf.querySelector('.press-media-stage');
  if(!windowEl)return;
+ if(!requested){
+   document.body.dataset.teatroScene='ready';
+   return; // paper carries an actionable player triangle, never a room poster
+ }
  if(mounted&&lastWindow===windowEl&&mounted.isConnected)return;
- release();
  const frame=document.createElement('iframe');
  frame.title='Interactive Teatro spatial score. Move inside the scene to orbit; press Enter for an explicitly user-activated cue.';
  frame.dataset.teatroLiveFrame='true';
@@ -31,7 +35,7 @@ function sync(){
  frame.setAttribute('aria-label','Animated spatial score within this book passage');
  frame.src='/editions/stage/embed/';
  windowEl.append(frame);
- const poster=windowEl.querySelector('img');if(poster)poster.hidden=true;
+ const play=windowEl.querySelector('[data-teatro-scene-play]');if(play)play.hidden=true;
  mounted=frame;lastWindow=windowEl;
  document.body.dataset.teatroScene='active';
 }
@@ -40,6 +44,14 @@ function schedule(){
  pending=true;
  requestAnimationFrame(sync);
 }
+stage.addEventListener('click',event=>{
+ const button=event.target.closest?.('[data-teatro-scene-play]');
+ if(!button)return;
+ const active=activeLeaf();
+ if(!active?.contains(button))return;
+ requested=true;
+ schedule();
+});
 const observer=new MutationObserver(schedule);
 observer.observe(stage,{childList:true,subtree:false});
 observer.observe(document.body,{attributes:true,attributeFilter:['data-book-ready','data-turn-motion']});

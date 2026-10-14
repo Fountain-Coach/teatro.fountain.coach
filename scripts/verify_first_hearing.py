@@ -47,6 +47,9 @@ def main():
   assert 'https://fountain.coach/essays/'+SLUG+'/' in book
   assert 'id="book-live-stage"' in book
   assert book.count('data-teatro-book-stage')==1
+  assert book.count('data-teatro-scene-play')==1
+  assert 'src="/assets/teatro-play.svg"' in book
+  assert 'src="/assets/teatro-stage-poster.svg"' not in book
   assert book.count('class="book-art-leaf"')==0
   assert 'data-press-media="spatial-scene"' in book
   assert 'data-keep-with-anchor="previous"' in book
@@ -81,6 +84,10 @@ def main():
  assert manifest["scenePlacement"]=="inside-authored-prose"
  assert "mediaWithAnchor(" in (SITE/"assets/linotype/linotype-engine.js").read_text()
  assert (SITE/"assets/linotype/mixed-media.css").is_file()
+ assert (SITE/"assets/teatro-play.svg").is_file()
+ assert 'book-atlas-title' not in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
+ assert 'cloneNode(true)' not in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
+ assert 'book-atlas-identity' in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
  stage=(SITE/"editions/stage/index.html").read_text()
  assert 'src="/assets/index-CY5_5ULO.js"' in stage and 'id="root"' in stage
  assert 'data-teatro-stage-return' in stage

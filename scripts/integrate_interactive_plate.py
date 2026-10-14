@@ -30,6 +30,10 @@ html,body,#root{width:100%;height:100%;min-height:0;margin:0;overflow:hidden;bac
 /* Book ink contrast for the fallback only; the WebGL implementation is unchanged. */
 #teatro-stage-scene svg > g:nth-of-type(1){stroke:#777065}
 #teatro-stage-scene svg > g:nth-of-type(2){stroke:#937756}
+/* On renderer-independent puppet fallback, the now obsolete empty-room
+   SVG becomes an invisible background; it must not draw through the puppet. */
+#teatro-stage-scene:has([data-teatro-fallback-puppet]) > svg{visibility:hidden!important}
+
 #root [role="status"]{position:absolute!important;width:1px!important;height:1px!important;
   padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
@@ -69,11 +73,12 @@ LIFECYCLE=r"""/* R12: release Teatro renderer whenever the anchored paper elemen
 const viewport=document.querySelector('#book-viewport');
 const stage=viewport?.querySelector('.linotype-stage');
 if(!viewport||!stage)return;
-let mounted=null, lastWindow=null, pending=false;
+let mounted=null, lastWindow=null, pending=false, requested=false;
 const activeLeaf=()=>[...stage.children].find(sheet=>sheet.matches?.('.linotype-sheet')&&sheet.querySelector('[data-teatro-book-stage]'));
 function release(){
  if(mounted){mounted.removeAttribute('src');mounted.remove();mounted=null;}
- if(lastWindow){const poster=lastWindow.querySelector('img');if(poster)poster.hidden=false;lastWindow=null;}
+ if(lastWindow){const play=lastWindow.querySelector('[data-teatro-scene-play]');if(play)play.hidden=false;lastWindow=null;}
+ requested=false;
  document.body.dataset.teatroScene='inactive';
 }
 function sync(){
@@ -84,8 +89,11 @@ function sync(){
  }
  const windowEl=leaf.querySelector('.press-media-stage');
  if(!windowEl)return;
+ if(!requested){
+   document.body.dataset.teatroScene='ready';
+   return; // paper carries an actionable player triangle, never a room poster
+ }
  if(mounted&&lastWindow===windowEl&&mounted.isConnected)return;
- release();
  const frame=document.createElement('iframe');
  frame.title='Interactive Teatro spatial score. Move inside the scene to orbit; press Enter for an explicitly user-activated cue.';
  frame.dataset.teatroLiveFrame='true';
@@ -94,7 +102,7 @@ function sync(){
  frame.setAttribute('aria-label','Animated spatial score within this book passage');
  frame.src='/editions/stage/embed/';
  windowEl.append(frame);
- const poster=windowEl.querySelector('img');if(poster)poster.hidden=true;
+ const play=windowEl.querySelector('[data-teatro-scene-play]');if(play)play.hidden=true;
  mounted=frame;lastWindow=windowEl;
  document.body.dataset.teatroScene='active';
 }
@@ -103,6 +111,14 @@ function schedule(){
  pending=true;
  requestAnimationFrame(sync);
 }
+stage.addEventListener('click',event=>{
+ const button=event.target.closest?.('[data-teatro-scene-play]');
+ if(!button)return;
+ const active=activeLeaf();
+ if(!active?.contains(button))return;
+ requested=true;
+ schedule();
+});
 const observer=new MutationObserver(schedule);
 observer.observe(stage,{childList:true,subtree:false});
 observer.observe(document.body,{attributes:true,attributeFilter:['data-book-ready','data-turn-motion']});
@@ -127,8 +143,10 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
         'data-source-revision-sha256="'+source_sha+'" '
         'aria-label="Teatro spatial score bound to the passage on theatrical attention">'
         '<div class="press-media-stage">'
-        '<img src="/assets/teatro-stage-poster.svg" width="800" height="600" '
-        'alt="An unoccupied isometric theatrical space, held within the text">'
+        '<button type="button" data-teatro-scene-play class="teatro-scene-play" '
+        'aria-label="Play the animated Teatro spatial score">'
+        '<img src="/assets/teatro-play.svg" width="240" height="170" '
+        'alt="" aria-hidden="true"></button>'
         '</div>'
         '<figcaption>TEATRO · SPATIAL SCORE 01 · TOUCH TO EXPLORE</figcaption></figure>'
     )
@@ -167,6 +185,20 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
     # The page engine receives the figure *before* pagination, and Press owns its
     # measured size. No Teatro-specific giant framed page overrides.
     (output_assets/'mixed-media.css').write_bytes(mixed_media_css.read_bytes())
+    with (output_assets/'teatro.css').open('a') as file:
+      file.write('''
+/* The visual default is the canonical play triangle, never a stage illustration. */
+.press-media-stage .teatro-scene-play{position:absolute;inset:0;margin:0;padding:0!important;
+ border:0;background:transparent;width:100%;height:100%;display:grid;place-items:center;
+ cursor:pointer;touch-action:manipulation}
+.press-media-stage .teatro-scene-play[hidden]{display:none!important}
+.press-media-stage .teatro-scene-play img{position:static;width:100%;height:100%;
+ max-width:100%;max-height:100%;object-fit:contain}
+.press-media-stage .teatro-scene-play:focus-visible{outline:2px solid var(--book-accent);
+ outline-offset:-4px}
+@media print{.press-media-stage .teatro-scene-play{display:grid!important}}
+''')
+
     document=document.replace('<link rel="stylesheet" href="/assets/linotype/teatro.css">',
       '<link rel="stylesheet" href="/assets/linotype/teatro.css">\n<link rel="stylesheet" href="/assets/linotype/mixed-media.css">')
     bookjs=output_assets/'book.js'

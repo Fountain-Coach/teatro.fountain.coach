@@ -123,3 +123,16 @@ def main():
  assert len(files)==obj["fileCount"]
  print("TEATRO_EDITION_ACCEPTED",len(files),"source files, book first, stage secondary")
 if __name__=="__main__":main()
+
+## R13 thumbnail identity and default media affordance
+
+Phone atlas cells must not duplicate or miniature-reflow the full page
+DOM, overlay a long running title, or show giant broken text. Give each
+actual composed page a stable short-form visual identity: authentic
+source plate, score triangle, or restrained prose line-pattern and folio.
+Keep the full page/source title in the accessible button label. The
+book's spatial media idle poster is a **playable triangle** with a real
+button and keyboard/touch action, never a random reminiscence photo or
+a static cube illustration. Entering media mounts the canonical stage;
+exiting the page releases it and returns to the Play state. Mobile UX
+requires portrait and landscape browser proof and writer visual review.

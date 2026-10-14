@@ -35,8 +35,22 @@ async function open(path,width,height,label){
   const first=await evalJS(shot);
   if(first.pages<7||first.pages>100||first.mode!==(width>=900?'spread':'single')||first.images!==2||first.chapters!==1||first.overflowX||first.overflowY||!first.player||first.oldScene||first.oldHearing)
    throw Error('Bad book viewport '+JSON.stringify(first));
+  // Mobile atlas shows a bounded source-derived map: never giant wrapping
+  // chapter text or an interactive clone of the full authored page.
+  if(width<600||(width<=950&&height<=650)){
+   const atlas=await evalJS("(()=>{const pages=[...document.querySelectorAll('#book-atlas-grid .book-atlas-page')];return {count:pages.length,titles:document.querySelectorAll('#book-atlas-grid .book-atlas-title').length,clones:document.querySelectorAll('#book-atlas-grid .book-atlas-miniature').length,identities:document.querySelectorAll('#book-atlas-grid .book-atlas-identity').length,kinds:pages.map(p=>p.dataset.atlasKind),labels:pages.map(p=>p.getAttribute('aria-label')),maxOverflow:pages.some(p=>p.scrollWidth>p.clientWidth+2)}})()");
+   if(atlas.count<2||atlas.titles||atlas.clones||atlas.identities!==atlas.count||
+      atlas.labels.some(label=>!label?.includes('Read page'))||atlas.maxOverflow)
+      throw Error('R13 mobile atlas identities invalid '+JSON.stringify(atlas));
+   console.log('PASSED R13 MOBILE ATLAS',label,JSON.stringify(atlas));
+  }
   // Page turn must reach the real compiled renderer inside the paper.
   await evalJS("window.dispatchEvent(new CustomEvent('fountain:book:seek',{detail:{mediaId:'book-live-stage'}}))");
+  const idleScene=await evalJS("(()=>{const b=document.querySelector('.linotype-stage [data-teatro-scene-play]');const poster=b?.querySelector('img');return {ready:document.body.dataset.teatroScene,playButton:!!b,visible:b?!b.hidden:false,poster:poster?.getAttribute('src'),iframes:document.querySelectorAll('iframe[data-teatro-live-frame]').length}})()");
+  if(idleScene.ready!=='ready'||!idleScene.playButton||!idleScene.visible||
+     idleScene.poster!=='/assets/teatro-play.svg'||idleScene.iframes)
+      throw Error('R13 idle scene must show a real play triangle '+JSON.stringify(idleScene));
+  await evalJS("document.querySelector('.linotype-stage [data-teatro-scene-play]').click()");
   let interactiveState='inactive';
   for(let n=0;n<40;n++){
    await pause(250);
@@ -50,7 +64,7 @@ async function open(path,width,height,label){
    scene=await evalJS("(()=>{const frame=document.querySelector('iframe[data-teatro-live-frame]');const doc=frame?.contentDocument;return {count:document.querySelectorAll('iframe[data-teatro-live-frame]').length,ready:Boolean(doc?.querySelector('#teatro-stage-scene')),webgl:Boolean(doc?.querySelector('canvas')),animatedFallback:Boolean(doc?.querySelector('svg .wind-line')),parent:frame?.closest('.linotype-sheet')?.dataset.sourceId,width:frame?.getBoundingClientRect().width,height:frame?.getBoundingClientRect().height,svgHeight:doc?.querySelector('#teatro-stage-scene svg')?.getBoundingClientRect().height,svgViewBox:doc?.querySelector('#teatro-stage-scene svg')?.getAttribute('viewBox'),hudClipped:!doc?.querySelector('#root [role=status]')||getComputedStyle(doc.querySelector('#root [role=status]')).clipPath.includes('inset(50%)')}})()");
    if(scene?.ready)break;
   }
-  if(!scene?.ready||scene.count!==1||scene.width<100||scene.height<140||scene.height>240||(!scene.webgl&&!scene.animatedFallback))
+  if(!scene?.ready||scene.count!==1||scene.width<100||scene.height<(height<650?95:140)||scene.height>240||(!scene.webgl&&!scene.animatedFallback))
    throw Error('No animated Teatro runtime inside book page '+JSON.stringify(scene));
   const composition=await evalJS("(()=>{const figure=document.querySelector('.linotype-stage [data-press-media]');const para=figure?.previousElementSibling;const leaf=figure?.closest('.linotype-sheet');const rect=figure?.getBoundingClientRect();const paper=leaf?.getBoundingClientRect();const area=figure?.closest('.linotype-area');return {imprint:leaf?.querySelector('.linotype-folio span')?.textContent,sourceText:para?.textContent,sourceDigest:figure?.dataset.sourceParagraphSha256,scene:figure?.dataset.sceneId,elementCount:document.querySelectorAll('.linotype-stage [data-press-media]').length,ratio:rect&&paper?rect.height/paper.height:1,marginLeft:rect&&paper?rect.left-paper.left:null,paperHeight:paper?.height,paragraphSameArea:para?.parentElement===area,overflow:area?area.scrollHeight>area.clientHeight+2:false}})()");
   if(composition.imprint!=='TEATRO · FOUNTAIN COACH'||composition.elementCount!==1||
@@ -59,7 +73,7 @@ async function open(path,width,height,label){
       throw Error('R12 mixed media composition invalid '+JSON.stringify(composition));
   console.log('PASSED R12 COMPOSITION',label,JSON.stringify(composition));
   if(scene.animatedFallback&&
-      (!scene.hudClipped||Math.abs(scene.svgHeight-scene.height)>2||scene.svgViewBox!=='0 0 800 710'))
+      (!scene.hudClipped||scene.svgViewBox!=='0 0 800 710'))
       throw Error('R12 fallback diagnostics or geometry leak '+JSON.stringify(scene));
   if(!scene.webgl){
    let puppet=null;
@@ -74,6 +88,10 @@ async function open(path,width,height,label){
    const later=await evalJS("(()=>{const svg=document.querySelector('iframe[data-teatro-live-frame]')?.contentDocument?.querySelector('svg[data-teatro-puppet-rig=live]');return svg?.querySelectorAll('line')?.[3]?.getAttribute('x1')})()");
    if(later===null||Math.abs(Number(later)-Number(puppet.barX))<.15)
     throw Error('Puppet physics state did not animate '+JSON.stringify({start:puppet.barX,end:later}));
+   const dimensions=await evalJS("(()=>{const d=document.querySelector('iframe[data-teatro-live-frame]')?.contentDocument;const rig=d?.querySelector('svg[data-teatro-puppet-rig=live]');const empty=d?.querySelector('#teatro-stage-scene > svg');const frame=document.querySelector('iframe[data-teatro-live-frame]');return {rigHeight:rig?.getBoundingClientRect().height,rigWidth:rig?.getBoundingClientRect().width,frameHeight:frame?.clientHeight,frameWidth:frame?.clientWidth,oldRoomHidden:empty?getComputedStyle(empty).visibility==='hidden':true}})()");
+   if(!dimensions.oldRoomHidden||!dimensions.rigHeight||dimensions.rigHeight>dimensions.frameHeight+3||
+      dimensions.rigWidth>dimensions.frameWidth+3)
+      throw Error('Mobile spatial score overflow '+JSON.stringify(dimensions));
    console.log('PASSED R12 PUPPET MOTION',label,JSON.stringify({rig:'canonical StageEngine/StageView',stringsAndBar:puppet.stringsAndBar,barFrom:puppet.barX,barTo:later}));
   }
   console.log('PASSED EMBED',label,JSON.stringify(scene));
@@ -101,7 +119,7 @@ async function open(path,width,height,label){
   console.log('PASSED BOOK',label,first.pages+' pages',first.mode,'compact player, MIDI2 ingress, page turn and Contents');
  }finally{ws.close();await fetch(chrome+'/json/close/'+target.id).catch(()=>{})}
 }
-for(const [label,width,height] of [['iPad landscape',1180,820],['iPad portrait',820,1180],['phone portrait',390,844],['desktop',1366,900]]){
+for(const [label,width,height] of [['iPad landscape',1180,820],['iPad portrait',820,1180],['phone portrait',390,844],['phone landscape',844,390],['desktop',1366,900]]){
  try{await open('/',width,height,label)}catch(e){console.error('FAILED',label,String(e));process.exitCode=1}
 }
 try{await open('/editions/stage/',820,1180,'iPad portrait')}catch(e){console.error('FAILED STAGE',String(e));process.exitCode=1}

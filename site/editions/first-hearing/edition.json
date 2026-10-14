@@ -37,18 +37,18 @@
     },
     {
       "name": "mobile-page-navigation.js",
-      "sha256": "fc5631543ec2269fcd536bafaf54c7f477a5d5253dbaf3296edcbc4402acd829"
+      "sha256": "e6a971c27f2fe64c2737fea7d4a16155fbf4917aa303b8fbfd9578e984651410"
     },
     {
       "name": "mobile-page-navigation.css",
-      "sha256": "b485292a2ef38f02298f9b2a124706bd179fa9502e7188de6f463c85da578327"
+      "sha256": "7625d43959a99e0fb2fa729639343e48fa9ef720e4920a63c0f3af7bef0f8a36"
     },
     {
       "name": "essays.css",
       "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
     }
   ],
-  "fountainPressCommit": "476ab2bd83bc953187acbd21f7df8501cba060b0",
+  "fountainPressCommit": "1c03e6be84b0855f2f7f7a31b21e0ed7e78103a3",
   "sceneAnchorId": "teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId": "teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement": "inside-authored-prose",

@@ -13,6 +13,10 @@ html,body,#root{width:100%;height:100%;min-height:0;margin:0;overflow:hidden;bac
 /* Book ink contrast for the fallback only; the WebGL implementation is unchanged. */
 #teatro-stage-scene svg > g:nth-of-type(1){stroke:#777065}
 #teatro-stage-scene svg > g:nth-of-type(2){stroke:#937756}
+/* On renderer-independent puppet fallback, the now obsolete empty-room
+   SVG becomes an invisible background; it must not draw through the puppet. */
+#teatro-stage-scene:has([data-teatro-fallback-puppet]) > svg{visibility:hidden!important}
+
 #root [role="status"]{position:absolute!important;width:1px!important;height:1px!important;
   padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
