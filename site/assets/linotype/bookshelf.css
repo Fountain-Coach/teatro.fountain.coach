@@ -12,8 +12,10 @@ box-shadow:none;padding:clamp(24px,5vw,56px);
 display:grid;grid-template-columns:minmax(88px,128px) minmax(0,1fr);align-items:start;
 align-content:center;column-gap:var(--shelf-gap)}
 .bookshelf-brand{display:flex;flex-direction:column;align-items:flex-start;align-self:start;gap:4px;min-width:0}
-.bookshelf-brand img{display:block;width:clamp(88px,10vw,128px);height:auto;aspect-ratio:1;object-fit:contain}
-.bookshelf-wordmark{font:500 10px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.14em;white-space:nowrap}
+/* The authentic 460px mark contains 78px of transparent top padding.
+   Align its *visible artwork*, not the transparent image box, with cover tops.
+   Keep the source logo bytes and its original alpha completely unchanged. */
+.bookshelf-brand img{display:block;width:clamp(88px,10vw,128px);height:auto;aspect-ratio:1;object-fit:contain;transform:translateY(-16.95652174%)}
 .bookshelf-books{display:grid;grid-template-columns:repeat(3,minmax(0,185px));
 justify-content:center;align-items:start;gap:var(--shelf-gap);list-style:none;padding:0;margin:0;width:100%}
 .shelf-item{min-width:0}

@@ -118,8 +118,8 @@ def main():
  assert root.count('data-preview-host="teatro"')==1
  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
  assert root.count('class="bookshelf-brand"')==1
- assert root.count('class="bookshelf-wordmark"')==1
- assert 'FOUNTAIN COACH</span>' in root
+ assert 'class="bookshelf-wordmark"' not in root
+ assert 'FOUNTAIN COACH</span>' not in root
  assert root.count('src="/assets/bookshelf/fountain-coach-logo-transparent.png"')==1
  assert 'class="bookshelf-toolbar"' not in root
  assert 'class="bookshelf-pagination"' not in root
@@ -160,6 +160,7 @@ def main():
  assert 'src="/assets/bookshelf/first-reading-ink.png"' in root
  assert '.bookshelf-paper{width:min(100%,970px)' in shelf_css
  assert 'grid-template-columns:minmax(88px,128px) minmax(0,1fr)' in shelf_css
+ assert 'transform:translateY(-16.95652174%)' in shelf_css
  assert (SITE/"assets/linotype/bookshelf.css").is_file()
  assert (SITE/"editions/first-hearing/index.html").is_file()
  assert manifest["scenePlacement"]=="inside-authored-prose"
