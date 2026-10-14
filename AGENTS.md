@@ -70,3 +70,16 @@ Do not invent a separate puppet, hand-drawn image, or clock. The compiled
 WebGL/Csound stage remains unchanged and must not autoplay audio.
 Book acceptance requires a moving rig witness across layouts, not merely a
 cube or a mounted renderer.
+
+## R12 media-player and book MIDI2 scope
+
+No separate Scene/Hear buttons, empty spoken-hearing footer, chat panel,
+fake MIDI device or static decorative ear meter. Use the one compact
+player and progressive, source-owned Csound parameters. All page
+navigation and parameter changes emit declared 64-bit MIDI2 UMP in the
+browser-local book plane, and the book admits bounded local input.
+Do not mistake the local Web Audio preview for Csound or give it a
+native MIDI2/Store receipt. Ear must witness actual rendered audio
+and retain its source identity. Actual Csound AudioWorklet remains
+secure-origin and user-gesture gated, with permission and admission
+separate from the public book projection.

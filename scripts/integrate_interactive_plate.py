@@ -37,6 +37,15 @@ html,body,#root{width:100%;height:100%;min-height:0;margin:0;overflow:hidden;bac
 <script type="module" src="/assets/index-CY5_5ULO.js"></script>
 <script type="module" src="/assets/book-puppet-fallback.js"></script>
 <script>
+let lastBookMotion=0;
+window.addEventListener('midi2:stage-motion', event => {
+  const now=performance.now();
+  if(now-lastBookMotion<190 || window.parent===window)return;
+  lastBookMotion=now;
+  const motion=Number(event.detail?.value01);
+  if(Number.isFinite(motion)&&motion>=0&&motion<=1)
+    window.parent.postMessage({schema:'teatro.book.motion.v1',motion},location.origin);
+});
 document.addEventListener('DOMContentLoaded', () => {
   const root=document.getElementById('root');
   // Source SVG fallback extends past its own 600-unit viewBox (to y=652).
@@ -132,8 +141,17 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
       '<body class="book-app" data-edition-id="teatro-first-hearing" '
       'data-edition-running-title="TEATRO · FIRST HEARING" '
       'data-edition-imprint="TEATRO · FOUNTAIN COACH">')
-    document=document.replace('<div class="book-tools"><a class="teatro-stage-link" href="/editions/stage/" aria-label="Open the live Teatro stage, where interactive sound can be activated">Stage ↗</a>',
-       '<div class="book-tools"><a class="teatro-stage-link" href="#book-live-stage" data-teatro-scene-link aria-label="Go to the animated score in the essay">Scene ↓</a>')
+    # Reframe R12: unified media affordance, no obsolete hearing rail.
+    document=document.replace(
+      '<div class="book-tools"><a class="teatro-stage-link" href="/editions/stage/" aria-label="Open the live Teatro stage, where interactive sound can be activated">Stage ↗</a>',
+      '<div class="book-tools">')
+    document=re.sub(r'<button type="button" id="satzfunk-hear"[^>]*>Hear</button>', '',document)
+    document=re.sub(r'<aside id="satzfunk-hearing-rail".*?</aside>\s*','',document,flags=re.S)
+    player=(ROOT/'scripts/book-player-ui.html').read_text()
+    document=document.replace('<div class="book-tools">','<div class="book-tools">'+player)
+    assert document.count('id="book-media-toggle"')==1
+    assert 'id="satzfunk-hearing-rail"' not in document
+    assert 'id="satzfunk-hear"' not in document
     document=document.replace('COMPLETE ORIGINAL ESSAY · ONE ORIGINAL TEATRO SCORE<br><a href="/editions/stage/">Enter the sounding stage →</a>',
       'COMPLETE ORIGINAL ESSAY · ORIGINAL SCORE AND SPATIAL COMPOSITION')
     document=document.replace('The interactive <a href="/editions/stage/">Teatro stage</a> has live browser-Csound sound, activated by the visitor.',
@@ -159,9 +177,37 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
 }));
 ''' + needle)
     bookjs.write_text(contents)
-    (output_assets/'teatro-stage-page.js').write_text(LIFECYCLE)
+    document=document.replace('<link rel="stylesheet" href="/assets/linotype/teatro.css">',
+      '<link rel="stylesheet" href="/assets/linotype/teatro.css">\n<link rel="stylesheet" href="/assets/linotype/book-player.css">')
     document=document.replace('<script type="module" src="/assets/satzfunk/satzfunk-book.mjs"></script>',
-      '<script type="module" src="/assets/satzfunk/satzfunk-book.mjs"></script>\n<script src="/assets/linotype/teatro-stage-page.js" defer></script>')
+      '<script type="module" src="/assets/linotype/book-player.mjs"></script>')
+    contents=bookjs.read_text()
+    marker=' mobileAtlas?.sync();\n store();'
+    assert contents.count(marker)==1
+    contents=contents.replace(marker,''' mobileAtlas?.sync();
+ window.dispatchEvent(new CustomEvent('fountain:book:position',{detail:{
+   page:engine.current,total:engine.pages,anchor:engine.currentChapter()
+ }}));
+ store();''')
+    seek='previous?.addEventListener("click",()=>turn(engine.prev(),{animate:true,velocity:.55}));'
+    assert contents.count(seek)==1
+    contents=contents.replace(seek,'''window.addEventListener('fountain:book:seek',event=>{
+ if(event.detail?.mediaId==='book-live-stage'){
+   const target=engine.leaves.findIndex(item=>Boolean(item.el.querySelector('[data-teatro-book-stage]')));
+   if(target>=0)turn(target);
+   return;
+ }
+ const normalized=Number(event.detail?.normalized);
+ if(Number.isFinite(normalized)&&normalized>=0&&normalized<=1)
+   turn(Math.round(normalized*(engine.pages-1)));
+});
+'''+seek)
+    bookjs.write_text(contents)
+    (output_assets/'teatro-stage-page.js').write_text(LIFECYCLE)
+    document=document.replace('<script type="module" src="/assets/linotype/book-player.mjs"></script>',
+      '<script type="module" src="/assets/linotype/book-player.mjs"></script>\n<script src="/assets/linotype/teatro-stage-page.js" defer></script>')
+    # Removing the obsolete rail must not leave spaces-only HTML lines.
+    document=re.sub(r'(?m)^[ \t]+$', '', document)
     embed=SITE/'editions/stage/embed/index.html'
     embed.parent.mkdir(parents=True,exist_ok=True)
     embed.write_text(EMBED)

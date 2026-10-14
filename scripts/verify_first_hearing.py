@@ -31,12 +31,19 @@ def main():
   assert book.count('data-book-toc-target=')==2
   assert book.count('src="/assets/edition/')==1
   assert book.count('aria-current="page"')==1
-  assert book.count('id="satzfunk-hear"')==1
-  assert book.count('id="satzfunk-hearing-rail"')==1
+  assert book.count('id="book-media-toggle"')==1
+  assert book.count('id="book-media-settings"')==1
+  assert book.count('id="book-ear-status"')==1
+  assert book.count('data-book-sound-parameter=')==4
+  assert 'id="satzfunk-hearing-rail"' not in book
+  assert 'id="satzfunk-hear"' not in book
+  assert '>Scene ↓<' not in book
+  assert 'src="/assets/linotype/book-player.mjs"' in book
+  assert 'href="/assets/linotype/book-player.css"' in book
   assert 'data-edition-id="teatro-first-hearing"' in book
   assert 'id="book-viewport"' in book and 'id="book-page-atlas"' in book
   assert 'https://fountain.coach/essays/'+SLUG+'/' in book
-  assert 'href="#book-live-stage" data-teatro-scene-link' in book
+  assert 'id="book-live-stage"' in book
   assert book.count('data-teatro-book-stage')==1
   assert book.count('class="book-art-leaf"')==0
   assert 'data-press-media="spatial-scene"' in book
@@ -86,6 +93,11 @@ def main():
  assert '<div id="root"></div>' in embed
  assert '.teatro-sidebar-disclosure{display:none!important}' in embed
  assert "createElement('iframe')" in (SITE/"assets/linotype/teatro-stage-page.js").read_text()
+ assert (SITE/'assets/linotype/book-midi2.mjs').is_file()
+ assert (SITE/'assets/linotype/book-player.mjs').is_file()
+ assert 'fountain:book:position' in (SITE/'assets/linotype/book.js').read_text()
+ assert 'fountain:book:seek' in (SITE/'assets/linotype/book.js').read_text()
+ assert sha((SITE/'assets/book-csound-host.js').read_bytes())==manifest['bookCsoundHostSHA256']
  assert not (SITE/"editions/first-hearing/hearings.json").exists()
  assert not (SITE/"hearings.json").exists()
  js=(SITE/"assets/satzfunk/satzfunk-book.mjs").read_text()

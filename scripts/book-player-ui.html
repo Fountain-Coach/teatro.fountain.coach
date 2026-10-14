@@ -1,0 +1,15 @@
+<section class="book-media-control" id="book-media-control" data-ear="idle" data-player="stopped" aria-label="Teatro media player">
+<button type="button" id="book-media-toggle" aria-pressed="false" aria-label="Play book sound">▶</button>
+<span class="book-ear-meter" role="img" aria-label="Ear signal monitor"></span>
+<button type="button" id="book-media-settings" aria-expanded="false" aria-controls="book-media-details" aria-label="Sound parameters and Ear">⌄</button>
+<div id="book-media-details" hidden>
+<div class="book-player-head"><strong>TEATRO · PLAYER</strong><span id="book-audio-source">Instrument ready</span></div>
+<p class="book-player-status" id="book-media-status" role="status">Ready to listen</p>
+<p class="book-player-status" id="book-ear-status">Ear · idle</p>
+<div class="book-player-row"><label for="player-wind">Wind</label><input id="player-wind" data-book-sound-parameter="wind" type="range" min="0" max="1" step=".01" value="1"><output>100%</output></div>
+<div class="book-player-row"><label for="player-turbulence">Turbulence</label><input id="player-turbulence" data-book-sound-parameter="turbulence" type="range" min="0" max="1" step=".01" value=".55"><output>55%</output></div>
+<div class="book-player-row"><label for="player-head">Head motion</label><input id="player-head" data-book-sound-parameter="head" type="range" min="0" max="1" step=".01" value=".4"><output>40%</output></div>
+<div class="book-player-row"><label for="player-voice">Resonance</label><input id="player-voice" data-book-sound-parameter="voice" type="range" min="0" max="1" step=".01" value=".2"><output>20%</output></div>
+<p id="book-midi-debug">MIDI 2.0 · awaiting book position</p>
+<p class="book-player-note">Ear observes actual audio output. Web Audio preview on HTTP; Csound AudioWorklet on a secure origin when available. No released narration or hardware MIDI connection is implied.</p>
+</div></section>

@@ -122,6 +122,13 @@ def main(fountain,satzfunk,press,stage_source):
    '.book-tools{align-items:center}\n'
    '.book-cover .subedition-title{font-size:clamp(28px,5vw,50px)}\n'
    '@media(max-width:700px){.teatro-stage-link{font-size:9px;padding:6px 4px}.book-tools button{padding:5px!important}}\n')
+ # Fountain Press: deterministic UMP and compact player shell.
+ for media_name in ('book-midi2.mjs','book-player.css'):
+  shutil.copyfile(press/'runtime'/media_name,output_assets/media_name)
+ shutil.copyfile(ROOT/'scripts/book-player.mjs',output_assets/'book-player.mjs')
+ csound_host=stage_source/'dist-book-csound/book-csound-host.js'
+ assert csound_host.stat().st_size>100_000, 'Compile source-owned Csound book host'
+ shutil.copyfile(csound_host,SITE/'assets/book-csound-host.js')
  adapter=satzfunk/"station/satzfunk-book.mjs"
  adapter_css=satzfunk/"station/satzfunk-book.css"
  audio=SITE/"assets/satzfunk";audio.mkdir(parents=True,exist_ok=True)
@@ -195,6 +202,10 @@ def main(fountain,satzfunk,press,stage_source):
   "sceneAnchorId":"teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId":"teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement":"inside-authored-prose",
+  "bookMidi2Implementation":"Fountain Press UMP local event plane",
+  "bookAudioModes":["csound-worklet-on-secure-origin","web-audio-local-preview"],
+  "bookEarBoundary":"real output samples and typed observations only",
+  "bookCsoundHostSHA256":sha(csound_host.read_bytes()),
   "puppetFallbackRuntimeSHA256":sha(fallback.read_bytes()),
   "puppetFallbackSource":"midi2-gpu-fabric/apps/teatro-stage-web/src/embedded/book-puppet-fallback.tsx",
   "puppetFallbackSourceCommit":git_sha(stage_source),

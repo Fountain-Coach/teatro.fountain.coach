@@ -103,3 +103,34 @@ Automated browser acceptance now checks that the fallback puppet **exists
 and moves**, rather than counting a static SVG or empty Stage as success.
 Chrome's headless GPU still cannot prove real iPad Safari WebGL, and this
 remains a candidate until writer approval.
+
+## R12: one player, MIDI2 book, Ear (staging candidate)
+
+The reader's former Scene and Hear controls, plus the oversized empty
+Satzfunk hearing rail, are replaced by **one small media transport**.
+Its disclosure shows four existing Csound-derived instrument channels
+(wind, turbulence, head motion, resonance) and an Ear meter. The
+original 22 paragraphs and spatial puppet remain attached to their
+authored sources. No recorded spoken edition is asserted.
+
+Fountain Press owns the reusable shell and bounded local MIDI2 Universal
+MIDI Packet event plane (commit 476ab2b). Every page change emits MIDI2
+Channel Voice 64-bit CC values for position/focus, and book transport,
+parameters and measured Ear signal publish their own declared controllers.
+The book accepts explicit local MIDI2 UMP input for pagination,
+transport and parameters. This is a browser-local MIDI2 message plane,
+NOT proof of a physical MIDI2 input/output port or a Store receipt.
+The stage may send bounded motion observations to the book across the
+same-origin iframe boundary.
+
+On HTTPS or localhost a user gesture attempts the real
+`BrowserCsoundRuntime` and its explicit `EarAudioTap`, owned in
+midi2-gpu-fabric source branch
+`codex/teatro-r12-moving-puppet-fallback-20261014`.
+On the HTTP WLAN staging host, where Csound's AudioWorklet cannot start,
+an explicitly identified **Web Audio instrument preview** produces actual
+sound. Ear measures its real analyser samples and emits bounded UMP
+observations only for witnessed output. This preview is not Csound, a
+narration, or a surrogate approval of canonical Csound/MIDI2 execution.
+The source Csound host is still a development branch; release to mainline,
+secure-origin evidence, hardware bridges and author iPad proof remain open.

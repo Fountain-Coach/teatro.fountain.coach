@@ -66,6 +66,9 @@ function update(){
  acceptedPlace={anchor:engine.currentChapter(),
    offset:engine.current-(engine.positions.get(engine.currentChapter())||0)};
  mobileAtlas?.sync();
+ window.dispatchEvent(new CustomEvent('fountain:book:position',{detail:{
+   page:engine.current,total:engine.pages,anchor:engine.currentChapter()
+ }}));
  store();
 }
 function turn(to,{animate=false,velocity=0}={}){
@@ -176,6 +179,16 @@ document.querySelectorAll('[data-teatro-scene-link]').forEach(link=>link.addEven
  const index=engine.leaves.findIndex(item=>Boolean(item.el.querySelector('[data-teatro-book-stage]')));
  if(index>=0)turn(index,{animate:true,velocity:.45});
 }));
+window.addEventListener('fountain:book:seek',event=>{
+ if(event.detail?.mediaId==='book-live-stage'){
+   const target=engine.leaves.findIndex(item=>Boolean(item.el.querySelector('[data-teatro-book-stage]')));
+   if(target>=0)turn(target);
+   return;
+ }
+ const normalized=Number(event.detail?.normalized);
+ if(Number.isFinite(normalized)&&normalized>=0&&normalized<=1)
+   turn(Math.round(normalized*(engine.pages-1)));
+});
 previous?.addEventListener("click",()=>turn(engine.prev(),{animate:true,velocity:.55}));
 next?.addEventListener("click",()=>turn(engine.next(),{animate:true,velocity:.55}));
 document.addEventListener("keydown",event=>{

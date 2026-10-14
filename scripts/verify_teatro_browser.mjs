@@ -31,12 +31,12 @@ async function open(path,width,height,label){
   let state='waiting';
   for(let n=0;n<65;n++){await pause(240);state=await evalJS("document.body?.dataset.bookReady||'waiting'");if(state==='true'||state==='fallback')break}
   if(state!=='true')throw Error('Linotype not ready '+state+': '+await evalJS("document.body?.dataset.bookError||''")+': '+errors.join(';'));
-  const shot="(() => {const sheet=document.querySelector('.linotype-stage .linotype-sheet')?.getBoundingClientRect();return {pages:Number(document.body.dataset.bookPageCount),mode:document.body.dataset.bookMode,folio:document.getElementById('book-page-count').textContent,images:document.querySelectorAll('#book-flow img').length,chapters:document.querySelectorAll('[data-book-chapter]').length,overflowX:document.documentElement.scrollWidth>innerWidth+1,overflowY:document.documentElement.scrollHeight>innerHeight+1,sheet:sheet?.toJSON(),stageLink:document.querySelector('.teatro-stage-link')?.getAttribute('href')}})()";
+  const shot="(() => {const sheet=document.querySelector('.linotype-stage .linotype-sheet')?.getBoundingClientRect();return {pages:Number(document.body.dataset.bookPageCount),mode:document.body.dataset.bookMode,folio:document.getElementById('book-page-count').textContent,images:document.querySelectorAll('#book-flow img').length,chapters:document.querySelectorAll('[data-book-chapter]').length,overflowX:document.documentElement.scrollWidth>innerWidth+1,overflowY:document.documentElement.scrollHeight>innerHeight+1,sheet:sheet?.toJSON(),player:!!document.getElementById('book-media-toggle'),oldScene:!!document.querySelector('.teatro-stage-link'),oldHearing:!!document.getElementById('satzfunk-hearing-rail')}})()";
   const first=await evalJS(shot);
-  if(first.pages<7||first.pages>100||first.mode!==(width>=900?'spread':'single')||first.images!==2||first.chapters!==1||first.overflowX||first.overflowY||first.stageLink!=='#book-live-stage')
+  if(first.pages<7||first.pages>100||first.mode!==(width>=900?'spread':'single')||first.images!==2||first.chapters!==1||first.overflowX||first.overflowY||!first.player||first.oldScene||first.oldHearing)
    throw Error('Bad book viewport '+JSON.stringify(first));
   // Page turn must reach the real compiled renderer inside the paper.
-  await evalJS("document.querySelector('[data-teatro-scene-link]').click()");
+  await evalJS("window.dispatchEvent(new CustomEvent('fountain:book:seek',{detail:{mediaId:'book-live-stage'}}))");
   let interactiveState='inactive';
   for(let n=0;n<40;n++){
    await pause(250);
@@ -81,13 +81,15 @@ async function open(path,width,height,label){
   await pause(500);
   const released=await evalJS("({state:document.body.dataset.teatroScene,frames:document.querySelectorAll('iframe[data-teatro-live-frame]').length})");
   if(released.state!=='inactive'||released.frames!==0)throw Error('Teatro runtime leaked past page turn '+JSON.stringify(released));
-  const hearing=await evalJS('(()=>{document.getElementById("satzfunk-hear").click();return {hidden:document.getElementById("satzfunk-hearing-rail").hidden,expanded:document.getElementById("satzfunk-hear").getAttribute("aria-expanded")}})()');
-  if(hearing.hidden||hearing.expanded!=='true')throw Error('Hearing rail did not open');
-  for(let n=0;n<20;n++){await pause(140);if((await evalJS("document.getElementById('satzfunk-hearing-status').textContent")).includes('No author-approved'))break}
-  const message=await evalJS("document.getElementById('satzfunk-hearing-status').textContent");
-  if(!message.includes('No author-approved spoken edition'))throw Error('Audio falsely released '+message);
-  if(await evalJS("document.querySelectorAll('#satzfunk-hearing-tracks audio').length"))throw Error('Unapproved audio mounted');
-  await evalJS("document.getElementById('satzfunk-close').click()");
+  const player=await evalJS("(()=>{const btn=document.getElementById('book-media-settings');btn.click();return {detailOpen:!document.getElementById('book-media-details').hidden,inputs:document.querySelectorAll('[data-book-sound-parameter]').length,bus:!!window.FountainBookMidi2,ear:!!document.getElementById('book-ear-status')}})()");
+  if(!player.detailOpen||player.inputs!==4||!player.bus||!player.ear)throw Error('Book media/player not mounted '+JSON.stringify(player));
+  await evalJS("document.getElementById('player-wind').value='.25';document.getElementById('player-wind').dispatchEvent(new Event('input',{bubbles:true}))");
+  const midi=await evalJS("(()=>{const b=window.FountainBookMidi2;let cc=null;const u=b.subscribe(e=>cc=e);b.receive({schema:'fountain.book-midi2.ump.v1',source:'test-inbound',target:b.id,sequence:23,words:[0x40b04600,0x80000000]});u();return {controller:cc?.controller,value:cc?.value,slider:document.getElementById('player-wind').value}})()");
+  if(midi.controller!==70||Math.abs(midi.value-.5)>.01||Math.abs(Number(midi.slider)-.5)>.01)
+    throw Error('MIDI2 UMP receive or parameter mapping failed '+JSON.stringify(midi));
+  if(await evalJS("Boolean(document.querySelector('#satzfunk-hearing-rail, #satzfunk-hear, .teatro-stage-link'))"))
+    throw Error('Old scene/hearing navigation leaked');
+  await evalJS("document.getElementById('book-media-settings').click()");
   const before=await evalJS("document.getElementById('book-page-count').textContent");
   await evalJS("(document.getElementById('book-next').disabled?document.getElementById('book-prev'):document.getElementById('book-next')).click()");
   await pause(150);
@@ -96,7 +98,7 @@ async function open(path,width,height,label){
   await evalJS("document.getElementById('book-toc-button').click()");
   if(!await evalJS("document.getElementById('book-contents').open"))throw Error('Contents did not open');
   if(errors.length)throw Error('JS errors: '+errors.join(';'));
-  console.log('PASSED BOOK',label,first.pages+' pages',first.mode,'Hear truthful, page turn and Contents');
+  console.log('PASSED BOOK',label,first.pages+' pages',first.mode,'compact player, MIDI2 ingress, page turn and Contents');
  }finally{ws.close();await fetch(chrome+'/json/close/'+target.id).catch(()=>{})}
 }
 for(const [label,width,height] of [['iPad landscape',1180,820],['iPad portrait',820,1180],['phone portrait',390,844],['desktop',1366,900]]){

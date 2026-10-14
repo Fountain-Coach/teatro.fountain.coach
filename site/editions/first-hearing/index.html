@@ -19,11 +19,12 @@
 <script src="/assets/linotype/book.js" defer></script>
 <title>Teatro — An Unfinished Composition · First Hearing</title>
 <link rel="stylesheet" href="/assets/linotype/teatro.css">
+<link rel="stylesheet" href="/assets/linotype/book-player.css">
 <link rel="stylesheet" href="/assets/linotype/mixed-media.css">
 <link rel="stylesheet" href="/assets/satzfunk/satzfunk-book.css">
 <meta name="satzfunk-edition-url" content="https://teatro.fountain.coach/editions/first-hearing/">
 <meta name="satzfunk-source-sha256" content="6acd813ac2b1c63ca76a289f2eb26a46b27d8a39877177ebafaae1c969c82d11">
-<script type="module" src="/assets/satzfunk/satzfunk-book.mjs"></script>
+<script type="module" src="/assets/linotype/book-player.mjs"></script>
 <script src="/assets/linotype/teatro-stage-page.js" defer></script>
 </head>
 <body class="book-app" data-edition-id="teatro-first-hearing" data-edition-running-title="TEATRO · FIRST HEARING" data-edition-imprint="TEATRO · FOUNTAIN COACH">
@@ -31,9 +32,24 @@
 <header class="book-toolbar">
   <a class="book-back" href="/editions/" aria-label="Teatro editions"><span aria-hidden="true">←</span><span>Teatro Editions</span></a>
   <nav class="edition-rail" aria-label="Estate editions"><a data-estate-id="estate" href="https://fountain.coach/editions/essays/" title="Fountain Coach essays">Fountain Coach</a><a data-estate-id="first-reading" href="https://works.benedikt-eickhoff.de/solstice/editions/first-reading/" title="First Reading">First Reading</a><a data-estate-id="teatro" href="https://teatro.fountain.coach/editions/first-hearing/" aria-current="page" title="Teatro first hearing">Teatro</a></nav>
-  <div class="book-tools"><a class="teatro-stage-link" href="#book-live-stage" data-teatro-scene-link aria-label="Go to the animated score in the essay">Scene ↓</a>
-    
-    <button type="button" id="satzfunk-hear" aria-controls="satzfunk-hearing-rail" aria-expanded="false">Hear</button>
+  <div class="book-tools"><section class="book-media-control" id="book-media-control" data-ear="idle" data-player="stopped" aria-label="Teatro media player">
+<button type="button" id="book-media-toggle" aria-pressed="false" aria-label="Play book sound">▶</button>
+<span class="book-ear-meter" role="img" aria-label="Ear signal monitor"></span>
+<button type="button" id="book-media-settings" aria-expanded="false" aria-controls="book-media-details" aria-label="Sound parameters and Ear">⌄</button>
+<div id="book-media-details" hidden>
+<div class="book-player-head"><strong>TEATRO · PLAYER</strong><span id="book-audio-source">Instrument ready</span></div>
+<p class="book-player-status" id="book-media-status" role="status">Ready to listen</p>
+<p class="book-player-status" id="book-ear-status">Ear · idle</p>
+<div class="book-player-row"><label for="player-wind">Wind</label><input id="player-wind" data-book-sound-parameter="wind" type="range" min="0" max="1" step=".01" value="1"><output>100%</output></div>
+<div class="book-player-row"><label for="player-turbulence">Turbulence</label><input id="player-turbulence" data-book-sound-parameter="turbulence" type="range" min="0" max="1" step=".01" value=".55"><output>55%</output></div>
+<div class="book-player-row"><label for="player-head">Head motion</label><input id="player-head" data-book-sound-parameter="head" type="range" min="0" max="1" step=".01" value=".4"><output>40%</output></div>
+<div class="book-player-row"><label for="player-voice">Resonance</label><input id="player-voice" data-book-sound-parameter="voice" type="range" min="0" max="1" step=".01" value=".2"><output>20%</output></div>
+<p id="book-midi-debug">MIDI 2.0 · awaiting book position</p>
+<p class="book-player-note">Ear observes actual audio output. Web Audio preview on HTTP; Csound AudioWorklet on a secure origin when available. No released narration or hardware MIDI connection is implied.</p>
+</div></section>
+
+
+
     <button type="button" id="book-toc-button" aria-label="Open table of contents" aria-haspopup="dialog">Contents</button>
     <button type="button" id="book-type-button" aria-label="Reading appearance" aria-haspopup="dialog">Aa</button>
   </div>
@@ -90,12 +106,6 @@
     <nav class="book-atlas-grid" id="book-atlas-grid" aria-label="Select a page"></nav>
   </aside>
 </main>
-<aside id="satzfunk-hearing-rail" class="satzfunk-hearing" aria-label="Satzfunk first hearing" hidden data-satzfunk-controls>
-<div class="satzfunk-hearing-head"><span>SATZFUNK · FIRST HEARING</span><button type="button" id="satzfunk-close" aria-label="Return to reading">×</button></div>
-<div id="satzfunk-hearing-status" class="satzfunk-hearing-status" role="status">Checking for an approved listening edition…</div>
-<div id="satzfunk-hearing-tracks"></div>
-<p class="satzfunk-stage-note">The <a href="#book-live-stage" data-teatro-scene-link>spatial element in the essay</a> includes a user-activated Teatro instrument cue. It is not a recorded narration of this text.</p>
-</aside>
 <footer class="book-pagination" aria-label="Book pagination">
   <button id="book-prev" type="button" aria-label="Previous page"><span aria-hidden="true">←</span><span>Previous</span></button>
   <nav class="book-legal" aria-label="Legal and company information"><a data-legal-role="company-status" href="https://status.fountain.coach/">Company status &amp; transparency</a> · <a href="https://governance.fountain.coach/legal/">Legal notices</a> · <a href="https://governance.fountain.coach/privacy/">Privacy</a></nav><div class="book-progress"><span id="book-location" aria-live="off">Essays</span><span class="book-page-count" id="book-page-count">A literary edition</span><div class="book-progress-track" aria-hidden="true"><span id="book-progress-fill"></span></div></div>
