@@ -8,10 +8,10 @@
   "publicationState": "source-candidate-three-front-navigation-not-publicly-deployed",
   "fileCount": 27,
   "indexPages": 1,
-  "sourceSha256Inventory": "d725f028ec4e4211f2fcd235826fe50d0ac3dd1cd60d741167b08d3bcb8e2755",
+  "sourceSha256Inventory": "7a060930d711c9a33760ce756bed6d826ccfae6d45b2caf8183c599abca35100",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
   "baselineTag": "baseline-captured-20261014",
-  "editorialIntent": "Three fronts: Fountain Coach, First Reading using verified works.benedikt-eickhoff.de edition URL, Teatro"
+  "editorialIntent": "Three front doors with Company Status exclusively in mandatory footer legals; not publicly deployed."
 }
