@@ -118,6 +118,8 @@ def main():
  assert root.count('data-preview-host="teatro"')==1
  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
  assert root.count('class="bookshelf-brand"')==1
+ assert root.count('class="bookshelf-wordmark"')==1
+ assert 'FOUNTAIN COACH</span>' in root
  assert root.count('src="/assets/bookshelf/fountain-coach-logo-transparent.png"')==1
  assert 'class="bookshelf-toolbar"' not in root
  assert 'class="bookshelf-pagination"' not in root
