@@ -3,6 +3,7 @@
 from html.parser import HTMLParser
 from pathlib import Path
 import hashlib,json,re
+from integrate_interactive_plate import SOURCE_SENTENCE
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/"site"
@@ -37,7 +38,21 @@ def main():
   assert 'https://fountain.coach/essays/'+SLUG+'/' in book
   assert 'href="#book-live-stage" data-teatro-scene-link' in book
   assert book.count('data-teatro-book-stage')==1
-  assert book.count('class="book-art-leaf"')==1
+  assert book.count('class="book-art-leaf"')==0
+  assert 'data-press-media="spatial-scene"' in book
+  assert 'data-keep-with-anchor="previous"' in book
+  assert 'data-edition-imprint="TEATRO · FOUNTAIN COACH"' in book
+  assert 'data-edition-running-title="TEATRO · FIRST HEARING"' in book
+  assert 'href="/assets/linotype/mixed-media.css"' in book
+  assert manifest["sceneAnchorId"] in book and manifest["sceneElementId"] in book
+  assert 'data-source-paragraph-sha256="'+sha(SOURCE_SENTENCE.encode())+'"' in book
+  assert 'data-source-revision-sha256="'+manifest["authoredSourceSHA256"]+'"' in book
+  assert 'This is an old knowledge of theatre.' in book
+  anchor_pos=book.index('This is an old knowledge of theatre.')
+  media_pos=book.index('data-press-media="spatial-scene"')
+  next_section=book.index('A score instead of an answer')
+  assert anchor_pos<media_pos<next_section
+
   assert "frame-src 'self'" in book
   assert 'src="/assets/linotype/teatro-stage-page.js"' in book
   assert 'data-legal-role="company-status"' in book
@@ -54,6 +69,9 @@ def main():
   assert sha(json.dumps(selected,ensure_ascii=False).encode())==manifest["paragraphsSHA256"],"Edited original Teatro text"
   print("TEATRO_FULL_BOOK_VERIFIED",path,len(selected),"complete source paragraphs")
  assert (SITE/"index.html").read_bytes()==(SITE/"editions/first-hearing/index.html").read_bytes()
+ assert manifest["scenePlacement"]=="inside-authored-prose"
+ assert "mediaWithAnchor(" in (SITE/"assets/linotype/linotype-engine.js").read_text()
+ assert (SITE/"assets/linotype/mixed-media.css").is_file()
  stage=(SITE/"editions/stage/index.html").read_text()
  assert 'src="/assets/index-CY5_5ULO.js"' in stage and 'id="root"' in stage
  assert 'data-teatro-stage-return' in stage

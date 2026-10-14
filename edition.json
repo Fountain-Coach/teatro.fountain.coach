@@ -6,9 +6,9 @@
   "repository": "Fountain-Coach/teatro.fountain.coach",
   "capturedAt": "2026-10-14T10:28:47Z",
   "publicationState": "source-candidate-book-first-teatro-first-hearing-not-publicly-deployed",
-  "fileCount": 46,
+  "fileCount": 47,
   "indexPages": 5,
-  "sourceSha256Inventory": "a07fd85a4aa17a3cca153018b486a55c6a8536f92d11cc35871992354762c324",
+  "sourceSha256Inventory": "4e7ef38c0889eb9b55d26a0ed25a566302cc8c1f8acc7854d499395b89a03c36",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
@@ -18,5 +18,6 @@
   "firstAudioSurface": "editions/first-hearing/#book-live-stage",
   "stageAudioClaim": "browser-Csound on explicit interaction, not released narration",
   "sourceAuthority": "Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
-  "embeddedInteractiveScene": "editions/stage/embed/"
+  "embeddedInteractiveScene": "editions/stage/embed/",
+  "sceneComposition": "authored-paragraph-anchored-mixed-media"
 }

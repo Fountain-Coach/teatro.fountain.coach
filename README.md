@@ -66,3 +66,18 @@ actual text, scene, score and editorial margin become one paginated,
 source-addressed working book. Fountain Press owns paper composition;
 Reframe owns writer identity, revisions and persistence; Teatro owns its
 original scene runtime and instruments. No writer UX acceptance is claimed.
+
+
+## R12 Slice A — semantic mixed-media book candidate
+
+The rejected v6 full-leaf embed has been superseded **in source** by an
+illustration attached to the exact authorial paragraph beginning
+“This is an old knowledge of theatre.” The original paragraph and scene
+occupy one typeset leaf. Fountain Press owns the measured
+`data-press-media` composition and Teatro's original compiled WebGL/Csound
+runtime is mounted only when the actual leaf is visible. Edition-specific
+Teatro running matter replaces the inherited Solstice/Essays folio.
+The browser proof verifies source/element IDs, complete 22-paragraph
+manuscript, ratio/overflow, clipped diagnostic HUD, animated fallback
+and resource release. **The actual iPad Safari GPU result and writer
+approval remain pending**; the R12 product checker must still report blocked.

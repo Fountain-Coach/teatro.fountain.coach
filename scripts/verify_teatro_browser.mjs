@@ -47,11 +47,20 @@ async function open(path,width,height,label){
   let scene=null;
   for(let n=0;n<50;n++){
    await pause(270);
-   scene=await evalJS("(()=>{const frame=document.querySelector('iframe[data-teatro-live-frame]');const doc=frame?.contentDocument;return {count:document.querySelectorAll('iframe[data-teatro-live-frame]').length,ready:Boolean(doc?.querySelector('#teatro-stage-scene')),webgl:Boolean(doc?.querySelector('canvas')),animatedFallback:Boolean(doc?.querySelector('svg .wind-line')),parent:frame?.closest('.linotype-sheet')?.dataset.sourceId,width:frame?.getBoundingClientRect().width,height:frame?.getBoundingClientRect().height}})()");
+   scene=await evalJS("(()=>{const frame=document.querySelector('iframe[data-teatro-live-frame]');const doc=frame?.contentDocument;return {count:document.querySelectorAll('iframe[data-teatro-live-frame]').length,ready:Boolean(doc?.querySelector('#teatro-stage-scene')),webgl:Boolean(doc?.querySelector('canvas')),animatedFallback:Boolean(doc?.querySelector('svg .wind-line')),parent:frame?.closest('.linotype-sheet')?.dataset.sourceId,width:frame?.getBoundingClientRect().width,height:frame?.getBoundingClientRect().height,svgHeight:doc?.querySelector('#teatro-stage-scene svg')?.getBoundingClientRect().height,svgViewBox:doc?.querySelector('#teatro-stage-scene svg')?.getAttribute('viewBox'),hudClipped:doc?.querySelector('#root [role=status]')?.style ? getComputedStyle(doc.querySelector('#root [role=status]')).clipPath.includes('inset(50%)') : false}})()");
    if(scene?.ready)break;
   }
-  if(!scene?.ready||scene.count!==1||scene.width<100||scene.height<150||(!scene.webgl&&!scene.animatedFallback))
+  if(!scene?.ready||scene.count!==1||scene.width<100||scene.height<140||scene.height>240||(!scene.webgl&&!scene.animatedFallback))
    throw Error('No animated Teatro runtime inside book page '+JSON.stringify(scene));
+  const composition=await evalJS("(()=>{const figure=document.querySelector('.linotype-stage [data-press-media]');const para=figure?.previousElementSibling;const leaf=figure?.closest('.linotype-sheet');const rect=figure?.getBoundingClientRect();const paper=leaf?.getBoundingClientRect();const area=figure?.closest('.linotype-area');return {imprint:leaf?.querySelector('.linotype-folio span')?.textContent,sourceText:para?.textContent,sourceDigest:figure?.dataset.sourceParagraphSha256,scene:figure?.dataset.sceneId,elementCount:document.querySelectorAll('.linotype-stage [data-press-media]').length,ratio:rect&&paper?rect.height/paper.height:1,marginLeft:rect&&paper?rect.left-paper.left:null,paperHeight:paper?.height,paragraphSameArea:para?.parentElement===area,overflow:area?area.scrollHeight>area.clientHeight+2:false}})()");
+  if(composition.imprint!=='TEATRO · FOUNTAIN COACH'||composition.elementCount!==1||
+      composition.paragraphSameArea!==true||!composition.sourceText?.includes('Attention changes it.')||
+      composition.ratio>=.45||composition.ratio<=.1||composition.overflow)
+      throw Error('R12 mixed media composition invalid '+JSON.stringify(composition));
+  console.log('PASSED R12 COMPOSITION',label,JSON.stringify(composition));
+  if(scene.animatedFallback&&
+      (!scene.hudClipped||Math.abs(scene.svgHeight-scene.height)>2||scene.svgViewBox!=='0 0 800 710'))
+      throw Error('R12 fallback diagnostics or geometry leak '+JSON.stringify(scene));
   console.log('PASSED EMBED',label,JSON.stringify(scene));
   await evalJS("document.getElementById('book-next').click()");
   await pause(500);

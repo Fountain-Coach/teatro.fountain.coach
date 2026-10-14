@@ -125,16 +125,20 @@ class Linotype {
     this.css.viewportWidth=w;
     this.css.viewportHeight=h;
   }
-  leaf(type,sectionId,chapterLabel="ESSAYS"){
+  leaf(type,sectionId,chapterLabel=null){
     const el=document.createElement("section");
     el.className="linotype-sheet linotype-"+type;
     el.dataset.sourceId=sectionId;
     const heading=document.createElement("div");heading.className="linotype-running";
-    heading.textContent=chapterLabel;
+    heading.textContent=chapterLabel||document.body.dataset.editionRunningTitle||"FIRST READING";
     const area=document.createElement("div");area.className="linotype-area";
     const folio=document.createElement("div");folio.className="linotype-folio";
     const n=this.leaves.length+1;
-    folio.innerHTML='<span>SOLSTICE · ESSAYS</span><span>'+String(n).padStart(3,"0")+'</span>';
+    const imprint=document.body.dataset.editionImprint||"FOUNTAIN PRESS";
+    folio.replaceChildren();
+    const imprintSpan=document.createElement("span");imprintSpan.textContent=imprint;
+    const countSpan=document.createElement("span");countSpan.textContent=String(n).padStart(3,"0");
+    folio.append(imprintSpan,countSpan);
     el.append(heading,area,folio);
     el.style.width=this.css.width+"px";
     el.style.height=this.css.height+"px";
@@ -216,7 +220,8 @@ class Linotype {
   }
   standard(section,type){
     const id=section.id;
-    const sheet=this.leaf(type,id,id==="book-vergil"?"VERGIL · PROLOGUE":"ESSAYS");
+    const sheet=this.leaf(type,id,id==="book-vergil"?"VERGIL · PROLOGUE":
+      document.body.dataset.editionRunningTitle||"FIRST READING");
     const contents=immutable(section);
     contents.removeAttribute("id");
     contents.classList.add("linotype-content");
@@ -231,7 +236,7 @@ class Linotype {
         const nodes=[...section.children];
         for(const node of nodes){
           if(!this.appendPiece(page,immutable(node))){
-            page=this.leaf(type,id,isVergil?"VERGIL · PROLOGUE":"ESSAYS");
+            page=this.leaf(type,id,isVergil?"VERGIL · PROLOGUE":"FIRST READING");
             if(!this.appendPiece(page,immutable(node))){
               if(isVergil&&node.matches("p.vergil-block"))
                 page=this.appendParagraph(page,node,id,"VERGIL · PROLOGUE","preface");
@@ -252,7 +257,12 @@ class Linotype {
     const frame=document.createElement("div");
     frame.className="linotype-image-frame";
     const figure=q("figure",section);
-    if(!figure)throw Error("Missing source figure in "+sourceId);
+    if(!figure){
+      // A documented technical chapter can be a typographic opener without
+      // an illustration. Never generate fake images to satisfy a book fixture.
+      if(!this.fits(leaf.area))throw Error("Text-only chapter opener overflow: "+sourceId);
+      return;
+    }
     frame.append(immutable(figure));
     leaf.area.append(frame);
     const title=q(".book-chapter-heading",leaf.area);
@@ -301,12 +311,40 @@ class Linotype {
     }
     if(!this.fits(leaf.area))throw Error("Plate overflow "+sourceId+" "+JSON.stringify({area:[leaf.area.clientWidth,leaf.area.clientHeight,leaf.area.scrollWidth,leaf.area.scrollHeight],titleH,img:[img.getBoundingClientRect().width,img.getBoundingClientRect().height],fig:[q("figure",frame).getBoundingClientRect().width,q("figure",frame).getBoundingClientRect().height],frame:[frame.clientWidth,frame.clientHeight]}));
   }
+  // An authored mixed-media object is part of the source sequence, not a
+  // post-pagination overlay. When requested, compose its short preceding
+  // source passage with the object atomically on one physical sheet.
+  // This avoids an unanchored full-page "application" orphan.
+  mediaWithAnchor(leaf,paragraph,media,sourceId,label){
+    const pair=[immutable(paragraph),immutable(media)];
+    const measure=(sheet)=>{
+      sheet.area.append(...pair);
+      if(this.fits(sheet.area))return true;
+      pair.forEach(node=>node.remove());
+      return false;
+    };
+    if(measure(leaf))return leaf;
+    const following=this.leafOfText(sourceId,label);
+    if(!measure(following))throw Error("Anchored mixed-media content cannot fit one sheet: "+media.dataset.pressMedia);
+    return following;
+  }
   text(section,sourceId,label){
-    let sheet=this.leafOfText(sourceId,label);
+    const last=this.leaves[this.leaves.length-1];
+    // A text-only technical chapter starts reading on its title leaf.
+    // Literary/image chapters retain their separate illustrated opener.
+    let sheet=last && last.type==="opener" && last.sourceId===sourceId &&
+      !last.area.querySelector("figure") ? last : this.leafOfText(sourceId,label);
     const prose=q(".book-prose",section);
     if(!prose)throw Error("No prose for "+sourceId);
-    for(const element of [...prose.children]){
-      if(element.tagName==="P"){
+    const elements=[...prose.children];
+    for(let i=0;i<elements.length;i++){
+      const element=elements[i];
+      const media=elements[i+1];
+      if(element.tagName==="P" && media?.hasAttribute("data-press-media") &&
+         media.dataset.keepWithAnchor==="previous" && element.textContent.length<=360){
+        sheet=this.mediaWithAnchor(sheet,element,media,sourceId,label);
+        i++; // the authored media is inseparable from the preceding passage
+      }else if(element.tagName==="P"){
         sheet=this.appendParagraph(sheet,element,sourceId,label);
       }else{
         if(!this.appendPiece(sheet,immutable(element))){
@@ -328,34 +366,32 @@ class Linotype {
     this.geometry();
     this.stage.dataset.mode="measure";
     const nodes=[...this.source.children];
-    let currentId="book-cover",label="ESSAYS";
+    let currentId="book-cover",label="FIRST READING";
     for(const node of nodes){
       if(node.classList.contains("book-cover"))this.standard(node,"cover");
       else if(node.classList.contains("book-preface"))this.standard(node,"preface");
       else if(node.classList.contains("book-chapter")){
         currentId=node.id;
-        label=q("h2",node)?.textContent||"ESSAYS";
+        label=q("h2",node)?.textContent||"FIRST READING";
         this.image(node,currentId,true);
       }else if(node.classList.contains("book-art-leaf"))this.image(node,currentId);
       else if(node.classList.contains("book-chapter-text"))this.text(node,currentId,label);
       else if(node.classList.contains("book-end"))this.standard(node,"end");
     }
     this.pages=this.leaves.length;
-    if(this.pages<7)throw Error("Insufficient typeset leaves");
+    if(this.pages<Math.max(4,Number(this.source.dataset.minLeaves||4)))throw Error("Insufficient typeset leaves");
     // Byte-for-byte equivalent text content across every deliberate split.
     // Paragraph boundaries and inline emphasis remain represented in DOM.
-    const expectedBySource=new Map();
     for(const original of this.source.querySelectorAll(".book-chapter-text")){
-      let opener=original.previousElementSibling;
+      const node=original.previousElementSibling;
+      let opener=node;
       while(opener&&!opener.classList.contains("book-chapter"))opener=opener.previousElementSibling;
       const id=opener?.id;
       if(!id)throw Error("Unbound manuscript passage");
       const expected=[...original.querySelectorAll(".book-prose p")].map(x=>x.textContent).join("");
-      expectedBySource.set(id,(expectedBySource.get(id)||"")+expected);
-    }
-    for(const [id,expected] of expectedBySource){
-      const received=this.leaves.filter(x=>x.type==="text"&&x.sourceId===id)
-        .flatMap(x=>[...x.area.querySelectorAll("p:not(.book-source-note)")])
+      const received=this.leaves.filter(x=>x.sourceId===id &&
+          (x.type==="text" || (x.type==="opener" && !x.area.querySelector("figure"))))
+        .flatMap(x=>[...x.area.querySelectorAll(":scope > p:not(.book-source-note)")])
         .map(x=>x.textContent).join("");
       if(expected!==received)throw Error("Source text lost in pagination: "+id);
     }

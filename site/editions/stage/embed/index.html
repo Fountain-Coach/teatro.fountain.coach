@@ -1,14 +1,34 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Teatro · Embedded animated page</title>
+<title>Teatro · Spatial element</title>
 <style>
-html,body,#root{width:100%;height:100%;min-height:0;margin:0;overflow:hidden;background:#f3efe7}
-#root>div{height:100%!important;min-height:0}
-#root main{height:100%;min-height:0}
-#teatro-stage-scene{height:100%!important;min-height:0!important}
+html,body,#root{width:100%;height:100%;min-height:0;margin:0;overflow:hidden;background:transparent}
+#root>div{height:100%!important;min-height:0;background:transparent!important}
+#root main,#root main>div,#teatro-stage-scene{
+  height:100%!important;min-height:0!important;max-height:100%!important;
+  overflow:hidden!important;
+}
 .teatro-sidebar-disclosure{display:none!important}
 #teatro-stage-scene canvas,#teatro-stage-scene svg{width:100%!important;height:100%!important;display:block}
+/* Book ink contrast for the fallback only; the WebGL implementation is unchanged. */
+#teatro-stage-scene svg > g:nth-of-type(1){stroke:#777065}
+#teatro-stage-scene svg > g:nth-of-type(2){stroke:#937756}
+#root [role="status"]{position:absolute!important;width:1px!important;height:1px!important;
+  padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 </style>
-<script type="module" src="/assets/index-CY5_5ULO.js"></script></head>
+<script type="module" src="/assets/index-CY5_5ULO.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const root=document.getElementById('root');
+  // Source SVG fallback extends past its own 600-unit viewBox (to y=652).
+  // Correct only the presentation viewport, not its source paths or animation.
+  const view=new MutationObserver(() => {
+    const svg=root.querySelector('#teatro-stage-scene > svg');
+    if(svg && svg.getAttribute('viewBox')==='0 0 800 600')
+      svg.setAttribute('viewBox','0 0 800 710');
+  });
+  view.observe(root,{subtree:true,childList:true});
+});
+</script></head>
 <body><div id="root"></div></body></html>

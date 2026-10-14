@@ -23,9 +23,10 @@ SCORE="teatro-score-memory-vector-human-condition.svg"
 def sha(data):return hashlib.sha256(data).hexdigest()
 def git_sha(path):return subprocess.check_output(["git","-C",str(path),"rev-parse","HEAD"],text=True).strip()
 
-def main(fountain,satzfunk):
+def main(fountain,satzfunk,press):
  fountain=fountain.resolve()
  satzfunk=satzfunk.resolve()
+ press=press.resolve()
  upstream=fountain/"site/editions/essays"/SLUG/"index.html"
  prose=fountain/"site/essays"/SLUG/"index.html"
  edition_meta=json.loads((fountain/"site/essays/edition-manifest.json").read_text())
@@ -109,7 +110,8 @@ def main(fountain,satzfunk):
  for name in ["book.css","book.js","book-boot.js","reading-layout-policy.js",
               "linotype-engine.js","mobile-page-navigation.js",
               "mobile-page-navigation.css","essays.css"]:
-  raw=(source_assets/name).read_bytes()
+  raw=((press/"runtime/linotype-engine.js") if name=="linotype-engine.js"
+       else source_assets/name).read_bytes()
   (output_assets/name).write_bytes(raw)
   runtime.append({"name":name,"sha256":sha(raw)})
  (output_assets/"teatro.css").write_text(
@@ -155,7 +157,7 @@ def main(fountain,satzfunk):
  with (output_assets/"teatro.css").open("a") as css:
   css.write('.satzfunk-stage-note{font:12px/1.5 Iowan Old Style,Georgia,serif;text-align:center;color:var(--book-muted)}.satzfunk-stage-note a{text-underline-offset:3px}\n')
 
- document=integrate(document,output_assets)
+ document=integrate(document,output_assets,press/"runtime/mixed-media.css",manuscript["sourceSHA256"])
  assert document.count('data-teatro-book-stage')==1
 
  # Domain root is *the edition*, not the app. An actual book remains
@@ -183,6 +185,10 @@ def main(fountain,satzfunk):
   "readerSourceHTMLSHA256":sha(source),
   "bookHTMLBeforeSatzfunkSHA256":bare_sha,
   "runtimeFiles":runtime,
+  "fountainPressCommit":git_sha(press),
+  "sceneAnchorId":"teatro:unfinished-composition:empty-chair-attention",
+  "sceneElementId":"teatro:unfinished-composition:spatial-relation-01",
+  "scenePlacement":"inside-authored-prose",
   "satzfunkSourceRepository":"Fountain-Coach/Satzfunk",
   "satzfunkCommit":git_sha(satzfunk),
   "satzfunkAdapterSHA256":sha(adapter.read_bytes()),
@@ -201,6 +207,7 @@ def main(fountain,satzfunk):
   "publicationState":"source-candidate-book-first-teatro-first-hearing-not-publicly-deployed",
   "editorialLanding":"editions/first-hearing/",
   "firstAudioSurface":"editions/first-hearing/#book-live-stage",
+  "sceneComposition":"authored-paragraph-anchored-mixed-media",
   "embeddedInteractiveScene":"editions/stage/embed/",
   "stageAudioClaim":"browser-Csound on explicit interaction, not released narration",
   "sourceAuthority":"Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
@@ -215,5 +222,6 @@ if __name__=="__main__":
  p=argparse.ArgumentParser()
  p.add_argument("--fountain-source",type=Path,required=True)
  p.add_argument("--satzfunk-source",type=Path,required=True)
+ p.add_argument("--press-source",type=Path,required=True)
  a=p.parse_args()
- main(a.fountain_source,a.satzfunk_source)
+ main(a.fountain_source,a.satzfunk_source,a.press_source)

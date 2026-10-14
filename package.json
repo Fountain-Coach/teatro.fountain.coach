@@ -6,7 +6,7 @@
   "description":"Book-first Teatro source edition and Satzfunk hearing boundary",
   "repository":{"type":"git","url":"git+https://github.com/Fountain-Coach/teatro.fountain.coach.git"},
   "scripts":{
-    "build":"python3 scripts/build_first_hearing.py --fountain-source ../fountain.coach --satzfunk-source ../../Satzfunk",
+    "build":"python3 scripts/build_first_hearing.py --fountain-source ../fountain.coach --satzfunk-source ../../Satzfunk --press-source ../../fountain-press",
     "check":"python3 scripts/verify_first_hearing.py",
     "browser":"node scripts/verify_teatro_browser.mjs"
   }

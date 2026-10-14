@@ -50,3 +50,13 @@ Further implementation must be scenario-driven, use Fountain Press
 semantic mixed-media composition and Reframe's existing stable anchors,
 editorial margin and Store. Do not add another standalone experience,
 unadmitted microphone/audio authority or fictional narrator.
+
+
+### Slice A candidate, not an accepted product
+
+The current scene is placed after the source-pinned empty-chair paragraph,
+using Fountain Press `data-press-media` and its atomic anchor paragraph
+composition. Do not regress to `book-art-leaf` or a scene-only paper page.
+The authored paragraph and media digest are required. Keep original WebGL
+and interactive browser-Csound separate from narration. Visual review on
+actual iPad and full Reframe editorial coupling are unaccepted.
