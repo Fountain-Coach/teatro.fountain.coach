@@ -1,0 +1,14 @@
+{
+  "schema": "fountain.estate.public-source.v1",
+  "host": "teatro.fountain.coach",
+  "canonical": "https://teatro.fountain.coach/",
+  "publicationRoot": "site/",
+  "repository": "Fountain-Coach/teatro.fountain.coach",
+  "capturedAt": "2026-10-14T10:28:47Z",
+  "publicationState": "verified-live-publication-baseline",
+  "fileCount": 27,
+  "indexPages": 1,
+  "sourceSha256Inventory": "2259138028d6aecfaff516e1431f05833573137656ffe85bdd6979cd9cf8dbf0",
+  "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
+  "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback"
+}
