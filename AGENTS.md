@@ -169,3 +169,17 @@ integrity, sparse Play/disclosure plus Contents, true measured Play
 ring, Ear in parameter panel, and reciprocal scene/audio activation.
 Do not infer final Reframe approval, native MIDI2, public deployment,
 or physical HTTPS Safari Csound witness.
+
+## R17 — bookshelf state before the accepted reader
+
+The domain root and `/editions/` project Press's source-admitted
+Bookshelf state; `/editions/first-hearing/` remains the original
+complete v16 Linotype reader. Treat source text, score, Stage and
+audio as read-only for this slice. A book object must show both a
+small page thumbnail **and** a larger book cover with the actual,
+verified original source image, not a random default picture.
+Do not count the separate Teatro Stage as a second book or insert
+fixture books. Link the whole book to its canonical internal route,
+test real pointer entry on all five layouts, and verify the book
+unchanged after entry. Root is no longer an HTML duplicate of the
+book. Public HTTPS publishing remains independently governed.

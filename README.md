@@ -262,3 +262,32 @@ The regression confirms the actual Play circle computed color
 changes in response to audio (not merely a CSS variable changing),
 reduced-motion computes to `0s`, Ear has no top-toolbar instance,
 and the full R12–R15 source and browser tests still pass.
+
+## R17 — Bookshelf landing, real Teatro book within
+
+Fountain Press owns a reusable **Linotype Bookshelf state**
+(`runtime/bookshelf.py` plus `runtime/bookshelf.css`). Teatro now
+uses that state for **both** `/` and `/editions/`, while its actual
+author-acknowledged v16 reader remains directly addressable at
+`/editions/first-hearing/`. These are one reading system's two
+states: bookshelf and open book; the landing is not a marketing
+website or an independent catalogue frontend.
+
+The single admitted book is **Teatro — An Unfinished Composition**.
+Its cover object is represented simultaneously by a small folio/page
+thumbnail and a larger paper cover showing the **original source
+Teatro Score: Memory Vector — Human Condition**. Both representations
+are derived from the same SHA-verified `/assets/edition/` image.
+Selecting either representation via the encompassing book link enters
+the complete literary book, not a dummy reading fixture.
+`/editions/stage/` is a performance sub-edition and remains outside
+the book catalogue, since it is not a separate admitted book.
+
+R17 is deliberately a new landing candidate based on the v16 beta,
+**not** another acceptance of the complete Reframe editor. The
+original essay, synchronized Teatro scene/CSound/Ear, browser-local
+MIDI2 UMP and approved beta book-control layout remain in the
+unchanged first-hearing reader route. The shelf has its own accessible
+book identity, natural responsive paper measure and readable mobile
+thumbnail; no external book sources, invented cover, public
+domain release or native MIDI2 capability is implied.

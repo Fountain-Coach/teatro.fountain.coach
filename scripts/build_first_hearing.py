@@ -12,6 +12,7 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 from integrate_interactive_plate import integrate
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -28,6 +29,8 @@ def main(fountain,satzfunk,press,stage_source):
  satzfunk=satzfunk.resolve()
  press=press.resolve()
  stage_source=stage_source.resolve()
+ sys.path.insert(0,str(press/"runtime"))
+ from bookshelf import render_bookshelf
  upstream=fountain/"site/editions/essays"/SLUG/"index.html"
  prose=fountain/"site/essays"/SLUG/"index.html"
  edition_meta=json.loads((fountain/"site/essays/edition-manifest.json").read_text())
@@ -124,6 +127,8 @@ def main(fountain,satzfunk,press,stage_source):
    '.book-cover .subedition-title{font-size:clamp(28px,5vw,50px)}\n'
    '@media(max-width:700px){.teatro-stage-link{font-size:9px;padding:6px 4px}.book-tools button{padding:5px!important}}\n')
  # Fountain Press: deterministic UMP and compact player shell.
+ # One reusable Press Bookshelf state serves the outer edition landing.
+ shutil.copyfile(press/"runtime/bookshelf.css",output_assets/"bookshelf.css")
  for media_name in ('book-midi2.mjs','book-player.css'):
   shutil.copyfile(press/'runtime'/media_name,output_assets/media_name)
  shutil.copyfile(ROOT/'scripts/book-player.mjs',output_assets/'book-player.mjs')
@@ -174,19 +179,35 @@ def main(fountain,satzfunk,press,stage_source):
  document=integrate(document,output_assets,press/"runtime/mixed-media.css",manuscript["sourceSHA256"])
  assert document.count('data-teatro-book-stage')==1
 
- # Domain root is *the edition*, not the app. An actual book remains
- # directly addressable even when its main landing changes later.
+ # A bookshelf is a Linotype state, not a rival website or another book.
+ # The v16 accepted reader remains byte-identical at its direct edition URL;
+ # root and /editions/ become the same source-admitted shelf.
  edition_dir=SITE/BOOK;edition_dir.mkdir(parents=True,exist_ok=True)
  (edition_dir/"index.html").write_text(document)
- (SITE/"index.html").write_text(document)
+ shelf=__import__("bookshelf").render_bookshelf(
+  title="The Teatro bookshelf",
+  imprint="TEATRO · FOUNTAIN COACH",
+  books=[{
+    "id":"teatro-first-hearing",
+    "title":"Teatro — An Unfinished Composition",
+    "author":"Benedikt Eickhoff",
+    "edition":"FIRST HEARING · EDITION 01",
+    "reader":"/editions/first-hearing/",
+    "cover_image":"/assets/edition/"+SCORE,
+    "source_revision":git_sha(fountain)
+  }],
+  css_url="/assets/linotype/bookshelf.css")
+ assert '<img src="/assets/edition/'+SCORE+'"' in shelf
+ assert 'data-linotype-state="bookshelf"' in shelf
+ (SITE/"index.html").write_text(shelf)
  index=SITE/"editions/index.html"
  index.parent.mkdir(parents=True,exist_ok=True)
- index.write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="robots" content="noindex,nofollow"><title>Teatro Editions</title><link rel="stylesheet" href="/assets/linotype/essays.css"></head><body style="background:#f4f0e8;color:#29251d;font:18px/1.5 Georgia,serif;max-width:45rem;margin:0 auto;padding:3rem 1.5rem"><small>TEATRO · THE EDITIONS</small><h1>Teatro.</h1><p><a href="/editions/first-hearing/">First Hearing · The authored book</a></p><p><a href="/editions/stage/">Stage · A sounding, executable space</a></p><p>The book is the entrance; stage and sound follow by invitation.</p><footer class="catalogue-footer"><nav class="footer-legals" aria-label="Legal and company information"><a href="https://status.fountain.coach/" data-legal-role="company-status">Company status &amp; transparency</a> · <a href="https://governance.fountain.coach/legal/">Legal notices</a></nav></footer></body></html>\n')
+ index.write_text(shelf)
 
  receipt={
   "schema":"teatro.fountain.press.first-hearing.v1",
   "edition":"Teatro — An Unfinished Composition · First Hearing",
-  "publicationRole":"book-first-with-page-embedded-interactive-WebGL-stage",
+  "publicationRole":"Linotype-bookshelf-landing-with-book-first-interactive-score",
   "canonical":CANON,"stageEdition":"editions/stage/",
   "owningRepository":"Fountain-Coach/teatro.fountain.coach",
   "authoredSourceRepository":"Fountain-Coach/fountain.coach",
@@ -216,7 +237,7 @@ def main(fountain,satzfunk,press,stage_source):
   "hearingStatus":"not-yet-released","approvedNarration":False,
   "stageAudio":"interactive-browser-csound-user-activated; not a spoken book",
   "releaseStatus":"Git source candidate, public Teatro homepage unchanged",
-  "bookPath":BOOK,"rootLanding":"book-mirrors-first-hearing",
+  "bookPath":BOOK,"rootLanding":"bookshelf-mirrors-editions",
   "sourceMutation":False
  }
  (edition_dir/"edition.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
@@ -225,8 +246,8 @@ def main(fountain,satzfunk,press,stage_source):
  (ROOT/"publication-files.sha256").write_text(inventory)
  edit=ROOT/"edition.json";manifest=json.loads(edit.read_text())
  manifest.update({
-  "publicationState":"source-candidate-book-first-teatro-first-hearing-not-publicly-deployed",
-  "editorialLanding":"editions/first-hearing/",
+  "publicationState":"source-candidate-Linotype-bookshelf-first-hearing-not-publicly-deployed",
+  "editorialLanding":"editions/",
   "firstAudioSurface":"editions/first-hearing/#book-live-stage",
   "sceneComposition":"authored-paragraph-anchored-mixed-media",
   "embeddedInteractiveScene":"editions/stage/embed/",

@@ -24,7 +24,7 @@ def main():
  assert manifest["hearingStatus"]=="not-yet-released"
  assert manifest["sourceMutation"] is False
  assert sha((SITE/"assets/edition/teatro-score-memory-vector-human-condition.svg").read_bytes())==manifest["originalScorePlateSHA256"]
- for path in ["index.html","editions/first-hearing/index.html"]:
+ for path in ["editions/first-hearing/index.html"]:
   book=(SITE/path).read_text()
   assert 'id="book-flow" class="book-flow"' in book
   assert book.count('data-book-chapter=')==1
@@ -101,7 +101,19 @@ def main():
   assert len(selected)==22
   assert sha(json.dumps(selected,ensure_ascii=False).encode())==manifest["paragraphsSHA256"],"Edited original Teatro text"
   print("TEATRO_FULL_BOOK_VERIFIED",path,len(selected),"complete source paragraphs")
- assert (SITE/"index.html").read_bytes()==(SITE/"editions/first-hearing/index.html").read_bytes()
+ root=(SITE/"index.html").read_text()
+ assert root==(SITE/"editions/index.html").read_text()
+ assert root!=(SITE/"editions/first-hearing/index.html").read_text()
+ assert 'data-linotype-state="bookshelf"' in root
+ assert 'data-book-count="1"' in root
+ assert 'id="book-viewport"' not in root
+ assert root.count('class="shelf-book"')==1
+ assert 'href="/editions/first-hearing/"' in root
+ assert 'class="shelf-miniature"' in root and 'class="shelf-cover"' in root
+ assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
+ assert 'teatro-stage' not in root
+ assert (SITE/"assets/linotype/bookshelf.css").is_file()
+ assert (SITE/"editions/first-hearing/index.html").is_file()
  assert manifest["scenePlacement"]=="inside-authored-prose"
  assert "mediaWithAnchor(" in (SITE/"assets/linotype/linotype-engine.js").read_text()
  assert (SITE/"assets/linotype/mixed-media.css").is_file()
