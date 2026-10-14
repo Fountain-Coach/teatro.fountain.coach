@@ -52,11 +52,15 @@ function observe(level,source){
  if(mode==='stopped')return;
  const raw=Number(level);
  if(!Number.isFinite(raw)||raw<0)return;
- const value=bound(raw*8);
+ // RMS ranges differ greatly between the genuine Csound worklet and the
+ // HTTP-only Web Audio preview. Calibrate each known source instead of
+ // saturating every preview sample at 100 percent.
+ const ceiling=source==='teatro-web-audio-preview'?0.30:0.025;
+ const value=bound(raw/ceiling);
  const witnessed=raw>0.0001;
- // Ear size follows actual RMS; the non-linear mapping remains bounded
- // (0.84–1.22), so near-silent instrument output remains legible.
- const intensity=bound(Math.sqrt(raw)*5);
+ // Bounded 0.84–1.22; the square root makes quiet Csound audible visually
+ // without flattening the louder preview into a permanent maximum.
+ const intensity=Math.sqrt(value);
  earIcon?.style.setProperty('--ear-scale',(0.84+intensity*.38).toFixed(3));
  earIcon?.setAttribute('aria-label',witnessed?
    'Ear: measured audio output, intensity '+Math.round(intensity*100)+' percent':
@@ -72,7 +76,7 @@ function observe(level,source){
   lastEar=now;
   bus.publish(bus.controllers.earLevel,value,'ear:'+source);
   window.dispatchEvent(new CustomEvent('fountain:ear:observation',{detail:{
-   sourceIdentity:source,timestamp:now,level:value,state:value>.018?'witnessed':'silent'}}));
+   sourceIdentity:source,timestamp:now,level:value,state:witnessed?'witnessed':'silent'}}));
  }
 }
 function applyPreview(){

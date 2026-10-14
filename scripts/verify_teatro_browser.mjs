@@ -88,7 +88,8 @@ async function open(path,width,height,label){
     if(['preview','csound'].includes(audible?.mode)&&audible?.ear==='witnessed')break;
   }
   if(!['preview','csound'].includes(audible?.mode)||audible.ear!=='witnessed'||
-      audible.rms<=0.0001||audible.scale<=.84||audible.pressed!=='true')
+      audible.rms<=0.0001||audible.scale<=.84||audible.scale>=1.221||
+      audible.pressed!=='true')
     throw Error('R15 page Play did not start measured sound/Ear '+JSON.stringify(audible));
   console.log('PASSED R15 PAGE TO AUDIO',label,JSON.stringify(audible));
   let interactiveState='inactive';
@@ -112,9 +113,17 @@ async function open(path,width,height,label){
       composition.ratio>=.45||composition.ratio<=.1||composition.overflow)
       throw Error('R12 mixed media composition invalid '+JSON.stringify(composition));
   console.log('PASSED R12 COMPOSITION',label,JSON.stringify(composition));
-  if(scene.animatedFallback&&
-      (!scene.hudClipped||scene.svgViewBox!=='0 0 800 710'))
+  if(scene.animatedFallback){
+    // The original SVG initializes at 800×600 and the admitted book
+    // projection expands it to 800×710 asynchronously after its first
+    // DOM mutation. Wait for that settled viewport, do not sample midway.
+    for(let i=0;i<18&&scene.svgViewBox!=='0 0 800 710';i++){
+      await pause(80);
+      scene.svgViewBox=await evalJS("document.querySelector('iframe[data-teatro-live-frame]')?.contentDocument?.querySelector('#teatro-stage-scene > svg')?.getAttribute('viewBox')");
+    }
+    if(!scene.hudClipped||scene.svgViewBox!=='0 0 800 710')
       throw Error('R12 fallback diagnostics or geometry leak '+JSON.stringify(scene));
+  }
   if(!scene.webgl){
    let puppet=null;
    for(let n=0;n<35;n++){
