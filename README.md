@@ -291,3 +291,38 @@ unchanged first-hearing reader route. The shelf has its own accessible
 book identity, natural responsive paper measure and readable mobile
 thumbnail; no external book sources, invented cover, public
 domain release or native MIDI2 capability is implied.
+
+## R18 — complete estate proofreading shelf, without tilted miniatures
+
+The author's R17 iPad critique requests the other **currently
+available books** and removal of the rotated off-axis thumbnail.
+The root Linotype Bookshelf now renders six source-backed **edition
+objects**, each as ONE upright cover with verified author-owned
+art, not a duplicate preview and cover:
+
+1. First Reading — Solstice · 30 selected works · publicly reachable
+   at its already operating works.benedikt-eickhoff.de HTTPS URL
+2. Teatro — An Unfinished Composition · First Hearing, with the
+   accepted v16 spatial-score/CSound/Ear/MIDI2 book
+3. Essays — Collected Edition · 77 paragraphs / three complete essays
+4. Teatro — An Unfinished Composition · standalone original essay
+5. Semantic Compilation — The Archive Is Not the Edition · essay
+6. Reframe and the Business Value of the Estate · essay
+
+The last three essays are *children of the collected Essays*; Teatro's
+First Hearing is an independent multimedia projection of its already
+present original essay, not a newly invented separate manuscript.
+Bookshelf count means **edition objects**, not source writing count.
+Stage, normative Governance and 30 First Reading chapters are not
+misrepresented as new books.
+
+All images are copied from original owning repositories and verified
+by the original essay-image SHA-256 or pinned First Reading source
+SHA. Git-owned links use canonical reader URLs and distinguish
+`PUBLIC READING` from `WLAN PROOF`. Only the ephemeral Estate
+WLAN release rewrites the four Fountain Coach and one First Reading
+links to neighboring stage ports, giving actual working proofreading
+paths on iPad. Teatro First Hearing remains at its internal direct
+route; its accepted v16 reader and original scene are untouched.
+The external HTTPS essay/Teatro reader URLs were checked and are
+currently not public (HTTP 404); the shelf is not a public launch.

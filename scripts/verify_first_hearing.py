@@ -105,13 +105,25 @@ def main():
  assert root==(SITE/"editions/index.html").read_text()
  assert root!=(SITE/"editions/first-hearing/index.html").read_text()
  assert 'data-linotype-state="bookshelf"' in root
- assert 'data-book-count="1"' in root
+ assert 'data-book-count="6"' in root
  assert 'id="book-viewport"' not in root
- assert root.count('class="shelf-book"')==1
+ assert root.count('class="shelf-book"')==6
+ assert root.count('class="shelf-cover"')==6
+ assert 'class="shelf-miniature"' not in root
  assert 'href="/editions/first-hearing/"' in root
- assert 'class="shelf-miniature"' in root and 'class="shelf-cover"' in root
+ assert 'https://fountain.coach/editions/essays/' in root
+ assert 'https://works.benedikt-eickhoff.de/solstice/editions/first-reading/' in root
+ assert root.count('data-preview-host="fountain"')==4
+ assert root.count('data-preview-host="solstice"')==1
+ assert root.count('data-preview-host="teatro"')==1
  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
  assert 'teatro-stage' not in root
+ assert 'governance-constitution' not in root and 'book-of-reframe' not in root
+ assert root.count('WLAN PROOF')==5 and root.count('PUBLIC READING')==1
+ manifest_all=json.loads((ROOT/"edition.json").read_text())
+ assert len(manifest_all["bookshelfBooks"])==6
+ for row in manifest_all["bookshelfBooks"]:
+  assert (SITE/row["art"].lstrip("/")).is_file(),row["id"]
  assert (SITE/"assets/linotype/bookshelf.css").is_file()
  assert (SITE/"editions/first-hearing/index.html").is_file()
  assert manifest["scenePlacement"]=="inside-authored-prose"

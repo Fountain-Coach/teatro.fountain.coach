@@ -184,20 +184,70 @@ def main(fountain,satzfunk,press,stage_source):
  # root and /editions/ become the same source-admitted shelf.
  edition_dir=SITE/BOOK;edition_dir.mkdir(parents=True,exist_ok=True)
  (edition_dir/"index.html").write_text(document)
- shelf=__import__("bookshelf").render_bookshelf(
-  title="The Teatro bookshelf",
-  imprint="TEATRO · FOUNTAIN COACH",
-  books=[{
+ # Catalogue membership is explicitly source-backed, not generated
+ # from any arbitrary Markdown repository or 30 First Reading chapters.
+ from bookshelf import render_bookshelf
+ collections=SITE/"assets/bookshelf"
+ collections.mkdir(parents=True,exist_ok=True)
+ fountain_manifest=json.loads((fountain/"site/essays/edition-manifest.json").read_text())
+ assert fountain_manifest["readingOrder"]==[
+    "teatro-an-unfinished-composition",
+    "semantic-compilation-the-archive-is-not-the-edition",
+    "reframe-and-the-business-value-of-the-estate"]
+ books=[]
+ solstice_source=ROOT.parent/"solstice.fountain.coach"
+ solstice_reader=solstice_source/"site/editions/first-reading/index.html"
+ solstice_image=solstice_source/"site/assets/edition/post-2025-12-22-b0e6cf8252aca0da.jpg"
+ assert solstice_reader.is_file() and solstice_image.is_file()
+ assert sha(solstice_image.read_bytes())=="b0e6cf8252aca0da83a9b0bfbdbb3f57b88c826e8b85ac5a89f43b23bad98876"
+ shutil.copyfile(solstice_image,collections/"first-reading.jpg")
+ books.append({
+    "id":"first-reading", "title":"First Reading — Solstice",
+    "author":"Benedikt Eickhoff","edition":"FIRST READING · 30 WORKS",
+    "reader":"https://works.benedikt-eickhoff.de/solstice/editions/first-reading/",
+    "cover_image":"/assets/bookshelf/first-reading.jpg",
+    "source_revision":git_sha(solstice_source),"host":"solstice",
+    "status":"public-live"
+ })
+ books.append({
     "id":"teatro-first-hearing",
     "title":"Teatro — An Unfinished Composition",
     "author":"Benedikt Eickhoff",
     "edition":"FIRST HEARING · EDITION 01",
     "reader":"/editions/first-hearing/",
     "cover_image":"/assets/edition/"+SCORE,
-    "source_revision":git_sha(fountain)
-  }],
+    "source_revision":git_sha(fountain),"host":"teatro","status":"wlan-proof"
+ })
+ first=fountain_manifest["essays"][0]
+ books.append({
+    "id":"essays-collection","title":"Essays — Collected Edition",
+    "author":"Benedikt Eickhoff","edition":"ESSAYS · THREE COMPLETE WORKS",
+    "reader":"https://fountain.coach/editions/essays/",
+    "cover_image":"/assets/edition/"+SCORE,
+    "source_revision":git_sha(fountain),"host":"fountain",
+    "status":"wlan-proof"
+ })
+ for item in fountain_manifest["essays"]:
+    original_art=fountain/"site/essays"/item["id"]/item["images"][0]["path"]
+    assert original_art.is_file() and sha(original_art.read_bytes())==item["images"][0]["sha256"]
+    admitted=collections/(item["id"]+original_art.suffix)
+    shutil.copyfile(original_art,admitted)
+    books.append({
+        "id":"essay-"+item["id"],"title":item["title"],
+        "author":"Benedikt Eickhoff",
+        "edition":"ESSAY · STANDALONE EDITION",
+        "reader":"https://fountain.coach/"+item["editionPath"],
+        "cover_image":"/assets/bookshelf/"+admitted.name,
+        "source_revision":git_sha(fountain),"host":"fountain",
+        "status":"wlan-proof"
+    })
+ assert len(books)==6
+ shelf=render_bookshelf(
+  title="The Teatro bookshelf",
+  imprint="TEATRO · FOUNTAIN COACH",
+  books=books,
   css_url="/assets/linotype/bookshelf.css")
- assert '<img src="/assets/edition/'+SCORE+'"' in shelf
+ assert 'src="/assets/edition/'+SCORE+'"' in shelf
  assert 'data-linotype-state="bookshelf"' in shelf
  (SITE/"index.html").write_text(shelf)
  index=SITE/"editions/index.html"
@@ -238,6 +288,7 @@ def main(fountain,satzfunk,press,stage_source):
   "stageAudio":"interactive-browser-csound-user-activated; not a spoken book",
   "releaseStatus":"Git source candidate, public Teatro homepage unchanged",
   "bookPath":BOOK,"rootLanding":"bookshelf-mirrors-editions",
+  "bookshelfBooks":[{"id":book["id"],"status":book["status"],"reader":book["reader"],"host":book["host"],"art":book["cover_image"]} for book in books],
   "sourceMutation":False
  }
  (edition_dir/"edition.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
@@ -248,6 +299,9 @@ def main(fountain,satzfunk,press,stage_source):
  manifest.update({
   "publicationState":"source-candidate-Linotype-bookshelf-first-hearing-not-publicly-deployed",
   "editorialLanding":"editions/",
+  "bookshelfBooks":[{"id":book["id"],"status":book["status"],
+     "reader":book["reader"],"host":book["host"],"art":book["cover_image"]}
+     for book in books],
   "firstAudioSurface":"editions/first-hearing/#book-live-stage",
   "sceneComposition":"authored-paragraph-anchored-mixed-media",
   "embeddedInteractiveScene":"editions/stage/embed/",

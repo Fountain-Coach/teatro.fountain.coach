@@ -31,26 +31,16 @@ margin-top:auto;padding:13px 0 0}
 .bookshelf-paper h1{font-size:clamp(28px,4vw,43px);font-weight:400;letter-spacing:-.02em;
 margin:27px 0 3px}
 .bookshelf-intro{font:14px/1.5 Georgia,serif;margin:0 0 25px;color:var(--shelf-muted)}
-.bookshelf-books{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,365px),1fr));
-gap:clamp(25px,4vw,50px);padding:0;margin:0 0 30px;list-style:none}
-.shelf-book{display:grid;grid-template-columns:26% 1fr;column-gap:16px;
-text-decoration:none;color:inherit;align-items:end;position:relative;
-border:1px solid transparent;padding:12px;outline-offset:4px}
+.bookshelf-books{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));
+gap:clamp(16px,2.6vw,36px);padding:0;margin:0 0 30px;list-style:none}
+.shelf-book{display:flex;flex-direction:column;align-items:stretch;gap:0;
+text-decoration:none;color:inherit;position:relative;border:1px solid transparent;
+padding:8px;outline-offset:4px;min-width:0}
 .shelf-book:hover{border-color:var(--shelf-rule)}
 .shelf-book:focus-visible{outline:2px solid var(--shelf-accent)}
-.shelf-miniature,.shelf-cover{background:#f7f2e8;min-width:0;
-box-shadow:1px 5px 12px #352c271b;border:1px solid #d6cfc2;
-display:flex;flex-direction:column;overflow:hidden}
-.shelf-miniature{aspect-ratio:.69;align-self:center;gap:7px;padding:11% 12%;
-transform:rotate(-3deg) translateX(5px);transform-origin:bottom}
-.shelf-miniature-rule{height:1px;background:var(--shelf-rule)}
-.shelf-miniature-title{font:600 clamp(5px,.55vw,7px)/1.2 Georgia,serif;
-max-height:2.5em;overflow:hidden;overflow-wrap:break-word}
-.shelf-miniature-art{flex:1;min-height:0;border-top:1px solid var(--shelf-rule);
-border-bottom:1px solid var(--shelf-rule);display:grid;place-items:center}
-.shelf-miniature-art img{width:100%;height:100%;max-height:105px;object-fit:contain}
-.shelf-miniature-folio{text-align:right;font:7px ui-monospace,monospace}
-.shelf-cover{aspect-ratio:.73;padding:8% 8% 6%;gap:10px;align-self:center;max-width:235px}
+.shelf-cover{background:#f7f2e8;min-width:0;box-shadow:1px 5px 12px #352c271b;
+border:1px solid #d6cfc2;display:flex;flex-direction:column;overflow:hidden}
+.shelf-cover{aspect-ratio:.73;padding:8% 8% 6%;gap:10px;align-self:center;width:100%;max-width:235px}
 .shelf-cover-kicker,.shelf-cover-author{font:600 9px/1.35 ui-monospace,monospace;
 color:var(--shelf-muted);letter-spacing:.08em}
 .shelf-cover-title{font-size:clamp(15px,1.85vw,23px);line-height:1.05;
@@ -60,7 +50,7 @@ border-bottom:1px solid var(--shelf-rule);display:grid;place-items:center;
 background:#f3eee4}
 .shelf-cover-image img{width:100%;height:100%;min-height:0;object-fit:contain;
 filter:grayscale(.18)}
-.shelf-item-caption{grid-column:1/-1;margin-top:15px;display:flex;flex-direction:column;gap:6px;
+.shelf-item-caption{margin-top:10px;display:flex;flex-direction:column;gap:6px;
 border-top:1px solid var(--shelf-rule);padding-top:10px}
 .shelf-item-name{font-size:17px;line-height:1.25}
 .shelf-item-detail,.shelf-item-revision{font:10px/1.5 ui-monospace,monospace;
@@ -70,8 +60,8 @@ color:var(--shelf-muted);letter-spacing:.03em}
 .bookshelf-toolbar,.bookshelf-pagination{min-height:50px;padding:10px 15px;font-size:9px}
 .bookshelf-main{padding:14px}.bookshelf-paper{padding:20px 17px;min-height:70vh}
 .bookshelf-paper h1{font-size:27px}.bookshelf-books{grid-template-columns:minmax(0,1fr)}
-.shelf-book{max-width:360px;margin:auto;width:100%;grid-template-columns:25% 1fr;
-gap:12px}.shelf-cover-title{font-size:clamp(17px,5vw,23px)}
+.shelf-book{max-width:300px;margin:auto;width:100%}
+.shelf-cover-title{font-size:clamp(17px,5vw,23px)}
 }
 @media(prefers-reduced-motion:no-preference){
 .shelf-book{transition:border-color .18s ease}
@@ -86,7 +76,7 @@ gap:12px}.shelf-cover-title{font-size:clamp(17px,5vw,23px)}
  .bookshelf-paper{min-height:0;padding:29px 45px}
  .bookshelf-paper h1{margin-top:18px}
  .bookshelf-intro{margin-bottom:10px}
- .bookshelf-books{margin-bottom:12px;gap:22px}
+ .bookshelf-books{margin-bottom:12px;gap:15px}
  .shelf-cover{max-width:205px}
  .shelf-item-caption{margin-top:8px}
 }

@@ -37,24 +37,29 @@ async function open(path,width,height,label){
    return;
   }
   if(path==='/'||path==='/editions/'){
-    for(let n=0;n<35;n++){
+    // Lazy cover art below the fold is still source-attested. Trigger its
+    // ordinary native loading without scrolling the chosen book away.
+    await evalJS("[...document.querySelectorAll('.shelf-book img')].forEach(i=>i.loading='eager')");
+    for(let n=0;n<65;n++){
       await pause(100);
       if(await evalJS("[...document.querySelectorAll('.shelf-book img')].every(i=>i.complete&&i.naturalWidth>0)"))break;
     }
-    const shelf=await evalJS("(()=>{const b=document.body,l=[...document.querySelectorAll('.shelf-book')],images=[...document.querySelectorAll('.shelf-book img')];return {state:b.dataset.linotypeState,count:Number(b.dataset.bookCount),links:l.map(a=>a.getAttribute('href')),miniatures:document.querySelectorAll('.shelf-miniature').length,covers:document.querySelectorAll('.shelf-cover').length,images:images.length,sourceImages:images.map(i=>i.getAttribute('src')),imageLoaded:images.every(i=>i.complete&&i.naturalWidth>0),viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth,hasBookFlow:!!document.getElementById('book-flow'),hasFakeBooks:!!document.querySelector('[data-book-id=governance-constitution],[data-book-id=book-of-reframe]')}})()");
-    if(shelf.state!=='bookshelf'||shelf.count!==1||shelf.links[0]!=='/editions/first-hearing/'||
-      shelf.miniatures!==1||shelf.covers!==1||shelf.images!==2||!shelf.imageLoaded||
-      shelf.hasBookFlow||shelf.hasFakeBooks||shelf.scrollWidth>shelf.viewportWidth+2||
-      shelf.sourceImages.some(src=>src!=='/assets/edition/teatro-score-memory-vector-human-condition.svg'))
+    const shelf=await evalJS("(()=>{const b=document.body,l=[...document.querySelectorAll('.shelf-book')],images=[...document.querySelectorAll('.shelf-book img')];return {state:b.dataset.linotypeState,count:Number(b.dataset.bookCount),links:l.map(a=>a.getAttribute('href')),miniatures:document.querySelectorAll('.shelf-miniature').length,covers:document.querySelectorAll('.shelf-cover').length,images:images.length,sourceImages:images.map(i=>i.getAttribute('src')),imageLoaded:images.every(i=>i.complete&&i.naturalWidth>0),viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth,hasBookFlow:!!document.getElementById('book-flow'),hasFakeBooks:!!document.querySelector('[data-book-id=governance-constitution],[data-book-id=book-of-reframe]'),bookIds:l.map(a=>a.parentElement.dataset.bookId)}})()");
+    if(shelf.state!=='bookshelf'||shelf.count!==6||shelf.links.length!==6||
+      !shelf.links.includes('/editions/first-hearing/')||
+      !shelf.links.includes('https://works.benedikt-eickhoff.de/solstice/editions/first-reading/')||
+      shelf.miniatures!==0||shelf.covers!==6||shelf.images!==6||!shelf.imageLoaded||
+      shelf.hasBookFlow||shelf.hasFakeBooks||new Set(shelf.bookIds).size!==6||shelf.scrollWidth>shelf.viewportWidth+2||
+      shelf.sourceImages.some(src=>!src.startsWith('/assets/bookshelf/')&&src!=='/assets/edition/teatro-score-memory-vector-human-condition.svg'))
       throw Error('R17 source-bound Bookshelf state invalid '+JSON.stringify(shelf));
     console.log('PASSED R17 BOOKSHELF',label,JSON.stringify(shelf));
     // A genuine source-owned link enters the existing v16 Linotype
     // reader; opening the book must not generate a competing app.
     // In short landscape viewports the shelf may scroll vertically.
     // Scroll the actual cover into the physical pointer target first.
-    await evalJS("document.querySelector('.shelf-book').scrollIntoView({block:'center',inline:'nearest'})");
+    await evalJS("document.querySelector('[data-book-id=teatro-first-hearing] .shelf-book').scrollIntoView({block:'center',inline:'nearest'})");
     await pause(180);
-    await userClick('.shelf-book');
+    await userClick('[data-book-id=teatro-first-hearing] .shelf-book');
     for(let n=0;n<55;n++){
       await pause(130);
       if(await evalJS("location.pathname==='/editions/first-hearing/'&&!!document.getElementById('book-flow')"))break;

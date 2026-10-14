@@ -183,3 +183,16 @@ fixture books. Link the whole book to its canonical internal route,
 test real pointer entry on all five layouts, and verify the book
 unchanged after entry. Root is no longer an HTML duplicate of the
 book. Public HTTPS publishing remains independently governed.
+
+## R18 complete proofreading shelf
+
+Do not bring back the rotated off-axis thumbnail. One upright cover
+per edition object; the artwork must match the original SHA-attested
+source asset. There are six real available edition objects, with
+the Essays collection, its three nested essays, one separate Teatro
+First Hearing multimedia projection and First Reading. These are
+not six distinct original manuscripts. Only First Reading is publicly
+reachable today; other labels say WLAN PROOF. No WebGL Stage or
+governance domain as fictitious book. Git stores canonical URLs;
+disposable Estate staging maps trusted book links to ports 8180/8181.
+Preserve the author's accepted v16 direct book URL and runtime.

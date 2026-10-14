@@ -6,9 +6,9 @@
   "repository": "Fountain-Coach/teatro.fountain.coach",
   "capturedAt": "2026-10-14T10:28:47Z",
   "publicationState": "source-candidate-Linotype-bookshelf-first-hearing-not-publicly-deployed",
-  "fileCount": 53,
+  "fileCount": 57,
   "indexPages": 5,
-  "sourceSha256Inventory": "a43840604784f7f296930e8137b410cd5e483888b9dea4f44fb33424f1728fd5",
+  "sourceSha256Inventory": "98ea4304b83c5b29fe5708b94da4b5ea41dd5e2a994c89f8179af7f9e81860f7",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
@@ -19,5 +19,49 @@
   "stageAudioClaim": "browser-Csound on explicit interaction, not released narration",
   "sourceAuthority": "Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
   "embeddedInteractiveScene": "editions/stage/embed/",
-  "sceneComposition": "authored-paragraph-anchored-mixed-media"
+  "sceneComposition": "authored-paragraph-anchored-mixed-media",
+  "bookshelfBooks": [
+    {
+      "id": "first-reading",
+      "status": "public-live",
+      "reader": "https://works.benedikt-eickhoff.de/solstice/editions/first-reading/",
+      "host": "solstice",
+      "art": "/assets/bookshelf/first-reading.jpg"
+    },
+    {
+      "id": "teatro-first-hearing",
+      "status": "wlan-proof",
+      "reader": "/editions/first-hearing/",
+      "host": "teatro",
+      "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
+    },
+    {
+      "id": "essays-collection",
+      "status": "wlan-proof",
+      "reader": "https://fountain.coach/editions/essays/",
+      "host": "fountain",
+      "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
+    },
+    {
+      "id": "essay-teatro-an-unfinished-composition",
+      "status": "wlan-proof",
+      "reader": "https://fountain.coach/editions/essays/teatro-an-unfinished-composition/",
+      "host": "fountain",
+      "art": "/assets/bookshelf/teatro-an-unfinished-composition.svg"
+    },
+    {
+      "id": "essay-semantic-compilation-the-archive-is-not-the-edition",
+      "status": "wlan-proof",
+      "reader": "https://fountain.coach/editions/essays/semantic-compilation-the-archive-is-not-the-edition/",
+      "host": "fountain",
+      "art": "/assets/bookshelf/semantic-compilation-the-archive-is-not-the-edition.svg"
+    },
+    {
+      "id": "essay-reframe-and-the-business-value-of-the-estate",
+      "status": "wlan-proof",
+      "reader": "https://fountain.coach/editions/essays/reframe-and-the-business-value-of-the-estate/",
+      "host": "fountain",
+      "art": "/assets/bookshelf/reframe-and-the-business-value-of-the-estate.png"
+    }
+  ]
 }
