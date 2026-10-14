@@ -23,10 +23,11 @@ SCORE="teatro-score-memory-vector-human-condition.svg"
 def sha(data):return hashlib.sha256(data).hexdigest()
 def git_sha(path):return subprocess.check_output(["git","-C",str(path),"rev-parse","HEAD"],text=True).strip()
 
-def main(fountain,satzfunk,press):
+def main(fountain,satzfunk,press,stage_source):
  fountain=fountain.resolve()
  satzfunk=satzfunk.resolve()
  press=press.resolve()
+ stage_source=stage_source.resolve()
  upstream=fountain/"site/editions/essays"/SLUG/"index.html"
  prose=fountain/"site/essays"/SLUG/"index.html"
  edition_meta=json.loads((fountain/"site/essays/edition-manifest.json").read_text())
@@ -157,6 +158,11 @@ def main(fountain,satzfunk,press):
  with (output_assets/"teatro.css").open("a") as css:
   css.write('.satzfunk-stage-note{font:12px/1.5 Iowan Old Style,Georgia,serif;text-align:center;color:var(--book-muted)}.satzfunk-stage-note a{text-underline-offset:3px}\n')
 
+ # Compile the fallback in the stage's original source owner; never invent
+ # a second puppet in this HTML publisher. Copy exactly its existing build.
+ fallback=stage_source/"dist-book-fallback/book-puppet-fallback.js"
+ assert fallback.is_file() and fallback.stat().st_size>1000, "Build canonical StageEngine fallback first"
+ shutil.copyfile(fallback,SITE/"assets/book-puppet-fallback.js")
  document=integrate(document,output_assets,press/"runtime/mixed-media.css",manuscript["sourceSHA256"])
  assert document.count('data-teatro-book-stage')==1
 
@@ -189,6 +195,9 @@ def main(fountain,satzfunk,press):
   "sceneAnchorId":"teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId":"teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement":"inside-authored-prose",
+  "puppetFallbackRuntimeSHA256":sha(fallback.read_bytes()),
+  "puppetFallbackSource":"midi2-gpu-fabric/apps/teatro-stage-web/src/embedded/book-puppet-fallback.tsx",
+  "puppetFallbackSourceCommit":git_sha(stage_source),
   "satzfunkSourceRepository":"Fountain-Coach/Satzfunk",
   "satzfunkCommit":git_sha(satzfunk),
   "satzfunkAdapterSHA256":sha(adapter.read_bytes()),
@@ -223,5 +232,6 @@ if __name__=="__main__":
  p.add_argument("--fountain-source",type=Path,required=True)
  p.add_argument("--satzfunk-source",type=Path,required=True)
  p.add_argument("--press-source",type=Path,required=True)
+ p.add_argument("--stage-source",type=Path,required=True)
  a=p.parse_args()
- main(a.fountain_source,a.satzfunk_source,a.press_source)
+ main(a.fountain_source,a.satzfunk_source,a.press_source,a.stage_source)

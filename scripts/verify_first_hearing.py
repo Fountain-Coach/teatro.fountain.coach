@@ -79,6 +79,10 @@ def main():
  assert 'data-legal-role="company-status"' in stage
  embed=(SITE/"editions/stage/embed/index.html").read_text()
  assert 'src="/assets/index-CY5_5ULO.js"' in embed
+ assert 'src="/assets/book-puppet-fallback.js"' in embed
+ fallback=(SITE/"assets/book-puppet-fallback.js")
+ assert fallback.stat().st_size>100_000
+ assert sha(fallback.read_bytes())==manifest["puppetFallbackRuntimeSHA256"]
  assert '<div id="root"></div>' in embed
  assert '.teatro-sidebar-disclosure{display:none!important}' in embed
  assert "createElement('iframe')" in (SITE/"assets/linotype/teatro-stage-page.js").read_text()

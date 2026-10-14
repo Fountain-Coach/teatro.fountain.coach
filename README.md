@@ -81,3 +81,25 @@ The browser proof verifies source/element IDs, complete 22-paragraph
 manuscript, ratio/overflow, clipped diagnostic HUD, animated fallback
 and resource release. **The actual iPad Safari GPU result and writer
 approval remain pending**; the R12 product checker must still report blocked.
+
+## R12 puppet fallback, source-authority witness (v8)
+
+The earlier original compiled Teatro stage switches to `EmptyStageView`
+when a WebGL context cannot be created. Consequently an iPad could show
+only an empty geometric room indefinitely, even though the canonical
+StageEngine continued producing puppet snapshots. R12 v8 adds a *book-only*
+renderer-independent projection of the **original StageEngine and StageView**
+owned by midi2-gpu-fabric source branch
+`codex/teatro-r12-moving-puppet-fallback-20261014` (commit `30565d1`).
+The original WebGL/Csound runtime and separately accessible Stage edition
+remain byte-preserved. On failed WebGL initialization the book element's
+fallback renders the actual controller, suspended strings, moving torso,
+head, hands and feet; it never invents performance speech or sound.
+On working WebGL the overlay is not mounted. Leaving the book leaf unloads
+both the original scene iframe and the fallback rig. Generated fallback
+assets are pinned by SHA-256 and the upstream source Git commit.
+
+Automated browser acceptance now checks that the fallback puppet **exists
+and moves**, rather than counting a static SVG or empty Stage as success.
+Chrome's headless GPU still cannot prove real iPad Safari WebGL, and this
+remains a candidate until writer approval.

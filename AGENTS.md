@@ -60,3 +60,13 @@ composition. Do not regress to `book-art-leaf` or a scene-only paper page.
 The authored paragraph and media digest are required. Keep original WebGL
 and interactive browser-Csound separate from narration. Visual review on
 actual iPad and full Reframe editorial coupling are unaccepted.
+
+## Teatro R12 invariant: no empty-stage-only fallback
+
+If WebGL is unavailable, rendering `EmptyStageView` alone is not an
+accepted Teatro performance. Use the existing Cannon `StageEngine` puppet
+snapshot and `StageView` SVG rig with moving bar, strings and puppet.
+Do not invent a separate puppet, hand-drawn image, or clock. The compiled
+WebGL/Csound stage remains unchanged and must not autoplay audio.
+Book acceptance requires a moving rig witness across layouts, not merely a
+cube or a mounted renderer.

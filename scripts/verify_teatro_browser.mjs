@@ -61,6 +61,21 @@ async function open(path,width,height,label){
   if(scene.animatedFallback&&
       (!scene.hudClipped||Math.abs(scene.svgHeight-scene.height)>2||scene.svgViewBox!=='0 0 800 710'))
       throw Error('R12 fallback diagnostics or geometry leak '+JSON.stringify(scene));
+  if(!scene.webgl){
+   let puppet=null;
+   for(let n=0;n<35;n++){
+    await pause(180);
+    puppet=await evalJS("(()=>{const d=document.querySelector('iframe[data-teatro-live-frame]')?.contentDocument;const rig=d?.querySelector('svg[data-teatro-puppet-rig=live]');const lines=rig?.querySelectorAll('line');return {active:d?.documentElement.dataset.teatroPuppetFallback,rig:!!rig,stringsAndBar:lines?.length,barX:lines?.[3]?.getAttribute('x1'),headX:rig?.querySelector('circle')?.getAttribute('cx'),visible:rig ? getComputedStyle(rig).display!=='none' : false}})()");
+    if(puppet?.rig)break;
+   }
+   if(!puppet?.visible||puppet.active!=='active'||puppet.stringsAndBar<4)
+    throw Error('Teatro fallback omitted real animated puppet '+JSON.stringify(puppet));
+   await pause(700);
+   const later=await evalJS("(()=>{const svg=document.querySelector('iframe[data-teatro-live-frame]')?.contentDocument?.querySelector('svg[data-teatro-puppet-rig=live]');return svg?.querySelectorAll('line')?.[3]?.getAttribute('x1')})()");
+   if(later===null||Math.abs(Number(later)-Number(puppet.barX))<.15)
+    throw Error('Puppet physics state did not animate '+JSON.stringify({start:puppet.barX,end:later}));
+   console.log('PASSED R12 PUPPET MOTION',label,JSON.stringify({rig:'canonical StageEngine/StageView',stringsAndBar:puppet.stringsAndBar,barFrom:puppet.barX,barTo:later}));
+  }
   console.log('PASSED EMBED',label,JSON.stringify(scene));
   await evalJS("document.getElementById('book-next').click()");
   await pause(500);
