@@ -39,6 +39,8 @@ def main():
   assert 'id="satzfunk-hear"' not in book
   assert '>Scene ↓<' not in book
   assert 'src="/assets/linotype/book-player.mjs"' in book
+  assert "script-src 'self' blob: 'wasm-unsafe-eval'" in book
+  assert "worker-src 'self' blob:" in book
   assert 'href="/assets/linotype/book-player.css"' in book
   assert 'data-edition-id="teatro-first-hearing"' in book
   assert 'id="book-viewport"' in book and 'id="book-page-atlas"' in book

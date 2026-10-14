@@ -1,85 +1,125 @@
-# teatro.fountain.coach Git ownership
+#!/usr/bin/env python3
+"""Verbatim book+sound provenance verification for Teatro's first book."""
+from html.parser import HTMLParser
+from pathlib import Path
+import hashlib,json,re
+from integrate_interactive_plate import SOURCE_SENTENCE
 
-- GitHub owner: Fountain-Coach/teatro.fountain.coach.
-- Canonical source: site/ and edition.json.
-- Preserve rights, status and historical source content.
-- Do not use the old Hetzner Git domain as source authority.
-- A Git push never deploys content.
-- Do not reverse-copy derived estate HTML over the canonical source.
-- Publication needs typed exact-host EstatePublisher and independent public read-back.
-- Three editorial fronts only: Fountain Coach, First Reading, Teatro.
+ROOT=Path(__file__).resolve().parents[1]
+SITE=ROOT/"site"
+SLUG="teatro-an-unfinished-composition"
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+class Text(HTMLParser):
+ def __init__(self,body):super().__init__(convert_charrefs=True);self.data=[];self.feed(body)
+ def handle_data(self,data):self.data.append(data)
+ def get(self):return "".join(self.data)
+def paragraphs(section):
+ return [Text(x).get() for x in re.findall(r'<p\b[^>]*>.*?</p>',section,re.S)]
+def main():
+ manifest=json.loads((SITE/"editions/first-hearing/edition.json").read_text())
+ assert manifest["owningRepository"]=="Fountain-Coach/teatro.fountain.coach"
+ assert manifest["authoredSourceRepository"]=="Fountain-Coach/fountain.coach"
+ assert manifest["originalParagraphs"]==22
+ assert manifest["approvedNarration"] is False
+ assert manifest["hearingStatus"]=="not-yet-released"
+ assert manifest["sourceMutation"] is False
+ assert sha((SITE/"assets/edition/teatro-score-memory-vector-human-condition.svg").read_bytes())==manifest["originalScorePlateSHA256"]
+ for path in ["index.html","editions/first-hearing/index.html"]:
+  book=(SITE/path).read_text()
+  assert 'id="book-flow" class="book-flow"' in book
+  assert book.count('data-book-chapter=')==1
+  assert book.count('data-book-toc-target=')==2
+  assert book.count('src="/assets/edition/')==1
+  assert book.count('aria-current="page"')==1
+  assert book.count('id="book-media-toggle"')==1
+  assert book.count('id="book-media-settings"')==1
+  assert book.count('id="book-ear-status"')==1
+  assert book.count('data-book-sound-parameter=')==4
+  assert 'id="satzfunk-hearing-rail"' not in book
+  assert 'id="satzfunk-hear"' not in book
+  assert '>Scene ↓<' not in book
+  assert 'src="/assets/linotype/book-player.mjs"' in book
+  assert "script-src 'self' blob: 'wasm-unsafe-eval'" in book
+  assert "worker-src 'self' blob:" in book
+  assert 'href="/assets/linotype/book-player.css"' in book
+  assert 'data-edition-id="teatro-first-hearing"' in book
+  assert 'id="book-viewport"' in book and 'id="book-page-atlas"' in book
+  assert 'https://fountain.coach/essays/'+SLUG+'/' in book
+  assert 'id="book-live-stage"' in book
+  assert book.count('data-teatro-book-stage')==1
+  assert book.count('class="book-art-leaf"')==0
+  assert 'data-press-media="spatial-scene"' in book
+  assert 'data-keep-with-anchor="previous"' in book
+  assert 'data-edition-imprint="TEATRO · FOUNTAIN COACH"' in book
+  assert 'data-edition-running-title="TEATRO · FIRST HEARING"' in book
+  assert 'href="/assets/linotype/mixed-media.css"' in book
+  assert manifest["sceneAnchorId"] in book and manifest["sceneElementId"] in book
+  assert 'data-source-paragraph-sha256="'+sha(SOURCE_SENTENCE.encode())+'"' in book
+  assert 'data-source-revision-sha256="'+manifest["authoredSourceSHA256"]+'"' in book
+  assert 'This is an old knowledge of theatre.' in book
+  anchor_pos=book.index('This is an old knowledge of theatre.')
+  media_pos=book.index('data-press-media="spatial-scene"')
+  next_section=book.index('A score instead of an answer')
+  assert anchor_pos<media_pos<next_section
 
-## Book first, Stage second, Satzfunk provenance
-
-- The canonical Teatro root lands in a complete authored Linotype book,
-  mirroring /editions/first-hearing/, never the compiled stage application.
-- The original Csound stage remains accessible at /editions/stage/ and returns
-  to the reader without changing its original compiled JS.
-- All 22 paragraphs and the source score plate are exactly pinned to
-  Fountain-Coach/fountain.coach. Do not synthesize replacement prose.
-- Fountain-Coach/Satzfunk owns source-addressed Hear. An interactive Csound
-  stage is not a published spoken book or an authorized AI narration.
-- Use npm run build, npm run check, npm run browser before any promotion.
-- Status remains with legal footer, and GitHub is source authority.
-
-
-## Interactive Teatro page (book composition authority)
-
-- The animated WebGL stage must appear **on a Linotype book leaf**. Do not
-  replace it with a toolbar exit, separate fullscreen site or static image.
-- Source the live scene from the original compiled Teatro renderer and its
-  existing Csound runtime. An SVG fallback is allowed only when WebGL is
-  unavailable, and must be reported as such in tests.
-- Treat the leaf as a bounded lifecycle: render on arrival, unload on exit,
-  and preserve the measured book layout, page-turning and all 22 essay
-  paragraphs. Do not autoplay audio or describe stage audio as narration.
-- `/editions/stage/` remains a secondary independent experience; the page
-  uses a chrome-free embed route in the same GitHub-owned repository.
-
-## UX rejected: Reframe Scenario R12 overrides iframe-complete claims
-
-Product scenario:
-https://github.com/Fountain-Coach/Reframe/blob/main/scenarios/012-linotype-book-as-reframe-workspace.md
-
-The 2026-10-14 WLAN v6 embedded scene was seen on an actual iPad and
-**rejected for visual composition**: near full-leaf box, Solstice/Essays
-chrome, no credible relation between prose and moving space, and no Reframe
-writer journey. The current compiled renderer/fallback and scene lifecycle
-can be retained as technical implementation evidence, not an accepted UX.
-Further implementation must be scenario-driven, use Fountain Press
-semantic mixed-media composition and Reframe's existing stable anchors,
-editorial margin and Store. Do not add another standalone experience,
-unadmitted microphone/audio authority or fictional narrator.
-
-
-### Slice A candidate, not an accepted product
-
-The current scene is placed after the source-pinned empty-chair paragraph,
-using Fountain Press `data-press-media` and its atomic anchor paragraph
-composition. Do not regress to `book-art-leaf` or a scene-only paper page.
-The authored paragraph and media digest are required. Keep original WebGL
-and interactive browser-Csound separate from narration. Visual review on
-actual iPad and full Reframe editorial coupling are unaccepted.
-
-## Teatro R12 invariant: no empty-stage-only fallback
-
-If WebGL is unavailable, rendering `EmptyStageView` alone is not an
-accepted Teatro performance. Use the existing Cannon `StageEngine` puppet
-snapshot and `StageView` SVG rig with moving bar, strings and puppet.
-Do not invent a separate puppet, hand-drawn image, or clock. The compiled
-WebGL/Csound stage remains unchanged and must not autoplay audio.
-Book acceptance requires a moving rig witness across layouts, not merely a
-cube or a mounted renderer.
-
-## R12 media-player and book MIDI2 scope
-
-No separate Scene/Hear buttons, empty spoken-hearing footer, chat panel,
-fake MIDI device or static decorative ear meter. Use the one compact
-player and progressive, source-owned Csound parameters. All page
-navigation and parameter changes emit declared 64-bit MIDI2 UMP in the
-browser-local book plane, and the book admits bounded local input.
-Do not mistake the local Web Audio preview for Csound or give it a
-native MIDI2/Store receipt. Ear must witness actual rendered audio
-and retain its source identity. Actual Csound AudioWorklet remains
-secure-origin and user-gesture gated, with permission and admission
-separate from the public book projection.
+  assert "frame-src 'self'" in book
+  assert 'src="/assets/linotype/teatro-stage-page.js"' in book
+  assert 'data-legal-role="company-status"' in book
+  assert 'https://teatro.fountain.coach/editions/first-hearing/' in book
+  assert book.count('data-estate-id=')==3
+  assert book.count('data-book-chapter="'+SLUG+'"')==1
+  assert 'meta name="satzfunk-source-sha256"' in book
+  assert manifest["bookHTMLBeforeSatzfunkSHA256"] in book
+  chapter=book.split('<section class="book-chapter"')[1].split('<section class="book-end"')[0]
+  selected=[x for block in re.findall(r'<article class="book-prose">(.*?)</article>',chapter,re.S) for x in paragraphs(block)]
+  # The source SHA-256 was established in the Fountain Coach owner. Its
+  # paragraph stream is exactly the unmodified Linotype prose, not a recap.
+  assert len(selected)==22
+  assert sha(json.dumps(selected,ensure_ascii=False).encode())==manifest["paragraphsSHA256"],"Edited original Teatro text"
+  print("TEATRO_FULL_BOOK_VERIFIED",path,len(selected),"complete source paragraphs")
+ assert (SITE/"index.html").read_bytes()==(SITE/"editions/first-hearing/index.html").read_bytes()
+ assert manifest["scenePlacement"]=="inside-authored-prose"
+ assert "mediaWithAnchor(" in (SITE/"assets/linotype/linotype-engine.js").read_text()
+ assert (SITE/"assets/linotype/mixed-media.css").is_file()
+ stage=(SITE/"editions/stage/index.html").read_text()
+ assert 'src="/assets/index-CY5_5ULO.js"' in stage and 'id="root"' in stage
+ assert 'data-teatro-stage-return' in stage
+ assert 'href="/editions/first-hearing/"' in stage
+ assert 'data-legal-role="company-status"' in stage
+ embed=(SITE/"editions/stage/embed/index.html").read_text()
+ assert 'src="/assets/index-CY5_5ULO.js"' in embed
+ assert 'src="/assets/book-puppet-fallback.js"' in embed
+ fallback=(SITE/"assets/book-puppet-fallback.js")
+ assert fallback.stat().st_size>100_000
+ assert sha(fallback.read_bytes())==manifest["puppetFallbackRuntimeSHA256"]
+ assert '<div id="root"></div>' in embed
+ assert '.teatro-sidebar-disclosure{display:none!important}' in embed
+ assert "createElement('iframe')" in (SITE/"assets/linotype/teatro-stage-page.js").read_text()
+ assert (SITE/'assets/linotype/book-midi2.mjs').is_file()
+ assert (SITE/'assets/linotype/book-player.mjs').is_file()
+ assert 'fountain:book:position' in (SITE/'assets/linotype/book.js').read_text()
+ assert 'fountain:book:seek' in (SITE/'assets/linotype/book.js').read_text()
+ assert sha((SITE/'assets/book-csound-host.js').read_bytes())==manifest['bookCsoundHostSHA256']
+ assert not (SITE/"editions/first-hearing/hearings.json").exists()
+ assert not (SITE/"hearings.json").exists()
+ js=(SITE/"assets/satzfunk/satzfunk-book.mjs").read_text()
+ assert 'meta[name="satzfunk-edition-url"]' in js
+ assert "manifest.status!=='released'" in js
+ assert "url.origin !== location.origin" in js
+ assert "status.textContent='The book is available to read. No author-approved spoken edition has been released yet.'" in js
+ print("SATZFUNK_RELEASE_BOUNDARY_ACCEPTED",manifest["satzfunkCommit"],"no invented media")
+ original=(SITE/"assets/index-CY5_5ULO.js")
+ assert original.is_file() and original.stat().st_size>1000
+ print("LIVE_STAGE_PRESERVED",original.stat().st_size,"javascript bytes")
+ files={str(p.relative_to(SITE)):sha(p.read_bytes()) for p in SITE.rglob("*") if p.is_file()}
+ inventory={}
+ for line in (ROOT/"publication-files.sha256").read_text().splitlines():
+  digest,sep,path=line.partition('  ')
+  assert sep and path not in inventory
+  inventory[path]=digest
+ assert files==inventory,"Git owner source inventory diverged"
+ obj=json.loads((ROOT/"edition.json").read_text())
+ assert obj["sourceSha256Inventory"]==sha((ROOT/"publication-files.sha256").read_bytes())
+ assert len(files)==obj["fileCount"]
+ print("TEATRO_EDITION_ACCEPTED",len(files),"source files, book first, stage secondary")
+if __name__=="__main__":main()

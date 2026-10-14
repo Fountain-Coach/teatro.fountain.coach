@@ -135,6 +135,10 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
     document=document.replace(paragraph.group(0),paragraph.group(0)+'\n'+element)
     assert document.count('data-teatro-book-stage')==1
     assert document.count('<section class="book-art-leaf"')==0
+    # Official @csound/browser uses a dynamically generated AudioWorklet
+    # module and a WebAssembly orchestra. Admit only those runtime classes;
+    # keep default-src none and the book's same-origin media/data bounds.
+    document=document.replace("script-src 'self';","script-src 'self' blob: 'wasm-unsafe-eval'; worker-src 'self' blob:;")
     document=document.replace("media-src 'self';","media-src 'self'; frame-src 'self';")
     assert "frame-src 'self'" in document
     document=document.replace('<body class="book-app" data-edition-id="teatro-first-hearing">',

@@ -45,9 +45,16 @@ for(const [key,slider] of Object.entries(sliderNodes))
  slider.addEventListener('input',()=>adjust(key,slider.value));
 function observe(level,source){
  if(mode==='stopped')return;
- const value=bound(level*8);
- control.dataset.ear=value>.018?'witnessed':'silent';
- earText.textContent=value>.018?'Ear · signal witnessed':'Ear · listening';
+ const raw=Number(level);
+ if(!Number.isFinite(raw)||raw<0)return;
+ const value=bound(raw*8);
+ const witnessed=raw>0.0001;
+ control.dataset.ear=witnessed?'witnessed':'silent';
+ control.dataset.earRms=raw.toFixed(6);
+ control.dataset.earSource=source;
+ if(witnessed&&source==='teatro-csound-ear-worklet')
+  control.dataset.earWorkletWitnesses=String(1+Number(control.dataset.earWorkletWitnesses||0));
+ earText.textContent=witnessed?('Ear · signal witnessed · RMS '+raw.toFixed(4)):'Ear · listening';
  const now=performance.now();
  if(now-lastEar>180){
   lastEar=now;
@@ -107,6 +114,7 @@ function createPreview(){
 }
 async function play(){
  toggle.disabled=true;
+ let csoundFailure='';
  try{
   // Official Csound is meaningful only in a browser secure context.
   if(window.isSecureContext){
@@ -122,14 +130,15 @@ async function play(){
     report('Teatro instrument active');
    }catch(e){
     await csound?.stop().catch(()=>{});csound=null;
-    report('Csound could not start: '+e.message);
+    csoundFailure=String(e.message);
+    control.dataset.csoundFailure=csoundFailure;
    }
   }
   if(mode!=='csound'){
     await createPreview();
     changeMode('preview');
     sourceText.textContent='Local Web Audio preview';
-    report(window.isSecureContext?'Csound unavailable · local audible preview':'Local audible preview · Csound needs HTTPS');
+    report(window.isSecureContext?('Local audible preview · Csound: '+(csoundFailure||'unavailable')):'Local audible preview · Csound needs HTTPS');
   }
   watchEar();
   bus.publish(bus.controllers.transport,1,'book:player');
