@@ -1,3 +1,37 @@
+# Teatro — First Hearing
+
+## Author-acknowledged beta — First Hearing v16
+
+**On 14 October 2026 the author called the running Teatro / Linotype
+reader “a great beta state” and requested that milestone be documented.**
+This is positive beta UX acceptance for the current **book/listening
+experience** after multiple real iPad screenshot-based revisions. It is
+not full Safari audio interoperability certification or public release.
+
+The **frozen v16 reference** is Teatro source
+`69656eb5934bc076fd589391ed7061c37287e194`, Fountain Press
+`45e28c7f2d235147aa1c21623083e6e89b3bee2a`, WLAN release
+`20261014-teatro-r16-play-ring-calibrated-v16`
+(`http://192.168.8.249:8182/editions/first-hearing/`, same WLAN),
+with v15 available for rollback. The essay's 22 original paragraphs,
+its original score and exact source digests remain unchanged.
+
+**Beta UX now has a reference standard:** enter a composed book rather
+than a site, use fixed authorial typography, meaningful page atlas,
+adjacent Contents, only Play/disclosure on the left and Contents on
+the right, and a restrained Play circle responding to witnessed sound.
+The Ear symbol and measured state belong inside the sound-parameter
+panel. In-page Teatro Play and top Play use one instrument and activate
+the canonical moving score; Stop disposes it. Responsive browser tests
+and the original Csound/Ear+MIDI2 loopback proofs support this beta.
+
+Remaining unverified: trusted iPad Safari HTTPS Csound, physical
+MIDI2 host transport, approved spoken narration, persistent Reframe
+writer/model editorial operations, and public publishing admission.
+The complete Reframe R12 writer journey remains blocked. The
+[author decision and full evidence](https://github.com/Fountain-Coach/Reframe/blob/main/docs/milestones/2026-10-14-teatro-linotype-beta-v16.md)
+are owned by Reframe; this repository owns the actual Teatro edition.
+
 #!/usr/bin/env python3
 """Verbatim book+sound provenance verification for Teatro's first book."""
 from html.parser import HTMLParser

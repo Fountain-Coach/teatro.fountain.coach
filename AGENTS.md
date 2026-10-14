@@ -157,3 +157,15 @@ preserving explicit accessible measured-state text. The halo is
 driven by source-calibrated Ear RMS and resets on Stop. Honor reduced
 motion, keep the original stage and MIDI2 event sources unchanged,
 and verify all five responsive layouts plus actual Csound/Ear.
+
+## Author-acknowledged beta — Teatro v16
+
+The author approved the book/listening **quality as a beta state** on
+14 October 2026. Refer to
+`Fountain-Coach/Reframe/docs/milestones/2026-10-14-teatro-linotype-beta-v16.md`.
+Treat Teatro source `69656eb` and Press `45e28c7` as the
+benchmark candidate. Preserve book-first presentation and source
+integrity, sparse Play/disclosure plus Contents, true measured Play
+ring, Ear in parameter panel, and reciprocal scene/audio activation.
+Do not infer final Reframe approval, native MIDI2, public deployment,
+or physical HTTPS Safari Csound witness.
