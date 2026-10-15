@@ -70,6 +70,9 @@ async function open(path,width,height,label){
       new Set(shelf.bookIds).size!==3||shelf.scrollWidth>shelf.viewportWidth+2||
       shelf.sourceImages.some(src=>!src.startsWith('/assets/bookshelf/')&&src!=='/assets/edition/teatro-score-memory-vector-human-condition.svg'))
       throw Error('R17 source-bound Bookshelf state invalid '+JSON.stringify(shelf));
+    const brandCircle=await evalJS("(()=>{const e=document.querySelector('.bookshelf-brand'),s=getComputedStyle(e);return {className:e.classList.contains('fc-identity-circle'),radius:s.borderTopLeftRadius,stroke:s.borderTopWidth,logo:e.querySelectorAll('img').length}})()");
+    if(!brandCircle.className||brandCircle.radius!=='50%'||brandCircle.stroke!=='1px'||brandCircle.logo!==1)throw Error('Publisher identity circle missing '+JSON.stringify(brandCircle));
+    console.log('PASSED SHARED PUBLISHER CIRCLE',label,JSON.stringify(brandCircle));
     console.log('PASSED R17 BOOKSHELF',label,JSON.stringify(shelf));
     // A genuine source-owned link enters the existing v16 Linotype
     // reader; opening the book must not generate a competing app.
@@ -101,6 +104,9 @@ async function open(path,width,height,label){
      !bookFurniture.pagination||
      bookFurniture.stageIconSrc!=='/assets/teatro-play.svg')
      throw Error('R14 book-only centered navigation invalid '+JSON.stringify(bookFurniture));
+  const playerCircle=await evalJS("(()=>{const e=document.getElementById('book-media-toggle'),s=getComputedStyle(e);return {className:e.classList.contains('fc-identity-circle'),radius:s.borderTopLeftRadius,stroke:s.borderTopWidth,token:getComputedStyle(document.documentElement).getPropertyValue('--fc-identity-circle-radius').trim(),label:e.getAttribute('aria-label')}})()");
+  if(!playerCircle.className||playerCircle.radius!=='50%'||playerCircle.stroke!=='1px'||playerCircle.token!=='50%'||!playerCircle.label)throw Error('Play/Stop identity circle mismatch '+JSON.stringify(playerCircle));
+  console.log('PASSED SHARED PLAY STOP CIRCLE',label,JSON.stringify(playerCircle));
   console.log('PASSED R14 BOOK FURNITURE',label,JSON.stringify(bookFurniture));
   if(first.pages<7||first.pages>100||first.mode!==(width>=900?'spread':'single')||first.images!==2||first.chapters!==1||first.overflowX||first.overflowY||!first.player||first.oldScene||first.oldHearing)
    throw Error('Bad book viewport '+JSON.stringify(first));

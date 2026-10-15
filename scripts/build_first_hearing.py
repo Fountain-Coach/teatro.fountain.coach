@@ -129,6 +129,7 @@ def main(fountain,satzfunk,press,stage_source):
  # Fountain Press: deterministic UMP and compact player shell.
  # One reusable Press Bookshelf state serves the outer edition landing.
  shutil.copyfile(press/"runtime/bookshelf.css",output_assets/"bookshelf.css")
+ shutil.copyfile(press/"runtime/identity-circle.css",output_assets/"identity-circle.css")
  for media_name in ('book-midi2.mjs','book-player.css'):
   shutil.copyfile(press/'runtime'/media_name,output_assets/media_name)
  shutil.copyfile(ROOT/'scripts/book-player.mjs',output_assets/'book-player.mjs')

@@ -1,10 +1,11 @@
+@import url("./identity-circle.css");
 /* Book-level media transport: one affordance, progressive parameter controls. */
 .book-media-control{display:flex;align-items:center;gap:5px;position:relative;min-width:0}
 .book-media-control button{min-width:34px;min-height:34px;padding:5px!important;cursor:pointer;color:var(--book-ink);border:0!important;background:none}
 .book-media-control button[aria-pressed="true"]{color:var(--book-accent)}
 .book-media-control #book-media-toggle{
- border:1px solid color-mix(in srgb,var(--book-ink) calc(14% + var(--play-fill,0%)),var(--book-rule))!important;
- border-radius:50%;width:36px;height:36px;display:grid;place-items:center;
+ border:var(--fc-identity-circle-stroke) solid color-mix(in srgb,var(--book-ink) calc(35% + var(--play-fill,0%)),var(--book-rule))!important;
+ border-radius:var(--fc-identity-circle-radius);width:36px;height:36px;display:grid;place-items:center;
  background:color-mix(in srgb,var(--book-accent) var(--play-fill,0%),var(--book-paper));
  box-shadow:0 0 0 var(--play-halo,0px)
    color-mix(in srgb,var(--book-accent) var(--play-halo-tint,0%),transparent);

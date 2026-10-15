@@ -225,3 +225,11 @@ project source artwork and book identities only. Four occupied cells (one
 logo, three covers) are followed by 20 visible inert, aria-hidden vacant
 slots. No labels, invented books, links, menu or decorative duplicate cover.
 Keep the established First Hearing v16 reader/audio/Stage untouched.
+
+## Shared circular publisher and transport identity
+
+Fountain Press owns `identity-circle.css` for the shelf's authentic logo
+circle and the existing Teatro Play/Stop button. Use the same circular shape
+and stroke while preserving Play/Stop's real Ear-driven fill/halo, transport,
+page-exit cleanup and audio settings. Copy the shared rule at build time;
+do not add a new control or modify the visual sound-response semantics.

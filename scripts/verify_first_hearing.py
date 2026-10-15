@@ -37,7 +37,7 @@ def main():
   assert 'class="edition-rail"' not in book
   assert 'class="book-legal"' not in book
   assert '<a href="/editions/">' not in book
-  assert book.count('id="book-media-toggle"')==1
+  assert book.count('class="fc-identity-circle" id="book-media-toggle"')==1
   assert book.count('class="book-ear-icon"')==1
   assert 'id="book-ear-reading"' in book
   assert 'class="book-player-status book-ear-status" id="book-ear-status"' in book
@@ -117,7 +117,9 @@ def main():
  assert root.count('data-preview-host="solstice"')==1
  assert root.count('data-preview-host="teatro"')==1
  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
- assert root.count('class="bookshelf-brand"')==1
+ assert root.count('class="bookshelf-brand fc-identity-circle"')==1
+ assert (SITE/'assets/linotype/identity-circle.css').read_bytes()==(ROOT.parent.parent/'fountain-press/runtime/identity-circle.css').read_bytes()
+ assert '@import url("./identity-circle.css")' in (SITE/'assets/linotype/book-player.css').read_text()
  assert 'class="bookshelf-wordmark"' not in root
  assert 'FOUNTAIN COACH</span>' not in root
  assert root.count('src="/assets/bookshelf/fountain-coach-logo-transparent.png"')==1
