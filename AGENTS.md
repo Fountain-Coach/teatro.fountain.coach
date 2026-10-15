@@ -216,3 +216,12 @@ counts, numbered chapter/edition labels, footer, a website rail
 or the earlier nested Essays as top-level items. Accessible
 book identities stay in aria-label / edition metadata. Do
 not change the v16 approved reading experience.
+
+## R27 — visible empty grid cells on the Bookshelf
+
+The visual reference is the Instruments catalogue's explicit dashed empty
+slots. Fountain Press now owns the repeating Bookshelf lattice; Teatro may
+project source artwork and book identities only. Four occupied cells (one
+logo, three covers) are followed by 20 visible inert, aria-hidden vacant
+slots. No labels, invented books, links, menu or decorative duplicate cover.
+Keep the established First Hearing v16 reader/audio/Stage untouched.

@@ -6,7 +6,7 @@
   "stageEdition": "editions/stage/",
   "owningRepository": "Fountain-Coach/teatro.fountain.coach",
   "authoredSourceRepository": "Fountain-Coach/fountain.coach",
-  "authoredSourceCommit": "11a593ae1d02e81098d90d736cc85c4fb50340ea",
+  "authoredSourceCommit": "099da69a1e46306f8ef4dc98d6fa2e01dd5e530a",
   "authoredSourceURL": "https://fountain.coach/essays/teatro-an-unfinished-composition/",
   "authoredSourceSHA256": "5f77e58bbb59d0802d5b8b0ee48ecea1bbea7d44ebf4b73e3107363b7b95bad8",
   "paragraphsSHA256": "2ab6fa84f8cd166a19535fa0ebe6e0755734bf9cfd379377c4ca15209f3b435c",
@@ -48,7 +48,7 @@
       "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
     }
   ],
-  "fountainPressCommit": "6a7a7c8f70c732da8f501ab0bb2ff53b21e22ce2",
+  "fountainPressCommit": "f7e7dee8f7686f9e750455ff945340c2666e684c",
   "sceneAnchorId": "teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId": "teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement": "inside-authored-prose",

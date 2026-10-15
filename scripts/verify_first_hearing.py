@@ -159,12 +159,14 @@ def main():
  assert ink.read_bytes()[25] in (4,6),"First Reading artwork must have real PNG alpha"
  assert 'src="/assets/bookshelf/first-reading-ink.png"' in root
  assert '.bookshelf-paper{width:100%;display:grid' in shelf_css
+ assert 'grid-template-columns:repeat(6,minmax(0,1fr))' in shelf_css
  assert 'grid-template-columns:repeat(4,minmax(0,1fr))' in shelf_css
  assert 'grid-template-columns:repeat(2,minmax(0,1fr))' in shelf_css
+ assert root.count('class="bookshelf-empty" aria-hidden="true"')==20
  assert '.bookshelf-books{display:contents' in shelf_css
  assert 'bookshelf-books::after' not in shelf_css
  assert '.shelf-item:last-child' not in shelf_css
- assert 'transform:translateY(-16.95652174%)' in shelf_css
+ assert '.bookshelf-empty{border:1px dashed var(--vacant)' in shelf_css
  assert (SITE/"assets/linotype/bookshelf.css").is_file()
  assert (SITE/"editions/first-hearing/index.html").is_file()
  assert manifest["scenePlacement"]=="inside-authored-prose"
