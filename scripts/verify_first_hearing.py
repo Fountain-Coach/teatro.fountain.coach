@@ -39,9 +39,12 @@ def main():
   assert book.count('data-book-chapter=')==1
   assert book.count('data-book-toc-target=')==2
   assert book.count('src="/assets/edition/')==1
+  entry=book.split('<main id="book-pages"',1)[1].split('<div id="book-flow"',1)[0]
+  assert '<section class="book-score" id="teatro-score"' in entry
+  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in entry
   opening=book.split('<div id="book-flow" class="book-flow">',1)[1].lstrip()
-  assert opening.startswith('<section class="book-score" id="teatro-score"')
-  assert opening.index('src="/assets/edition/teatro-score-memory-vector-human-condition.svg"') < opening.index('class="book-chapter"')
+  assert opening.startswith('<section class="book-chapter"')
+  assert 'class="book-score"' not in opening
   assert 'class="book-cover"' not in book
   assert book.count(' id="teatro-score"')==1 and book.count('data-score-id="teatro-score"')==1
   assert 'data-edition-entry-anchor="teatro-score"' in book
@@ -54,7 +57,7 @@ def main():
   assert 'id="'+trace_id+'"' in book
   assert 'id="book-navigation-status" role="status"' in book
   assert 'id="book-cover"' not in book
-  assert '.teatro-score-hotspot{' in (SITE/'assets/linotype/teatro.css').read_text()
+  assert '.teatro-score-hotspot {' in (SITE/'assets/linotype/teatro.css').read_text()
   engine=(SITE/'assets/linotype/linotype-engine.js').read_text()
   controller=(SITE/'assets/linotype/book.js').read_text()
   assert 'book-score' in engine and 'data-score-trace-id' in engine

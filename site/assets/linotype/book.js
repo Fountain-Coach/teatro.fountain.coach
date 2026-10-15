@@ -6,6 +6,8 @@
 const body=document.body;
 const viewport=document.getElementById("book-viewport");
 const source=document.getElementById("book-flow");
+const scorePortal=document.querySelector('#book-pages > .book-score[data-score-id]');
+if(scorePortal)body.dataset.editorialState='preparing';
 if(!viewport||!source||!window.SolsticeLinotype)return;
 const engine=new window.SolsticeLinotype(viewport,source);
 const mobileAtlas=window.FountainMobilePageAtlas?
@@ -219,6 +221,10 @@ document.addEventListener("keydown",event=>{
 document.querySelectorAll("[data-book-toc-target]").forEach(link=>link.addEventListener("click",event=>{
  const target=link.dataset.bookTocTarget;
  const id=target==="score"?(body.dataset.editionEntryAnchor||"book-cover"):target==="cover"?"book-cover":target==="preface"?"book-preface":target==="vergil"?"book-vergil":"work-"+target;
+ if(scorePortal&&target==='score'){
+   event.preventDefault();history.pushState({scoreId:scoreEntry},'','#'+scoreEntry);
+   openEditorialScore();setContentsOpen(false);return;
+ }
  if(!ready||!engine.positions.has(id))return;
  event.preventDefault();
  history.replaceState(null,"","#"+id);
@@ -529,6 +535,7 @@ window.addEventListener("resize",()=>{
  resizeTimer=setTimeout(()=>{
  cancelAnimationFrame(resizeRaf);
  resizeRaf=requestAnimationFrame(()=>{
+  if(scorePortal&&body.dataset.editorialState==='score')return;
   if(!ready){compose(acceptedPlace);return;}
   const w=viewport.clientWidth,h=viewport.clientHeight;
   const nextMode=window.FountainReadingLayout.mode(w,h);
@@ -558,33 +565,70 @@ function clearNavigationFailure(){
 }
 function resolveHistoryAddress(){
  const id=decodeURIComponent(location.hash.slice(1))||editionOrigin;
- if(ready){
-   if(engine.positions.has(id)){clearNavigationFailure();seek(id);}
-   else {seek(editionOrigin);showNavigationFailure('The requested Score trace is unavailable in this edition.');}
+ if(!ready)return;
+ if(scorePortal&&(id===scoreEntry||!location.hash)){
+   openEditorialScore();return;
+ }
+ if(engine.positions.has(id)){
+   clearNavigationFailure();
+   if(scorePortal){showEditorialState('reading');compose({anchor:id,offset:0});}
+   else seek(id);
+   selectedTraceId=source.querySelector('[data-score-trace-id="'+CSS.escape(id)+'"]')?id:null;
+ }else{
+   if(scorePortal)showEditorialState('score');
+   showNavigationFailure('The requested Score trace is unavailable in this edition.');
  }
 }
-document.addEventListener("click",event=>{
+document.addEventListener('click',event=>{
  const link=event.target.closest?.('[data-score-trace-link],[data-score-return]');
- if(!link||!link.closest('#book-viewport'))return;
+ if(!link || !(link.closest('#book-viewport')||link.closest('#teatro-score')))return;
  event.preventDefault();
  const id=decodeURIComponent(new URL(link.href).hash.slice(1));
+ if(scorePortal&&id===scoreEntry){
+   history.pushState({scoreId:id},'','#'+encodeURIComponent(id));
+   openEditorialScore();scorePortal.querySelector('[data-score-trace-link]')?.focus({preventScroll:true});
+   return;
+ }
  if(!ready||!engine.positions.has(id)){
+   if(scorePortal)showEditorialState('score');
    showNavigationFailure('The requested Score trace is unavailable in this edition.');return;
  }
  clearNavigationFailure();
- history.pushState({scoreTrace:id},'', '#'+encodeURIComponent(id));
- seek(id);
+ history.pushState({scoreTrace:id},'','#'+encodeURIComponent(id));
+ if(scorePortal){showEditorialState('reading');compose({anchor:id,offset:0});}
+ else seek(id);
+ selectedTraceId=source.querySelector('[data-score-trace-id="'+CSS.escape(id)+'"]')?id:null;
 });
-window.addEventListener("popstate",resolveHistoryAddress);
-window.addEventListener("hashchange",resolveHistoryAddress);
+window.addEventListener('popstate',resolveHistoryAddress);
+window.addEventListener('hashchange',resolveHistoryAddress);
 const prefs=restore();
 body.dataset.bookTheme="paper";
 const hash=decodeURIComponent(location.hash.slice(1));
 // Opening from an edition cover is an explicit entry, not invisible resume.
 // The optional fragment is a semantic deep link; stale fragments fail closed.
 const entry=body.dataset.editionEntryAnchor||"book-cover";
-const requested=hash?(document.getElementById(hash)?hash:entry):(body.dataset.editionEntryAnchor?entry:prefs.anchor||"book-cover");
-if(hash&&!document.getElementById(hash))showNavigationFailure('The requested Score trace is unavailable in this edition.');
+const scoreEntry=scorePortal?.id||null;
+function showEditorialState(which){
+ if(!scorePortal)return;
+ if(which!=='score'&&which!=='reading')throw Error('Invalid editorial state');
+ body.dataset.editorialState=which;
+ scorePortal.setAttribute('aria-hidden',String(which==='reading'));
+ const bookRegion=document.querySelector('#book-pages .book-leaf-frame');
+ bookRegion?.setAttribute('aria-hidden',String(which==='score'));
+ document.querySelector('.book-pagination')?.setAttribute('aria-hidden',String(which==='score'));
+}
+function openEditorialScore(){
+ if(!scorePortal)return false;
+ clearNavigationFailure();
+ showEditorialState('score');
+ return true;
+}
+// A score-led entrance does not belong to the typesetter's page stream.
+const readerEntry=scorePortal?(source.querySelector('.book-chapter')?.id||'book-cover'):entry;
+const requested=scorePortal?(hash&&hash!==scoreEntry&&document.getElementById(hash)?hash:readerEntry):
+  (hash?(document.getElementById(hash)?hash:entry):(body.dataset.editionEntryAnchor?entry:prefs.anchor||"book-cover"));
+const unknownEntry=Boolean(hash&&hash!==scoreEntry&&!document.getElementById(hash));
+if(unknownEntry)showNavigationFailure('The requested Score trace is unavailable in this edition.');
 // The first visible leaf must already have its final font, image and viewport
 // geometry. Start on load/font readiness (not requestAnimationFrame: Safari
 // throttles that in background tabs). A bounded timer guarantees fallback.
@@ -593,8 +637,13 @@ const startBook=()=>{
  if(bookStarted)return;
  bookStarted=true;
  clearTimeout(startupLimit);
- compose({anchor:requested,offset:(hash||body.dataset.editionEntryAnchor)?0:Number(prefs.pageWithin)||0});
- if(hash&&source.querySelector('[data-score-trace-id="'+CSS.escape(hash)+'"]'))selectedTraceId=hash;
+ compose({anchor:requested,offset:scorePortal?0:((hash||body.dataset.editionEntryAnchor)?0:Number(prefs.pageWithin)||0)});
+ if(scorePortal){
+   if(!hash||hash===scoreEntry||unknownEntry){showEditorialState('score');}
+   else if(engine.positions.has(hash)){showEditorialState('reading');selectedTraceId=hash;}
+   else {showEditorialState('score');showNavigationFailure('The requested Score trace is unavailable in this edition.');}
+ }
+ if(!scorePortal&&hash&&source.querySelector('[data-score-trace-id="'+CSS.escape(hash)+'"]'))selectedTraceId=hash;
  document.documentElement.classList.remove("book-hydrating");
 };
 const onResourcesReady=()=>{

@@ -57,9 +57,12 @@ def admit_score_first(document, source_digest, score_bytes):
       '<p class="teatro-navigation-status" id="book-navigation-status" role="status" aria-live="polite"></p>'
       '</section>'
     )
-    opening = '<div id="book-flow" class="book-flow">'
+    # Identity navigation is outside the pagination source tree. A Score is
+    # not a faux Linotype page; the book begins after the reader chooses a trace.
+    opening = '<main id="book-pages" class="book-main" aria-label="Fountain Coach essay edition">'
     assert document.count(opening) == 1
     document = document.replace(opening, opening+'\n'+score, 1)
+    assert document.index('id="teatro-score"') < document.index('id="book-flow"')
 
     # Bind the already documented source paragraph without touching its text.
     paragraph = '<p>'+SOURCE_SENTENCE+'</p>'

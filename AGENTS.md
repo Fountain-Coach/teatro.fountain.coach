@@ -270,3 +270,17 @@ must survive iPad and phone pagination without moving source identity.
 source checks remain mandatory. This is not a published seven-way graph and
 not a claim that public Teatro has been deployed. See Fountain Press
 `docs/score-trace-implementation-r31.md`.
+
+## R32 corrected after author rejection of R31
+
+R31 must never be described as visual acceptance: a Score copied into an
+inherited portrait Linotype page is not identity navigation. R32 projects the
+*one unchanged authentic Score* directly under `#book-pages`, outside the
+`#book-flow` pagination source. While at Score the portrait reader and folio
+are invisible; selection of the single admitted movement 06 enters the exact
+source reading. Browser Back, explicit source return and keyboard activation
+recover the Score, never a generated cover. All other six movements remain
+unmapped. `npm run browser:visual` is mandatory and compares the rejected
+v31 iPad screenshot against the reproducible R32 candidate. The technical
+golden and evidence are in `docs/qa/r32` and are **not** a substitute for
+author or native iPad Safari review. Keep full original audio/MIDI2 suite.

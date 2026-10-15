@@ -18,21 +18,72 @@
 .press-media-stage .teatro-scene-play:focus-visible{outline:2px solid var(--book-accent);
  outline-offset:-4px}
 @media print{.press-media-stage .teatro-scene-play{display:grid!important}}
-/* Teatro R31. Original Score is the first editorial leaf; not a substitute cover. */
-.book-score{max-width:100%;margin:0;display:flex;flex-direction:column;gap:12px}
-.linotype-score .linotype-area{display:flex;align-items:center;justify-content:center}
-.linotype-score .book-score{width:100%;max-height:100%;min-height:0;gap:clamp(10px,2vh,18px);justify-content:center}
-.teatro-score-original{position:relative;width:100%;max-width:100%;min-width:0}
-.teatro-score-original figure{display:block;width:100%;max-width:100%;margin:0;padding:0;border:0}
-.teatro-score-original figure img{display:block;width:100%;height:auto;max-width:100%;max-height:min(240px,calc(var(--sheet-h,650px) * .39));object-fit:contain}
-.teatro-score-original figcaption{font:9px/1.55 ui-monospace,Menlo,monospace;letter-spacing:.05em;text-align:center;color:var(--book-muted);margin:8px 0 0}
-.teatro-score-hotspot{position:absolute;z-index:1;left:69.4%;top:2%;width:13.6%;height:86%;min-height:40px;border:1px solid transparent;border-radius:5px;display:flex;justify-content:flex-end;align-items:start;text-decoration:none;touch-action:manipulation}
-.score-hotspot-mark{background:var(--book-paper);color:var(--book-ink);border:1px solid var(--book-rule);border-radius:50%;font:12px/1 ui-monospace,monospace;width:20px;height:20px;display:grid;place-items:center}
-.teatro-score-hotspot:hover,.teatro-score-hotspot:focus-visible{border-color:var(--book-accent);outline:1px dashed var(--book-accent);outline-offset:2px}
-.teatro-score-navigation{text-align:center;margin-top:5px}
-.teatro-score-navigation a{display:inline-block;font:10px/1.7 ui-monospace,Menlo,monospace;letter-spacing:.04em;text-decoration:none;border-bottom:1px solid var(--book-rule);padding:5px 7px}
-.teatro-score-navigation a:hover,.teatro-score-navigation a:focus-visible{border-bottom-color:var(--book-accent)}
-.teatro-navigation-status{min-height:0;margin:0;text-align:center;font:10px/1.4 ui-monospace,monospace;color:#8e5347}
-.teatro-navigation-status:empty{display:none}
-.press-anchored-media [data-score-return]{display:inline-block;color:var(--book-ink);margin-left:12px;text-decoration:none;border-bottom:1px solid var(--book-rule);padding:2px 4px}
-.press-anchored-media [data-score-return]:focus-visible{outline:2px solid var(--book-accent)}
+/* R32: editorial identity is not a paper leaf. Publisher owns admission;
+   Linotype may paginate only the source reached through an admitted edge. */
+#book-pages > .book-score {
+  width:min(100%,1100px);
+  min-height:calc(100svh - 64px);
+  margin:0 auto;
+  padding:clamp(22px,3.3vw,60px) clamp(16px,3vw,40px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(16px,2.4vh,30px);
+}
+body[data-editorial-state="score"] #book-pages {
+  background:var(--book-outer);
+  min-height:calc(100svh - 64px);
+  padding:0 max(8px,env(safe-area-inset-left)) 0 max(8px,env(safe-area-inset-right));
+}
+body[data-editorial-state="score"] #book-pages .book-leaf-frame,
+body[data-editorial-state="score"] .book-pagination,
+body[data-editorial-state="score"] .book-contents-rail,
+body[data-editorial-state="score"] .book-page-atlas {display:none!important}
+body[data-editorial-state="reading"] #teatro-score,
+body[data-editorial-state="preparing"] #teatro-score {display:none!important}
+body[data-editorial-state="reading"] #book-pages .book-leaf-frame{display:block}
+#teatro-score .teatro-score-original {width:100%;max-width:1100px;position:relative;min-width:0}
+#teatro-score .teatro-score-original figure {display:block;width:100%;margin:0;border:0;padding:0}
+#teatro-score .teatro-score-original figure img {
+  display:block;width:100%;height:auto;max-width:100%;
+  max-height:min(77svh,680px);object-fit:contain;
+  object-position:center;
+}
+#teatro-score .teatro-score-original figcaption {
+  position:absolute; width:1px;height:1px;padding:0; margin:-1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0;
+}
+#teatro-score .teatro-score-hotspot {
+  position:absolute;left:67%;top:10%;width:16%;height:78%;
+  min-width:44px;min-height:44px;max-height:600px;
+  border:1px solid transparent;border-radius:8px;
+  display:flex;justify-content:flex-end;align-items:flex-start;
+  text-decoration:none;touch-action:manipulation;
+}
+#teatro-score .teatro-score-hotspot:hover,
+#teatro-score .teatro-score-hotspot:focus-visible {border-color:var(--book-accent);outline:2px solid var(--book-accent);outline-offset:2px}
+#teatro-score .score-hotspot-mark {
+  display:grid;place-items:center;width:24px;height:24px;
+  color:var(--book-ink);background:var(--book-paper);
+  border:1px solid var(--book-rule);border-radius:50%;
+  font:14px/1 ui-monospace,Menlo,monospace;
+}
+#teatro-score .teatro-score-navigation {
+  margin:0;text-align:center;
+}
+#teatro-score .teatro-score-navigation a{
+  color:var(--book-ink);font:11px/1.6 ui-monospace,Menlo,monospace;
+  text-decoration:none;letter-spacing:.06em;
+  padding:10px 12px;min-height:44px;display:inline-flex;align-items:center;
+  border-bottom:1px solid var(--book-rule);
+}
+#teatro-score .teatro-score-navigation a:hover,
+#teatro-score .teatro-score-navigation a:focus-visible{border-bottom-color:var(--book-accent);outline-offset:3px}
+#teatro-score .teatro-navigation-status{margin:0;min-height:0;color:#8e5347;text-align:center;font:12px/1.5 ui-monospace,monospace}
+#teatro-score .teatro-navigation-status:empty {display:none}
+.press-anchored-media [data-score-return]{display:inline-flex;align-items:center;min-height:36px;color:var(--book-ink);margin-left:10px;text-decoration:none;border-bottom:1px solid var(--book-rule);padding:2px 7px}
+@media(max-width:700px){
+  #book-pages > .book-score{min-height:calc(100svh - 64px);padding:16px 10px;gap:14px}
+  #teatro-score .teatro-score-original figure img{max-height:72svh}
+}
