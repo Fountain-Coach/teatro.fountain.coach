@@ -82,8 +82,15 @@ body[data-editorial-state="reading"] #book-pages .book-leaf-frame{display:block}
 #teatro-score .teatro-score-navigation a:focus-visible{border-bottom-color:var(--book-accent);outline-offset:3px}
 #teatro-score .teatro-navigation-status{margin:0;min-height:0;color:#8e5347;text-align:center;font:12px/1.5 ui-monospace,monospace}
 #teatro-score .teatro-navigation-status:empty {display:none}
-.press-anchored-media [data-score-return]{display:inline-flex;align-items:center;min-height:36px;color:var(--book-ink);margin-left:10px;text-decoration:none;border-bottom:1px solid var(--book-rule);padding:2px 7px}
+.press-anchored-media [data-score-return]{position:absolute;right:0;bottom:0;z-index:2;display:inline-flex;align-items:center;min-height:36px;color:var(--book-ink);background:var(--book-paper);margin:0;text-decoration:none;border-bottom:1px solid var(--book-rule);padding:2px 8px}
 @media(max-width:700px){
   #book-pages > .book-score{min-height:calc(100svh - 64px);padding:16px 10px;gap:14px}
   #teatro-score .teatro-score-original figure img{max-height:72svh}
+}
+/* R32: Small reading sheets need a shorter embedded stage, not a loosened
+   overflow bound. Preserve the source paragraph + scene on one sheet. */
+@media(max-width:600px), (max-height:650px){
+  [data-press-media].teatro-spatial-score .press-media-stage{
+    height:clamp(168px,calc(var(--sheet-w,450px) * .42),185px);
+  }
 }
