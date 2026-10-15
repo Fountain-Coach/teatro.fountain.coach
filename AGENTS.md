@@ -241,3 +241,16 @@ empty slots. The genuine cover art retains its natural proportions inside
 those frames. Do not make the full thumbnail into a portrait paper card and
 do not change the distinct circular logo or existing Play/Stop sound transport.
 Use the shared Fountain Press CSS for all these boundaries.
+
+## Authorial navigation contract (pinned, not yet implemented)
+
+The current Bookshelf → First Hearing navigation is semantically incomplete:
+it promises the authored Teatro Score but compiles a conventional cover before
+that Score. The binding first proof and eight rules are recorded in Fountain
+Press [Navigation Semantics — Score → Trace → Reading](https://github.com/Fountain-Coach/fountain-press/blob/main/docs/navigation-semantics-score-trace-reading.md),
+scenario `teatro.score.trace.navigate`. A separate illustrated Ulysses essay
+expounds the rule at [The Door Must Keep Its Word](https://github.com/Fountain-Coach/fountain-press/blob/main/docs/ulysses-the-door-must-keep-its-word.md).
+These are documentation and editorial design, **not** a claim that the current
+compiler already implements score-first entry or admitted movement addresses.
+Do not solve by generating a new illustrative cover or making seven fictitious
+chapters from the Score's seven graphics. Preserve all authorial boundaries.
