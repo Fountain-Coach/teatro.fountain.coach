@@ -21,13 +21,14 @@ const pageCount=document.getElementById("book-page-count");
 const locationLabel=document.getElementById("book-location");
 const progress=document.getElementById("book-progress-fill");
 const contents=document.getElementById("book-contents");
-const anchors=[...source.querySelectorAll("[id^='book-'],[id^='work-']")].filter(n=>n.classList.contains("book-cover")||n.classList.contains("book-preface")||n.classList.contains("book-chapter")||n.classList.contains("book-end"));
+const anchors=[...source.querySelectorAll("[id^='book-'],[id^='work-'],.book-score")].filter(n=>n.classList.contains("book-score")||n.classList.contains("book-cover")||n.classList.contains("book-preface")||n.classList.contains("book-chapter")||n.classList.contains("book-end"));
 const STORAGE="fountain-press."+String(document.body.dataset.editionId||"first-reading")+".linotype.v1";
 const fontSize=100;
 let ready=false;
 let resizeRaf=0;
 let resizeTimer=0;
-let acceptedPlace={anchor:"book-cover",offset:0};
+let acceptedPlace={anchor:body.dataset.editionEntryAnchor||"book-cover",offset:0};
+let selectedTraceId=null;
 let finishTurnMotion=null;
 let dragSession=null;
 let pendingFontReflow=false;
@@ -39,6 +40,7 @@ function restore(){
  try{return JSON.parse(localStorage.getItem(STORAGE)||"{}")}catch{return {}}
 }
 function titleFor(id){
+ if(id==="teatro-score")return "Teatro Score";
  if(id==="book-cover")return "Cover";
  if(id==="book-preface")return "The edition";
  if(id==="book-end")return "End of edition";
@@ -55,7 +57,7 @@ function update(){
  next.disabled=engine.next()<=first;
  document.querySelectorAll("[data-book-toc-target]").forEach(a=>{
    const id=a.dataset.bookTocTarget;
-   const match=(id==="cover"?"book-cover":id==="preface"?"book-preface":id==="vergil"?"book-vergil":"work-"+id)===engine.currentChapter();
+   const match=(id==="score"?(body.dataset.editionEntryAnchor||"book-cover"):id==="cover"?"book-cover":id==="preface"?"book-preface":id==="vergil"?"book-vergil":"work-"+id)===engine.currentChapter();
    if(match)a.setAttribute("aria-current","location");
    else a.removeAttribute("aria-current");
  });
@@ -76,6 +78,7 @@ function turn(to,{animate=false,velocity=0}={}){
  const previousIndex=engine.current;
  const direction=Math.sign(to-previousIndex);
  if(direction===0)return;
+ selectedTraceId=null;
  const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
  const motion=animate&&!reduced&&typeof engine.stage.animate==="function";
  // Never keep an obsolete overlay alive during a subsequent turn.
@@ -121,6 +124,7 @@ function seek(id){
  const index=engine.positions.get(id);
  if(index===undefined)return false;
  turn(index);
+ selectedTraceId=source.querySelector('[data-score-trace-id="'+CSS.escape(id)+'"]')?id:null;
  return true;
 }
 function compose({anchor=null,offset=0}={}){
@@ -185,11 +189,15 @@ tocButton.setAttribute("aria-label","Show contents side rail");
 tocButton.removeAttribute("aria-haspopup");
 tocButton.setAttribute("aria-controls","book-contents-rail");
 tocButton.setAttribute("aria-expanded","false");
+function currentSemanticPlace(){
+ if(selectedTraceId&&engine.positions.has(selectedTraceId))return {anchor:selectedTraceId,offset:0};
+ const anchor=engine.currentChapter();
+ return {anchor,offset:engine.current-(engine.positions.get(anchor)||0)};
+}
 function recomposeForRail(){
  if(!ready)return;
- const anchor=engine.currentChapter();
- const offset=engine.current-(engine.positions.get(anchor)||0);
- requestAnimationFrame(()=>compose({anchor,offset}));
+ const place=currentSemanticPlace();
+ requestAnimationFrame(()=>compose(place));
 }
 function setContentsOpen(open){
  const next=Boolean(open);
@@ -210,7 +218,7 @@ document.addEventListener("keydown",event=>{
 });
 document.querySelectorAll("[data-book-toc-target]").forEach(link=>link.addEventListener("click",event=>{
  const target=link.dataset.bookTocTarget;
- const id=target==="cover"?"book-cover":target==="preface"?"book-preface":target==="vergil"?"book-vergil":"work-"+target;
+ const id=target==="score"?(body.dataset.editionEntryAnchor||"book-cover"):target==="cover"?"book-cover":target==="preface"?"book-preface":target==="vergil"?"book-vergil":"work-"+target;
  if(!ready||!engine.positions.has(id))return;
  event.preventDefault();
  history.replaceState(null,"","#"+id);
@@ -366,6 +374,7 @@ function createDrag(direction){
 }
 function acceptDrag(session,velocity){
  dragSession=null;
+ selectedTraceId=null;
  if(!session||!ready)return;
  if(prefersReducedMotion()){
    session.root.remove();
@@ -532,19 +541,50 @@ window.addEventListener("resize",()=>{
     mobileAtlas?.onResize();
     return;
   }
-  const anchor=engine.currentChapter(),offset=engine.current-(engine.positions.get(anchor)||0);
-  compose({anchor,offset});
+  compose(currentSemanticPlace());
  });
  },140);
 },{passive:true});
-window.addEventListener("hashchange",()=>{
- const id=decodeURIComponent(location.hash.slice(1));
- if(ready&&engine.positions.has(id))seek(id);
+// Admitted links are composed against the source address, never a page count.
+// Browser Back and the Score return control resolve the same durable address.
+const editionOrigin=body.dataset.editionEntryAnchor||"book-cover";
+function showNavigationFailure(message){
+ body.dataset.navigationFailure='unresolved-trace';
+ document.querySelectorAll('#book-navigation-status').forEach(status=>{status.textContent=message;});
+}
+function clearNavigationFailure(){
+ delete body.dataset.navigationFailure;
+ document.querySelectorAll('#book-navigation-status').forEach(status=>{status.textContent='';});
+}
+function resolveHistoryAddress(){
+ const id=decodeURIComponent(location.hash.slice(1))||editionOrigin;
+ if(ready){
+   if(engine.positions.has(id)){clearNavigationFailure();seek(id);}
+   else {seek(editionOrigin);showNavigationFailure('The requested Score trace is unavailable in this edition.');}
+ }
+}
+document.addEventListener("click",event=>{
+ const link=event.target.closest?.('[data-score-trace-link],[data-score-return]');
+ if(!link||!link.closest('#book-viewport'))return;
+ event.preventDefault();
+ const id=decodeURIComponent(new URL(link.href).hash.slice(1));
+ if(!ready||!engine.positions.has(id)){
+   showNavigationFailure('The requested Score trace is unavailable in this edition.');return;
+ }
+ clearNavigationFailure();
+ history.pushState({scoreTrace:id},'', '#'+encodeURIComponent(id));
+ seek(id);
 });
+window.addEventListener("popstate",resolveHistoryAddress);
+window.addEventListener("hashchange",resolveHistoryAddress);
 const prefs=restore();
 body.dataset.bookTheme="paper";
 const hash=decodeURIComponent(location.hash.slice(1));
-const requested=hash&&document.getElementById(hash)?hash:prefs.anchor||"book-cover";
+// Opening from an edition cover is an explicit entry, not invisible resume.
+// The optional fragment is a semantic deep link; stale fragments fail closed.
+const entry=body.dataset.editionEntryAnchor||"book-cover";
+const requested=hash?(document.getElementById(hash)?hash:entry):(body.dataset.editionEntryAnchor?entry:prefs.anchor||"book-cover");
+if(hash&&!document.getElementById(hash))showNavigationFailure('The requested Score trace is unavailable in this edition.');
 // The first visible leaf must already have its final font, image and viewport
 // geometry. Start on load/font readiness (not requestAnimationFrame: Safari
 // throttles that in background tabs). A bounded timer guarantees fallback.
@@ -553,7 +593,8 @@ const startBook=()=>{
  if(bookStarted)return;
  bookStarted=true;
  clearTimeout(startupLimit);
- compose({anchor:requested,offset:hash?0:Number(prefs.pageWithin)||0});
+ compose({anchor:requested,offset:(hash||body.dataset.editionEntryAnchor)?0:Number(prefs.pageWithin)||0});
+ if(hash&&source.querySelector('[data-score-trace-id="'+CSS.escape(hash)+'"]'))selectedTraceId=hash;
  document.documentElement.classList.remove("book-hydrating");
 };
 const onResourcesReady=()=>{
@@ -568,9 +609,7 @@ else window.addEventListener("load",onResourcesReady,{once:true});
 function processFontReflow(){
  if(!pendingFontReflow||!ready||gesture||dragSession||finishTurnMotion)return;
  pendingFontReflow=false;
- const anchor=engine.currentChapter();
- const offset=engine.current-(engine.positions.get(anchor)||0);
- compose({anchor,offset});
+ compose(currentSemanticPlace());
 }
 
 })();

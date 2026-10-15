@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import sys
 from integrate_interactive_plate import integrate
+from score_navigation import admit_score_first
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/"site"
@@ -178,6 +179,9 @@ def main(fountain,satzfunk,press,stage_source):
  assert fallback.is_file() and fallback.stat().st_size>1000, "Build canonical StageEngine fallback first"
  shutil.copyfile(fallback,SITE/"assets/book-puppet-fallback.js")
  document=integrate(document,output_assets,press/"runtime/mixed-media.css",manuscript["sourceSHA256"])
+ document,score_navigation=admit_score_first(document,manuscript["sourceSHA256"],art.read_bytes())
+ with (output_assets/"teatro.css").open("a") as style:
+  style.write((ROOT/"scripts/score-navigation.css").read_text())
  assert document.count('data-teatro-book-stage')==1
 
  # A bookshelf is a Linotype state, not a rival website or another book.
@@ -283,6 +287,9 @@ def main(fountain,satzfunk,press,stage_source):
   "sceneAnchorId":"teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId":"teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement":"inside-authored-prose",
+  "scoreNavigation":score_navigation,
+  "openingIdentity":"teatro-score",
+  "semanticEntryPolicy":"score-first-not-implicit-resume",
   "bookMidi2Implementation":"Fountain Press UMP local event plane",
   "bookAudioModes":["csound-worklet-on-secure-origin","web-audio-local-preview"],
   "bookEarBoundary":"real output samples and typed observations only",

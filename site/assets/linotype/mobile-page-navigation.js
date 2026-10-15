@@ -153,6 +153,7 @@ class MobilePageAtlas {
   }
   pageTitle(leaf){
     if(!leaf)return "First Reading";
+    if(leaf.sourceId==="teatro-score")return "Teatro Score";
     if(leaf.sourceId==="book-cover")return "First Reading";
     if(leaf.sourceId==="book-vergil")return "Vergil";
     if(leaf.sourceId==="book-preface")return "The edition";

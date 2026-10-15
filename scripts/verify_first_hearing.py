@@ -24,12 +24,42 @@ def main():
  assert manifest["hearingStatus"]=="not-yet-released"
  assert manifest["sourceMutation"] is False
  assert sha((SITE/"assets/edition/teatro-score-memory-vector-human-condition.svg").read_bytes())==manifest["originalScorePlateSHA256"]
+ mapping=manifest["scoreNavigation"]
+ assert mapping==json.loads((ROOT/'scripts/score-navigation.json').read_text())
+ assert mapping["sourceSHA256"]==manifest["authoredSourceSHA256"]
+ assert mapping["scoreSHA256"]==manifest["originalScorePlateSHA256"]
+ assert manifest["openingIdentity"]==mapping["scoreId"]=="teatro-score"
+ assert manifest["semanticEntryPolicy"]=="score-first-not-implicit-resume"
+ assert len(mapping["traces"])==1 and mapping["traces"][0]["status"]=="admitted"
+ assert sorted(mapping["unmappedMovements"])==["01","02","03","04","05","07"]
+ assert mapping["traces"][0]["sourceParagraphSHA256"]==sha(SOURCE_SENTENCE.encode())
  for path in ["editions/first-hearing/index.html"]:
   book=(SITE/path).read_text()
   assert 'id="book-flow" class="book-flow"' in book
   assert book.count('data-book-chapter=')==1
   assert book.count('data-book-toc-target=')==2
   assert book.count('src="/assets/edition/')==1
+  opening=book.split('<div id="book-flow" class="book-flow">',1)[1].lstrip()
+  assert opening.startswith('<section class="book-score" id="teatro-score"')
+  assert opening.index('src="/assets/edition/teatro-score-memory-vector-human-condition.svg"') < opening.index('class="book-chapter"')
+  assert 'class="book-cover"' not in book
+  assert book.count(' id="teatro-score"')==1 and book.count('data-score-id="teatro-score"')==1
+  assert 'data-edition-entry-anchor="teatro-score"' in book
+  assert 'data-book-toc-target="score"' in book and '>Teatro Score</span>' in book
+  assert book.count('data-score-trace-link')==2 and book.count('data-score-return')==1
+  trace_id=mapping['traces'][0]['id']
+  assert book.count('data-score-trace-id="'+trace_id+'"')==1
+  assert book.count('href="#'+trace_id+'"')==2
+  assert book.count('data-source-anchor="'+trace_id+'"')==1
+  assert 'id="'+trace_id+'"' in book
+  assert 'id="book-navigation-status" role="status"' in book
+  assert 'id="book-cover"' not in book
+  assert '.teatro-score-hotspot{' in (SITE/'assets/linotype/teatro.css').read_text()
+  engine=(SITE/'assets/linotype/linotype-engine.js').read_text()
+  controller=(SITE/'assets/linotype/book.js').read_text()
+  assert 'book-score' in engine and 'data-score-trace-id' in engine
+  assert 'editionEntryAnchor' in controller and 'data-score-trace-link' in controller
+  assert 'history.pushState' in controller and 'popstate' in controller
   assert book.count('aria-current="page"')==0
   assert 'class="book-toolbar book-reading-controls"' in book
   assert 'class="book-pagination book-reading-pagination"' in book

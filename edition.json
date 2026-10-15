@@ -8,7 +8,7 @@
   "publicationState": "source-candidate-Linotype-bookshelf-first-hearing-not-publicly-deployed",
   "fileCount": 60,
   "indexPages": 5,
-  "sourceSha256Inventory": "6f5e7ef12c18281384e8fdbfd538b3fb365425b4ee7cb8e2b8defece67a65ba2",
+  "sourceSha256Inventory": "3002353d666d196973aec8ddc897fe74f3e964356d824e2fbf6bf1203eb342dc",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",

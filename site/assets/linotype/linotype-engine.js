@@ -368,7 +368,8 @@ class Linotype {
     const nodes=[...this.source.children];
     let currentId="book-cover",label="FIRST READING";
     for(const node of nodes){
-      if(node.classList.contains("book-cover"))this.standard(node,"cover");
+      if(node.classList.contains("book-score"))this.standard(node,"score");
+      else if(node.classList.contains("book-cover"))this.standard(node,"cover");
       else if(node.classList.contains("book-preface"))this.standard(node,"preface");
       else if(node.classList.contains("book-chapter")){
         currentId=node.id;
@@ -377,6 +378,16 @@ class Linotype {
       }else if(node.classList.contains("book-art-leaf"))this.image(node,currentId);
       else if(node.classList.contains("book-chapter-text"))this.text(node,currentId,label);
       else if(node.classList.contains("book-end"))this.standard(node,"end");
+    }
+    // Trace IDs belong to source passages, never measured physical folios.
+    // Refuse to publish an ambiguous or unresolvable address.
+    for(const address of this.source.querySelectorAll('[data-score-trace-id]')){
+      const traceId=address.dataset.scoreTraceId;
+      if(!traceId||this.positions.has(traceId))throw Error('Duplicate Score trace identity: '+traceId);
+      const matches=this.leaves.flatMap((leaf,i)=>
+        leaf.area.querySelector('[data-score-trace-id="'+CSS.escape(traceId)+'"]')?[i]:[]);
+      if(matches.length!==1)throw Error('Score trace has no unique typeset source: '+traceId);
+      this.positions.set(traceId,matches[0]);
     }
     this.pages=this.leaves.length;
     if(this.pages<Math.max(4,Number(this.source.dataset.minLeaves||4)))throw Error("Insufficient typeset leaves");

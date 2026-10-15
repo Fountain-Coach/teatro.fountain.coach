@@ -254,3 +254,19 @@ These are documentation and editorial design, **not** a claim that the current
 compiler already implements score-first entry or admitted movement addresses.
 Do not solve by generating a new illustrative cover or making seven fictitious
 chapters from the Score's seven graphics. Preserve all authorial boundaries.
+
+## R31 accepted implementation — first Score-led trace
+
+The previous 'not yet implemented' reservation is superseded **only for this
+first proof**. From the Teatro bookshelf, First Hearing starts on the original
+Teatro Score as its very first composed leaf; the inherited Essays cover is
+removed, not hidden. `scripts/score-navigation.json` admits *one* movement:
+06 Attention / Authority → the original empty-chair passage and its source
+anchored spatial media. The other six remain inert. Reader can follow the
+actual marked score region or the adjacent accessible link, return to the
+Score, use browser Back, or open the trace via its stable fragment ID. This
+must survive iPad and phone pagination without moving source identity.
+`npm run browser:navigation` is mandatory; the existing browser audio and
+source checks remain mandatory. This is not a published seven-way graph and
+not a claim that public Teatro has been deployed. See Fountain Press
+`docs/score-trace-implementation-r31.md`.

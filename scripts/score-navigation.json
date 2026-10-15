@@ -1,0 +1,29 @@
+{
+  "schema": "fountain.press.score-trace.v1",
+  "edition": "teatro-first-hearing",
+  "scoreId": "teatro-score",
+  "scoreAsset": "teatro-score-memory-vector-human-condition.svg",
+  "scoreSHA256": "226e3440690dd8cbeb331c4f3f62ee002fa0bc0e6007fcdf8431f1f578d115e2",
+  "owner": "Fountain-Coach/teatro.fountain.coach",
+  "entry": "score",
+  "traces": [
+    {
+      "id": "teatro:unfinished-composition:empty-chair-attention",
+      "movement": "06",
+      "movementLabel": "ATTENTION / AUTHORITY",
+      "sourceWork": "teatro-an-unfinished-composition",
+      "sourceParagraphSHA256": "a0617b4afa10a85c6591a20bd73c99eb54d87e12c1153d4f0ea5128f38971c78",
+      "targetMediaId": "book-live-stage",
+      "status": "admitted"
+    }
+  ],
+  "unmappedMovements": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "07"
+  ],
+  "sourceSHA256": "5f77e58bbb59d0802d5b8b0ee48ecea1bbea7d44ebf4b73e3107363b7b95bad8"
+}
