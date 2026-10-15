@@ -233,3 +233,11 @@ circle and the existing Teatro Play/Stop button. Use the same circular shape
 and stroke while preserving Play/Stop's real Ear-driven fill/halo, transport,
 page-exit cleanup and audio settings. Copy the shared rule at build time;
 do not add a new control or modify the visual sound-response semantics.
+
+## Publisher thumbnail geometry
+
+Admitted book covers occupy rounded-square thumbnail frames exactly like the
+empty slots. The genuine cover art retains its natural proportions inside
+those frames. Do not make the full thumbnail into a portrait paper card and
+do not change the distinct circular logo or existing Play/Stop sound transport.
+Use the shared Fountain Press CSS for all these boundaries.

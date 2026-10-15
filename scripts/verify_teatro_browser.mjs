@@ -73,6 +73,9 @@ async function open(path,width,height,label){
     const brandCircle=await evalJS("(()=>{const e=document.querySelector('.bookshelf-brand'),s=getComputedStyle(e);return {className:e.classList.contains('fc-identity-circle'),radius:s.borderTopLeftRadius,stroke:s.borderTopWidth,logo:e.querySelectorAll('img').length}})()");
     if(!brandCircle.className||brandCircle.radius!=='50%'||brandCircle.stroke!=='1px'||brandCircle.logo!==1)throw Error('Publisher identity circle missing '+JSON.stringify(brandCircle));
     console.log('PASSED SHARED PUBLISHER CIRCLE',label,JSON.stringify(brandCircle));
+    const thumbGeometry=await evalJS("(()=>{const covers=[...document.querySelectorAll('.shelf-cover')],e=document.querySelector('.bookshelf-empty'),radius=getComputedStyle(e).borderTopLeftRadius;return {radius,items:covers.map(c=>{const a=c.getBoundingClientRect(),b=c.closest('.shelf-item').getBoundingClientRect();return {width:a.width,height:a.height,slotW:b.width,slotH:b.height,radius:getComputedStyle(c).borderTopLeftRadius,artFit:getComputedStyle(c.querySelector('img')).objectFit}})}})()");
+    if(thumbGeometry.items.length!==3||thumbGeometry.radius!=='22.37%'||thumbGeometry.items.some(g=>Math.abs(g.width-g.height)>1||Math.abs(g.width-g.slotW)>1||Math.abs(g.slotW-g.slotH)>1||g.radius!==thumbGeometry.radius||g.artFit!=='contain'))throw Error('Rounded-square thumbnail identity lost '+JSON.stringify(thumbGeometry));
+    console.log('PASSED ROUNDED SQUARE THUMBNAILS',label,JSON.stringify(thumbGeometry));
     console.log('PASSED R17 BOOKSHELF',label,JSON.stringify(shelf));
     // A genuine source-owned link enters the existing v16 Linotype
     // reader; opening the book must not generate a competing app.
