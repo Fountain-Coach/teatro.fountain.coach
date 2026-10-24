@@ -114,6 +114,7 @@ def main() -> None:
     parser.add_argument("--human-asr")
     parser.add_argument("--human-challenge-reference")
     parser.add_argument("--human-challenge-asr")
+    parser.add_argument("--human-sung-timing-reference")
     args = parser.parse_args()
     if bool(args.human_challenge_reference) != bool(args.human_challenge_asr):
         parser.error("Human mispronunciation challenge needs a source-blind ASR receipt")
@@ -226,6 +227,22 @@ def main() -> None:
             if (human_challenge["phonemeRecognition"] != "NOT_IMPLEMENTED" or
                     sum(k["recordings"] for k in human_challenge["aggregates"].values()) != 4):
                 raise RuntimeError("Human challenge cannot certify phoneme recognition")
+        human_sung_timing = None
+        if args.human_sung_timing_reference:
+            # Human-sung timed labels never enter this or any upstream
+            # recognizer's inference. They are evaluation references only.
+            human_sung_manifest = private_path(args.human_sung_timing_reference)
+            sung_timing_receipt = stage / "human-sung-timing.json"
+            human_sung_timing = json.loads(command([
+                sys.executable, str(SCRIPTS / "ear_private_sung_timing_gate.py"),
+                "--reference", str(human_sung_manifest),
+                "--report", str(sung_timing_receipt)
+            ]))
+            if (human_sung_timing["humanSungPhonemeRecognition"] != "NOT_QUALIFIED" or
+                human_sung_timing["speakerDisjointWitness"] is not False or
+                human_sung_timing["automaticPhoneIdentityRecognition"] != "NOT_IMPLEMENTED" or
+                human_sung_timing["publicMedia"] != "not-admitted"):
+                raise RuntimeError("Sung timing cannot be promoted to qualified phones")
         if (browser["results"]["speechDerived"]["sha256"] != envelope["speechDerivedSHA256"]):
             raise RuntimeError("Browser and envelope analysis did not observe identical PCM")
         if (browser["results"]["procedural"]["sha256"] != envelope["proceduralSHA256"]):
@@ -245,6 +262,7 @@ def main() -> None:
             "humanPronunciationChallenge": (
                 json.loads((stage / "human-pronunciation-challenge.json").read_text())
                 if human_challenge is not None else None),
+            "humanSungTimingReference": human_sung_timing,
             "phonemeRecognition": "NOT_IMPLEMENTED",
             "humanIntelligibility": "unverified",
             "speakerIdentity": "unverified",
@@ -274,6 +292,9 @@ def main() -> None:
                       "humanPronunciationChallenge": (
                           result["humanPronunciationChallenge"]["status"]
                           if result["humanPronunciationChallenge"] else "not-requested"),
+                      "humanSungTimingReference": (
+                          result["humanSungTimingReference"]["status"]
+                          if result["humanSungTimingReference"] else "not-requested"),
                       "mediaPublished": False,
                       "testServicesTerminated": True}, indent=2))
 
