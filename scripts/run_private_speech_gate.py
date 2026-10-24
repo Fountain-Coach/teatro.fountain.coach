@@ -118,7 +118,12 @@ def main() -> None:
     parser.add_argument("--human-sung-timing-reference")
     parser.add_argument("--allphone-python")
     parser.add_argument("--activity-controls-manifest")
+    parser.add_argument("--native-sound-novel-manifest")
     args = parser.parse_args()
+    if args.native_sound_novel_manifest and not all((
+        args.allphone_python, args.human_reference, args.human_challenge_reference,
+        args.human_sung_timing_reference, args.activity_controls_manifest)):
+        parser.error("Native vocal diagnostic requires all source-addressed human and adversarial references")
     if args.activity_controls_manifest and not args.allphone_python:
         parser.error("Adversarial activity controls require the independent allphone decoder")
     if args.allphone_python and not args.human_sung_timing_reference:
@@ -339,6 +344,68 @@ def main() -> None:
                     activity_holdout["activityScreenIsPhonemeConfidence"] is not False or
                     activity_holdout["mediaPublished"] is not False):
                     raise RuntimeError("Non-speech activity test must fail closed")
+        native_sound = None
+        if args.native_sound_novel_manifest:
+            novel_manifest = json.loads(
+                private_path(args.native_sound_novel_manifest).read_text())
+            if (novel_manifest.get("schema") != "ear.private-native-sound-novel-v1"
+                or len(novel_manifest.get("records", [])) != 9 or
+                novel_manifest.get("generatedAfterNativeThresholdFrozen") is not True):
+                raise RuntimeError("Untrusted frozen native SoundAnalysis negative set")
+            ordinary_source = json.loads(private_path(args.human_reference).read_text())
+            hard_source = json.loads(private_path(args.human_challenge_reference).read_text())
+            # Only the private WAV paths are passed into Apple's built-in
+            # audio model. Labels/transcripts/phone annotations are used
+            # exclusively later by Ear's independent evidence evaluator.
+            human_speech_wavs = [
+                private_path(row["file"]) for source in (ordinary_source, hard_source)
+                for row in source["records"]
+            ]
+            singer_wavs = [
+                private_path(row["audioPath"]) for row in human_manifest["records"]
+            ]
+            known_chirps = [
+                private_path(row["path"]) for row in controls_manifest["entries"]
+                if row["sourceId"] == "witness-chirp.wav" and row["partition"] == "witness"
+            ]
+            if len(known_chirps) != 1:
+                raise RuntimeError("Missing original held-out chirp")
+            novel_negatives = [private_path(row["path"])
+                               for row in novel_manifest["records"]]
+            if len(set(novel_negatives)) != 9:
+                raise RuntimeError("Duplicated SoundAnalysis negative sources")
+            native_binary = stage / "ear-apple-native-sound"
+            command(["swiftc", "-O",
+                     str(SCRIPTS / "ear_private_apple_sound_gate.swift"),
+                     "-o", str(native_binary)], timeout=85)
+            raw_native = command([
+                str(native_binary),
+                *[item for path in [*human_speech_wavs, *singer_wavs,
+                                    paths["spoken"], paths["speech-derived"]]
+                  for item in ("--candidate", str(path))],
+                *[item for path in [*novel_negatives, controls[3], known_chirps[0]]
+                  for item in ("--negative", str(path))]
+            ], timeout=115)
+            raw_native_report = stage / "native-sound-raw.json"
+            raw_native_report.write_text(raw_native)
+            native_sound = json.loads(command([
+                sys.executable, str(SCRIPTS / "ear_private_native_sound_eval.py"),
+                "--native-report", str(raw_native_report),
+                "--ordinary", str(private_path(args.human_reference)),
+                "--challenge", str(private_path(args.human_challenge_reference)),
+                "--sung", str(private_path(args.human_sung_timing_reference)),
+                "--novel", str(private_path(args.native_sound_novel_manifest)),
+                "--sing-spoken", str(paths["spoken"]),
+                "--sing-derived", str(paths["speech-derived"]),
+                "--old-noise", str(controls[3]),
+                "--old-chirp", str(known_chirps[0]),
+                "--allphone-holdout", str(stage / "adversarial-activity.json"),
+                "--report", str(stage / "native-sound-evaluation.json")
+            ], timeout=25))
+            if (native_sound["phonemeIdentityRecognition"] != "NOT_QUALIFIED"
+                or native_sound["independentSecondSinger"] is not False
+                or native_sound["publicMedia"] is not False):
+                raise RuntimeError("Native sound classification cannot authorize recognized lyrics")
         if (browser["results"]["speechDerived"]["sha256"] != envelope["speechDerivedSHA256"]):
             raise RuntimeError("Browser and envelope analysis did not observe identical PCM")
         if (browser["results"]["procedural"]["sha256"] != envelope["proceduralSHA256"]):
@@ -361,6 +428,7 @@ def main() -> None:
             "humanSungTimingReference": human_sung_timing,
             "allphone": allphone,
             "activityHoldout": activity_holdout,
+            "nativeSound": native_sound,
             "phonemeRecognition": (
                 "RAW_ALLPHONE_HYPOTHESES_NOT_QUALIFIED" if allphone else "NOT_IMPLEMENTED"),
             "humanIntelligibility": "unverified",
@@ -390,6 +458,14 @@ def main() -> None:
                                row["strict"]["phoneErrorRate"]
                                for row in result["allphone"]["humanSungReference"]["evaluation"]]}
                           if result["allphone"] else "not-requested"),
+                      "nativeSound": (
+                          {"status": result["nativeSound"]["status"],
+                           "knownVocalRetained": result["nativeSound"]["knownVocalEvidenceRetained"],
+                           "knownVocalCount": result["nativeSound"]["knownHumanOrSpokenPositiveCount"],
+                           "novelFalseVocal": result["nativeSound"]["novelNegativeFalseVocalEvidence"],
+                           "syntheticSingVocalEvidence": result["nativeSound"]["singDerivedSyntheticHasIndependentVocalEvidence"],
+                           "oldChirpAfterNativeScreen": result["nativeSound"]["oldChirpAfterNativeVocalScreenCandidatePhones"]}
+                          if result["nativeSound"] else "not-requested"),
                       "activityHeldout": (
                           {"rawFalsePhones": result["activityHoldout"]["negativeFalsePositiveCount"],
                            "afterActivityScreen": result["activityHoldout"]["negativePostActivityScreenFalsePositiveCount"],
