@@ -10,7 +10,10 @@ if(config.recognizesPhonemes!==false||config.publicRelease!=='not-admitted')
   throw Error('Private Ear comparison is not a recognizer or release');
 const originalSHA='4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427';
 if(config.workletSha256!==originalSHA)throw Error('Shipped Ear worklet SHA changed');
-const response=await fetch('http://127.0.0.1:9237/json/new?about:blank',{method:'PUT'});
+const port=(key,fallback)=>{const n=Number(process.env[key]||fallback);if(!Number.isInteger(n)||n<1024||n>65535)throw Error('Invalid port '+key);return n};
+const httpPort=port('EAR_HTTP_PORT',8198);
+const cdpPort=port('EAR_CDP_PORT',9237);
+const response=await fetch('http://127.0.0.1:'+cdpPort+'/json/new?about:blank',{method:'PUT'});
 if(!response.ok)throw Error('Browser CDP tab unavailable '+response.status);
 const page=await response.json();
 const ws=new WebSocket(page.webSocketDebuggerUrl);
@@ -42,7 +45,7 @@ function requireTruth(condition,description){
 }
 try{
   await call('Runtime.enable');await call('Page.enable');
-  await call('Page.navigate',{url:'http://127.0.0.1:8198/'});
+  await call('Page.navigate',{url:'http://127.0.0.1:'+httpPort+'/'});
   await new Promise(ok=>setTimeout(ok,900));
   await call('Runtime.evaluate',{
     expression:"window.runEarAudition().catch(e=>{window.earResult={status:'error',reason:String(e)}}); 'started'",
@@ -91,5 +94,5 @@ try{
   process.exitCode=1;
 }finally{
   ws.close();
-  await fetch('http://127.0.0.1:9237/json/close/'+page.id).catch(()=>{});
+  await fetch('http://127.0.0.1:'+cdpPort+'/json/close/'+page.id).catch(()=>{});
 }
