@@ -108,7 +108,11 @@ def main() -> None:
     parser.add_argument("--procedural", required=True)
     parser.add_argument("--speech-derived", required=True)
     parser.add_argument("--receipt", default="/tmp/ear-private-speech-gate.json")
+    parser.add_argument("--phonetic-reference")
+    parser.add_argument("--novel-phonetic-witness")
     args = parser.parse_args()
+    if bool(args.phonetic_reference) != bool(args.novel_phonetic_witness):
+        parser.error("Phonetic source requires separate NEW held-out voices too")
     if platform.system() != "Darwin":
         parser.error("The current source-blind transcript lane requires macOS 26+")
     paths = {name: private_path(value) for name, value in (
@@ -155,6 +159,36 @@ def main() -> None:
             "--spoken", str(paths["spoken"]),
             "--procedural", str(paths["procedural"]),
             "--speech-derived", str(paths["speech-derived"])]))
+        phonetic_research = None
+        if args.phonetic_reference:
+            ref = private_path(args.phonetic_reference)
+            novel = private_path(args.novel_phonetic_witness)
+            cv = json.loads(command([
+                sys.executable, str(SCRIPTS / "ear_private_cv_probe.py"),
+                "--reference", str(ref),
+                "--candidate", str(paths["speech-derived"]),
+                "--report", str(stage / "bounded-cv.json")]))
+            i_probe = json.loads(command([
+                sys.executable, str(SCRIPTS / "ear_private_i_vowel_gate.py"),
+                "--reference", str(ref),
+                "--novel-witness", str(novel),
+                "--candidate", str(paths["speech-derived"]),
+                "--report", str(stage / "bounded-i.json")]))
+            # Keep the complete model/test receipts private and preserve the
+            # precise distance between a raw acoustic hypothesis and an
+            # independently qualified phoneme recognizer.
+            phonetic_research = {
+                "cv": json.loads((stage / "bounded-cv.json").read_text()),
+                "iNucleus": json.loads((stage / "bounded-i.json").read_text()),
+                "scoreSuppliedToInference": False,
+                "generalPhonemeRecognition": "NOT_QUALIFIED"
+            }
+            if (phonetic_research["iNucleus"]["independentPhonemeRecognition"] !=
+                    "NOT_QUALIFIED"):
+                raise RuntimeError("Bounded research erroneously claims phoneme recognition")
+            match = phonetic_research["iNucleus"]["privateAudioWitness"]
+            if len(match) != 1 or match[0]["SHA256"] != envelope["speechDerivedSHA256"]:
+                raise RuntimeError("Phonetic and vowel detectors did not observe identical source")
         if (browser["results"]["speechDerived"]["sha256"] != envelope["speechDerivedSHA256"]):
             raise RuntimeError("Browser and envelope analysis did not observe identical PCM")
         if (browser["results"]["procedural"]["sha256"] != envelope["proceduralSHA256"]):
@@ -167,6 +201,7 @@ def main() -> None:
             "browser": browser,
             "lexical": lexical,
             "vowelEnvelope": envelope,
+            "phoneticResearch": phonetic_research,
             "phonemeRecognition": "NOT_IMPLEMENTED",
             "humanIntelligibility": "unverified",
             "speakerIdentity": "unverified",
@@ -187,6 +222,9 @@ def main() -> None:
                           row["sampledToSource"]
                           for row in result["vowelEnvelope"]["noteObservations"]],
                       "phonemeRecognition": "NOT_IMPLEMENTED",
+                      "syntheticPhoneticProbe": (
+                          result["phoneticResearch"]["iNucleus"]["status"]
+                          if result["phoneticResearch"] else "not-requested"),
                       "mediaPublished": False,
                       "testServicesTerminated": True}, indent=2))
 
