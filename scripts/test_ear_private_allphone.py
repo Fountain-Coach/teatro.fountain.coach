@@ -83,6 +83,35 @@ class AllphoneBoundaryTests(unittest.TestCase):
             self.assertFalse(r["hasCalibratedConfidence"])
             self.assertFalse(r["groundTruthSuppliedDuringInference"])
 
+    def test_noise_false_phone_is_screened_but_raw_error_preserved(self):
+        path = "/tmp/ear-negative-noise.wav"
+        if not pathlib.Path(path).exists():self.skipTest("Private noise unavailable")
+        result = evaluate([], [path], None)
+        self.assertEqual(result["negativeFalsePositiveCount"], 1)
+        self.assertEqual(result["negativePostActivityScreenFalsePositiveCount"], 0)
+        self.assertFalse(result["predictions"][0]["voiceActivityDiagnostic"]["passesActivityScreen"])
+        self.assertEqual(result["predictions"][0]["phonemesAdmittedAsRecognized"], 0)
+        self.assertFalse(result["activityScreenIsPhonemeConfidence"])
+        self.assertFalse(result["phonemeRecognitionQualified"])
+
+    def test_unseen_chirp_false_phone_survives_activity_screen(self):
+        path = "/tmp/ear-activity-controls-20261024/witness-chirp.wav"
+        if not pathlib.Path(path).exists():self.skipTest("Private chirp unavailable")
+        result = evaluate([], [path], None)
+        self.assertGreater(result["negativeFalsePositiveCount"], 0)
+        self.assertGreater(result["negativePostActivityScreenFalsePositiveCount"], 0)
+        self.assertEqual(result["activityScreenStatus"], "independent-diagnostic-not-qualified")
+        self.assertFalse(result["phonemeRecognitionQualified"])
+
+    def test_sung_audio_is_not_suppressed_by_activity_screen(self):
+        path = "/tmp/sing-speech-hybrid.wav"
+        if not pathlib.Path(path).exists():self.skipTest("Private Sing take unavailable")
+        result = evaluate([path], [], None)
+        p = result["predictions"][0]
+        self.assertTrue(p["voiceActivityDiagnostic"]["passesActivityScreen"])
+        self.assertEqual(p["activityScreenedPhoneCandidates"],p["rawPhonemeHypotheses"])
+        self.assertEqual(p["phonemesAdmittedAsRecognized"],0)
+
     def test_reordering_private_audio_sources_cannot_change_phone_hypotheses(self):
         spoken = "/tmp/sing-speech-macos.wav"
         noise = "/tmp/ear-negative-noise.wav"

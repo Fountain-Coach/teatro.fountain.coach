@@ -26,6 +26,7 @@ import wave
 
 import pocketsphinx
 
+from ear_private_voice_activity import analyze_pcm16
 from ear_private_sung_alignment import (
     EXPECTED_SHA256, REFERENCE, TICKS_PER_SECOND, parse_lab, private_path,
 )
@@ -115,6 +116,9 @@ def decode_wav(source: str, decoder: pocketsphinx.Decoder) -> dict:
                 raise ValueError("Resample not reproducible as 16 kHz PCM16")
             pcm = wav.readframes(wav.getnframes())
         decoded_audio_sha = digest(pcm)
+        # Independent, inference-only activity screen: cannot recognize
+        # phonemes or distinguish pure music tones from real vocal sound.
+        activity = analyze_pcm16(pcm, SRC_RATE)
         decoder.start_utt()
         for start in range(0, len(pcm), SRC_RATE * 2):
             decoder.process_raw(pcm[start:start + SRC_RATE * 2], no_search=False, full_utt=False)
@@ -143,6 +147,11 @@ def decode_wav(source: str, decoder: pocketsphinx.Decoder) -> dict:
         "segments": results,
         "rawPhonemeHypotheses": len(phones),
         "nonspeechTokens": len(results) - len(phones),
+        "voiceActivityDiagnostic": activity,
+        "activityScreenedPhoneCandidates": (
+            len(phones) if activity["passesActivityScreen"] else 0),
+        "phonemesAdmittedAsRecognized": 0,
+        "activityScreenIsQualifiedSpeechDetector": False,
         "groundTruthSuppliedDuringInference": False,
         "referenceLyricsSuppliedDuringInference": False,
         "hasCalibratedConfidence": False,
@@ -282,6 +291,8 @@ def evaluate(source_files: list[str], negative_files: list[str],
         {
             "source": p["sourceId"], "sourceSHA256": p["originalAudioSHA256"],
             "phonemeFalsePositives": p["rawPhonemeHypotheses"],
+            "postActivityScreenFalsePhones": p["activityScreenedPhoneCandidates"],
+            "voiceActivityPasses": p["voiceActivityDiagnostic"]["passesActivityScreen"],
             "silenceOrNoiseAbstained": p["rawPhonemeHypotheses"] == 0,
         }
         for p in predictions if p["sourceId"] in neg_ids
@@ -295,6 +306,10 @@ def evaluate(source_files: list[str], negative_files: list[str],
         "predictions": predictions,
         "negativeControls": negatives,
         "negativeFalsePositiveCount": sum(x["phonemeFalsePositives"] for x in negatives),
+        "negativePostActivityScreenFalsePositiveCount": sum(
+            x["postActivityScreenFalsePhones"] for x in negatives),
+        "activityScreenStatus": "independent-diagnostic-not-qualified",
+        "activityScreenIsPhonemeConfidence": False,
         "humanSungReference": human,
         "recognizerPhonemesAreRawHypotheses": True,
         "confidenceCalibrated": False,
@@ -325,6 +340,8 @@ def main() -> None:
             for p in report["predictions"]
         ],
         "negativeControlFalsePhones": report["negativeFalsePositiveCount"],
+        "negativeControlFalsePhonesAfterActivityScreen": report["negativePostActivityScreenFalsePositiveCount"],
+        "activityScreenStatus": report["activityScreenStatus"],
         "realHumanSingingEvaluation": (
             report["humanSungReference"]["evaluation"]
             if report["humanSungReference"] else None

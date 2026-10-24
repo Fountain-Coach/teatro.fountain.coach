@@ -8,6 +8,7 @@ with Chrome, Swift, Python, Node. Private HTTP/CDP services are bound to
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import platform
@@ -116,7 +117,10 @@ def main() -> None:
     parser.add_argument("--human-challenge-asr")
     parser.add_argument("--human-sung-timing-reference")
     parser.add_argument("--allphone-python")
+    parser.add_argument("--activity-controls-manifest")
     args = parser.parse_args()
+    if args.activity_controls_manifest and not args.allphone_python:
+        parser.error("Adversarial activity controls require the independent allphone decoder")
     if args.allphone_python and not args.human_sung_timing_reference:
         parser.error("Allphone source-blind evaluation requires human singing labels only for AFTER inference")
     if bool(args.human_challenge_reference) != bool(args.human_challenge_asr):
@@ -247,6 +251,7 @@ def main() -> None:
                 human_sung_timing["publicMedia"] != "not-admitted"):
                 raise RuntimeError("Sung timing cannot be promoted to qualified phones")
         allphone = None
+        activity_holdout = None
         if args.allphone_python:
             # Python in macOS venv is a symlink to Homebrew's interpreter:
             # retain the authorized /tmp/venv path instead of checking its
@@ -290,6 +295,50 @@ def main() -> None:
             if not any(p["originalAudioSHA256"] == envelope["speechDerivedSHA256"]
                        for p in allphone["predictions"]):
                 raise RuntimeError("Allphone model did not decode the SHA-identical Sing PCM")
+            if (allphone["activityScreenStatus"] != "independent-diagnostic-not-qualified"
+                or allphone["activityScreenIsPhonemeConfidence"] is not False):
+                raise RuntimeError("WebRTC VAD cannot be promoted to phone confidence")
+            if args.activity_controls_manifest:
+                controls_manifest = json.loads(
+                    private_path(args.activity_controls_manifest).read_text())
+                if (controls_manifest.get("schema") !=
+                        "ear.private-adversarial-activity-controls.v1" or
+                    controls_manifest.get("thresholdsFrozenBeforeCreation") is not True or
+                    controls_manifest.get("allControlsAreNonSpeech") is not True or
+                    controls_manifest.get("entryCount") != 11 or
+                    controls_manifest.get("mediaRelease") != "not-admitted"):
+                    raise RuntimeError("Unrecognized adversarial non-speech corpus")
+                holdout = []
+                calibration = []
+                for entry in controls_manifest["entries"]:
+                    path = private_path(entry["path"])
+                    if (entry["sourceId"] != path.name or
+                        hashlib.sha256(path.read_bytes()).hexdigest() !=
+                            entry["sourceSHA256"] or
+                        entry["expectedSpeech"] is not False):
+                        raise RuntimeError("Non-speech adversarial fixture SHA or label drift")
+                    if entry["partition"] == "witness":
+                        holdout.append(path)
+                    elif entry["partition"] == "calibration":
+                        calibration.append(path)
+                    else:
+                        raise RuntimeError("Unknown activity control partition")
+                if (len(calibration), len(holdout)) != (4, 7) or len(set(holdout)) != 7:
+                    raise RuntimeError("Expected 4 calibration and 7 held-out adversarial controls")
+                # The held-out NONSPEECH examples are not used for changing
+                # the previously frozen VAD threshold. The external raw
+                # phone model never receives the negative classification.
+                command([
+                    str(phone_python), str(SCRIPTS / "ear_private_allphone.py"),
+                    *[value for path in holdout for value in ("--negative", str(path))],
+                    "--report", str(stage / "adversarial-activity.json")
+                ], timeout=90)
+                activity_holdout = json.loads(
+                    (stage / "adversarial-activity.json").read_text())
+                if (activity_holdout["phonemeRecognitionQualified"] is not False or
+                    activity_holdout["activityScreenIsPhonemeConfidence"] is not False or
+                    activity_holdout["mediaPublished"] is not False):
+                    raise RuntimeError("Non-speech activity test must fail closed")
         if (browser["results"]["speechDerived"]["sha256"] != envelope["speechDerivedSHA256"]):
             raise RuntimeError("Browser and envelope analysis did not observe identical PCM")
         if (browser["results"]["procedural"]["sha256"] != envelope["proceduralSHA256"]):
@@ -311,6 +360,7 @@ def main() -> None:
                 if human_challenge is not None else None),
             "humanSungTimingReference": human_sung_timing,
             "allphone": allphone,
+            "activityHoldout": activity_holdout,
             "phonemeRecognition": (
                 "RAW_ALLPHONE_HYPOTHESES_NOT_QUALIFIED" if allphone else "NOT_IMPLEMENTED"),
             "humanIntelligibility": "unverified",
@@ -335,10 +385,17 @@ def main() -> None:
                       "allphone": (
                           {"status": result["allphone"]["status"],
                            "negativeFalsePhones": result["allphone"]["negativeFalsePositiveCount"],
+                           "negativeAfterActivityScreen": result["allphone"]["negativePostActivityScreenFalsePositiveCount"],
                            "humanPhoneErrorRates": [
                                row["strict"]["phoneErrorRate"]
                                for row in result["allphone"]["humanSungReference"]["evaluation"]]}
                           if result["allphone"] else "not-requested"),
+                      "activityHeldout": (
+                          {"rawFalsePhones": result["activityHoldout"]["negativeFalsePositiveCount"],
+                           "afterActivityScreen": result["activityHoldout"]["negativePostActivityScreenFalsePositiveCount"],
+                           "status": "failed" if result["activityHoldout"]["negativePostActivityScreenFalsePositiveCount"]
+                                     else "no-false-phones-in-this-small-witness"}
+                          if result["activityHoldout"] else "not-requested"),
                       "syntheticPhoneticProbe": (
                           result["phoneticResearch"]["iNucleus"]["status"]
                           if result["phoneticResearch"] else "not-requested"),
