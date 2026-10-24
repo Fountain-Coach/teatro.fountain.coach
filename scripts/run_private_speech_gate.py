@@ -115,7 +115,10 @@ def main() -> None:
     parser.add_argument("--human-challenge-reference")
     parser.add_argument("--human-challenge-asr")
     parser.add_argument("--human-sung-timing-reference")
+    parser.add_argument("--allphone-python")
     args = parser.parse_args()
+    if args.allphone_python and not args.human_sung_timing_reference:
+        parser.error("Allphone source-blind evaluation requires human singing labels only for AFTER inference")
     if bool(args.human_challenge_reference) != bool(args.human_challenge_asr):
         parser.error("Human mispronunciation challenge needs a source-blind ASR receipt")
     if bool(args.human_reference) != bool(args.human_asr):
@@ -243,6 +246,50 @@ def main() -> None:
                 human_sung_timing["automaticPhoneIdentityRecognition"] != "NOT_IMPLEMENTED" or
                 human_sung_timing["publicMedia"] != "not-admitted"):
                 raise RuntimeError("Sung timing cannot be promoted to qualified phones")
+        allphone = None
+        if args.allphone_python:
+            # Python in macOS venv is a symlink to Homebrew's interpreter:
+            # retain the authorized /tmp/venv path instead of checking its
+            # resolved /opt/homebrew target against the private path.
+            phone_python = Path(args.allphone_python).expanduser().absolute()
+            if (not phone_python.is_file() or
+                str(phone_python) not in (
+                    "/tmp/ear-phoneme-venv/bin/python",
+                    "/private/tmp/ear-phoneme-venv/bin/python")):
+                raise RuntimeError("The private pinned allphone Python executable is unavailable")
+            human_manifest = json.loads(private_path(args.human_sung_timing_reference).read_text())
+            singer_inputs = [private_path(item["audioPath"])
+                             for item in human_manifest["records"]]
+            # Acoustic phone inference only receives PCM paths. Original
+            # reference labels are consumed by the evaluator only AFTER the
+            # entire decoder run has completed, with all songs held out from
+            # model training.
+            from ear_private_vowel_probe import synthetic_tone
+            tone_paths = []
+            for tone in ("pure", "harmonic"):
+                dest = stage / ("ear-negative-tonal-" + tone + ".wav")
+                synthetic_tone(dest, tone)
+                tone_paths.append(dest)
+            command([
+                str(phone_python), str(SCRIPTS / "ear_private_allphone.py"),
+                "--candidate", str(paths["spoken"]),
+                "--candidate", str(paths["speech-derived"]),
+                "--candidate", str(paths["procedural"]),
+                *[a for source in singer_inputs
+                  for a in ("--candidate", str(source))],
+                *[a for negative in [controls[2], controls[3], *tone_paths]
+                  for a in ("--negative", str(negative))],
+                "--human-sung-reference", str(private_path(args.human_sung_timing_reference)),
+                "--report", str(stage / "allphone.json")
+            ], timeout=85)
+            allphone = json.loads((stage / "allphone.json").read_text())
+            if (allphone["phonemeRecognitionQualified"] is not False or
+                allphone["confidenceCalibrated"] is not False or
+                allphone["humanSungReference"]["speakerDisjointReference"] is not False):
+                raise RuntimeError("Raw allphone research cannot be promoted to qualified")
+            if not any(p["originalAudioSHA256"] == envelope["speechDerivedSHA256"]
+                       for p in allphone["predictions"]):
+                raise RuntimeError("Allphone model did not decode the SHA-identical Sing PCM")
         if (browser["results"]["speechDerived"]["sha256"] != envelope["speechDerivedSHA256"]):
             raise RuntimeError("Browser and envelope analysis did not observe identical PCM")
         if (browser["results"]["procedural"]["sha256"] != envelope["proceduralSHA256"]):
@@ -263,7 +310,9 @@ def main() -> None:
                 json.loads((stage / "human-pronunciation-challenge.json").read_text())
                 if human_challenge is not None else None),
             "humanSungTimingReference": human_sung_timing,
-            "phonemeRecognition": "NOT_IMPLEMENTED",
+            "allphone": allphone,
+            "phonemeRecognition": (
+                "RAW_ALLPHONE_HYPOTHESES_NOT_QUALIFIED" if allphone else "NOT_IMPLEMENTED"),
             "humanIntelligibility": "unverified",
             "speakerIdentity": "unverified",
             "realtimeCallback": "not-tested",
@@ -282,7 +331,14 @@ def main() -> None:
                       "sourceSpectralProxy": [
                           row["sampledToSource"]
                           for row in result["vowelEnvelope"]["noteObservations"]],
-                      "phonemeRecognition": "NOT_IMPLEMENTED",
+                      "phonemeRecognition": result["phonemeRecognition"],
+                      "allphone": (
+                          {"status": result["allphone"]["status"],
+                           "negativeFalsePhones": result["allphone"]["negativeFalsePositiveCount"],
+                           "humanPhoneErrorRates": [
+                               row["strict"]["phoneErrorRate"]
+                               for row in result["allphone"]["humanSungReference"]["evaluation"]]}
+                          if result["allphone"] else "not-requested"),
                       "syntheticPhoneticProbe": (
                           result["phoneticResearch"]["iNucleus"]["status"]
                           if result["phoneticResearch"] else "not-requested"),
