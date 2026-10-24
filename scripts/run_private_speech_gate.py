@@ -110,7 +110,15 @@ def main() -> None:
     parser.add_argument("--receipt", default="/tmp/ear-private-speech-gate.json")
     parser.add_argument("--phonetic-reference")
     parser.add_argument("--novel-phonetic-witness")
+    parser.add_argument("--human-reference")
+    parser.add_argument("--human-asr")
+    parser.add_argument("--human-challenge-reference")
+    parser.add_argument("--human-challenge-asr")
     args = parser.parse_args()
+    if bool(args.human_challenge_reference) != bool(args.human_challenge_asr):
+        parser.error("Human mispronunciation challenge needs a source-blind ASR receipt")
+    if bool(args.human_reference) != bool(args.human_asr):
+        parser.error("Human reference requires a separate, blinded ASR receipt")
     if bool(args.phonetic_reference) != bool(args.novel_phonetic_witness):
         parser.error("Phonetic source requires separate NEW held-out voices too")
     if platform.system() != "Darwin":
@@ -189,6 +197,35 @@ def main() -> None:
             match = phonetic_research["iNucleus"]["privateAudioWitness"]
             if len(match) != 1 or match[0]["SHA256"] != envelope["speechDerivedSHA256"]:
                 raise RuntimeError("Phonetic and vowel detectors did not observe identical source")
+        human_speech = None
+        if args.human_reference:
+            # Human-rated real speech is ONLY a separate independent reference.
+            # It never provides labels or phonetic targets to the singing
+            # renderer or acoustic/lexical inference.
+            human_reference = private_path(args.human_reference)
+            human_asr = private_path(args.human_asr)
+            human_speech = json.loads(command([
+                sys.executable,
+                str(SCRIPTS / "ear_private_human_reference_gate.py"),
+                "--reference", str(human_reference),
+                "--asr", str(human_asr),
+                "--report", str(stage / "human-speech-witness.json")
+            ]))
+            if human_speech["phonemeRecognition"] != "NOT_IMPLEMENTED":
+                raise RuntimeError("Human speech word ASR cannot be called phone recognition")
+        human_challenge = None
+        if args.human_challenge_reference:
+            challenge_manifest = private_path(args.human_challenge_reference)
+            challenge_asr = private_path(args.human_challenge_asr)
+            human_challenge = json.loads(command([
+                sys.executable, str(SCRIPTS / "ear_private_human_reference_gate.py"),
+                "--reference", str(challenge_manifest),
+                "--asr", str(challenge_asr),
+                "--report", str(stage / "human-pronunciation-challenge.json")
+            ]))
+            if (human_challenge["phonemeRecognition"] != "NOT_IMPLEMENTED" or
+                    sum(k["recordings"] for k in human_challenge["aggregates"].values()) != 4):
+                raise RuntimeError("Human challenge cannot certify phoneme recognition")
         if (browser["results"]["speechDerived"]["sha256"] != envelope["speechDerivedSHA256"]):
             raise RuntimeError("Browser and envelope analysis did not observe identical PCM")
         if (browser["results"]["procedural"]["sha256"] != envelope["proceduralSHA256"]):
@@ -202,6 +239,12 @@ def main() -> None:
             "lexical": lexical,
             "vowelEnvelope": envelope,
             "phoneticResearch": phonetic_research,
+            "humanSpeechReference": (
+                json.loads((stage / "human-speech-witness.json").read_text())
+                if human_speech is not None else None),
+            "humanPronunciationChallenge": (
+                json.loads((stage / "human-pronunciation-challenge.json").read_text())
+                if human_challenge is not None else None),
             "phonemeRecognition": "NOT_IMPLEMENTED",
             "humanIntelligibility": "unverified",
             "speakerIdentity": "unverified",
@@ -225,6 +268,12 @@ def main() -> None:
                       "syntheticPhoneticProbe": (
                           result["phoneticResearch"]["iNucleus"]["status"]
                           if result["phoneticResearch"] else "not-requested"),
+                      "humanSpeechReference": (
+                          result["humanSpeechReference"]["status"]
+                          if result["humanSpeechReference"] else "not-requested"),
+                      "humanPronunciationChallenge": (
+                          result["humanPronunciationChallenge"]["status"]
+                          if result["humanPronunciationChallenge"] else "not-requested"),
                       "mediaPublished": False,
                       "testServicesTerminated": True}, indent=2))
 
