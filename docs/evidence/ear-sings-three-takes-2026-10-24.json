@@ -1,0 +1,288 @@
+{
+  "status": "finished",
+  "engine": "source-extracted-Teatro-EarAnalysisProcessor",
+  "sampleRate": 48000,
+  "results": {
+    "plain": {
+      "sourceId": "sing:plain:f4826365089889ea",
+      "sha256": "f4826365089889eafef579f5e0b3cf6f77d7bf570fcc0fa6e1d5f85ef191cf24",
+      "silences": 13,
+      "observedCount": 487,
+      "silentWindows": 13,
+      "meanRms": 0.12758432,
+      "maxRms": 0.15300614,
+      "onsetCount": 1,
+      "fixedNoteCount": 487,
+      "firstTimestamp": 0.16,
+      "lastTimestamp": 5.344,
+      "acousticFeatures": {
+        "mOnset": {
+          "count": 5,
+          "rms": 0.0911159,
+          "low": 0.907366,
+          "high": 0.0103526,
+          "flux": 0.07671,
+          "pitchHz": 387.1,
+          "meanPitchConfidence": 0.9925357
+        },
+        "mVowel": {
+          "count": 19,
+          "rms": 0.1516672,
+          "low": 0.8611639,
+          "high": 0.1119524,
+          "flux": 0.0002322,
+          "pitchHz": 387.1,
+          "meanPitchConfidence": 0.9720974
+        },
+        "nOnset": {
+          "count": 6,
+          "rms": 0.1305637,
+          "low": 0.9996436,
+          "high": 0.0003197,
+          "flux": 0.1008233,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.9880283
+        },
+        "nVowel": {
+          "count": 19,
+          "rms": 0.1357212,
+          "low": 0.9912707,
+          "high": 0.0061334,
+          "flux": 0.0009154,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.9773706
+        },
+        "laVowel": {
+          "count": 18,
+          "rms": 0.1361068,
+          "low": 0.1336313,
+          "high": 0.0111395,
+          "flux": 0.0004765,
+          "pitchHz": 260.9,
+          "meanPitchConfidence": 0.9976178
+        },
+        "miVowel": {
+          "count": 19,
+          "rms": 0.1516672,
+          "low": 0.8611639,
+          "high": 0.1119524,
+          "flux": 0.0002322,
+          "pitchHz": 387.1,
+          "meanPitchConfidence": 0.9720974
+        },
+        "naVowel": {
+          "count": 19,
+          "rms": 0.1357212,
+          "low": 0.9912707,
+          "high": 0.0061334,
+          "flux": 0.0009154,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.9773706
+        },
+        "laMelisma": {
+          "count": 23,
+          "rms": 0.134476,
+          "low": 0.9912374,
+          "high": 0.006132,
+          "flux": 0.0007161,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.97738
+        }
+      },
+      "featureWindows": 500,
+      "spectralOnsetCandidates": 5,
+      "pitchSupportedWindows": 473
+    },
+    "articulated": {
+      "sourceId": "sing:articulated:1d285c6b0a9dd2f7",
+      "sha256": "1d285c6b0a9dd2f7b7be58aac1509b5f55bcac5e3636c530cbec25f20db8f505",
+      "silences": 13,
+      "observedCount": 487,
+      "silentWindows": 13,
+      "meanRms": 0.12833927,
+      "maxRms": 0.19472768,
+      "onsetCount": 1,
+      "fixedNoteCount": 487,
+      "firstTimestamp": 0.16,
+      "lastTimestamp": 5.344,
+      "acousticFeatures": {
+        "mOnset": {
+          "count": 5,
+          "rms": 0.1013854,
+          "low": 0.8965168,
+          "high": 0.0016679,
+          "flux": 0.0657948,
+          "pitchHz": 387.1,
+          "meanPitchConfidence": 0.9947041
+        },
+        "mVowel": {
+          "count": 19,
+          "rms": 0.1516672,
+          "low": 0.8611639,
+          "high": 0.1119524,
+          "flux": 0.0002322,
+          "pitchHz": 387.1,
+          "meanPitchConfidence": 0.9720974
+        },
+        "nOnset": {
+          "count": 6,
+          "rms": 0.1767814,
+          "low": 0.9998546,
+          "high": 0.0001376,
+          "flux": 0.0955751,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.9901675
+        },
+        "nVowel": {
+          "count": 19,
+          "rms": 0.1357212,
+          "low": 0.9912707,
+          "high": 0.0061334,
+          "flux": 0.0009154,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.9773706
+        },
+        "laVowel": {
+          "count": 18,
+          "rms": 0.1361068,
+          "low": 0.1336313,
+          "high": 0.0111395,
+          "flux": 0.0004765,
+          "pitchHz": 260.9,
+          "meanPitchConfidence": 0.9976178
+        },
+        "miVowel": {
+          "count": 19,
+          "rms": 0.1516672,
+          "low": 0.8611639,
+          "high": 0.1119524,
+          "flux": 0.0002322,
+          "pitchHz": 387.1,
+          "meanPitchConfidence": 0.9720974
+        },
+        "naVowel": {
+          "count": 19,
+          "rms": 0.1357212,
+          "low": 0.9912707,
+          "high": 0.0061334,
+          "flux": 0.0009154,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.9773706
+        },
+        "laMelisma": {
+          "count": 23,
+          "rms": 0.134476,
+          "low": 0.9912374,
+          "high": 0.006132,
+          "flux": 0.0007161,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.97738
+        }
+      },
+      "featureWindows": 500,
+      "spectralOnsetCandidates": 5,
+      "pitchSupportedWindows": 473
+    },
+    "expressive": {
+      "sourceId": "sing:expressive:b7390503bdcb4669",
+      "sha256": "b7390503bdcb4669235fc417e0d21f8008c578f59228ab7ee0817e3df3ff8d27",
+      "silences": 12,
+      "observedCount": 488,
+      "silentWindows": 12,
+      "meanRms": 0.13005451,
+      "maxRms": 0.19511819,
+      "onsetCount": 1,
+      "fixedNoteCount": 488,
+      "firstTimestamp": 0.15466666666666667,
+      "lastTimestamp": 5.349333333333334,
+      "acousticFeatures": {
+        "mOnset": {
+          "count": 5,
+          "rms": 0.097571,
+          "low": 0.8986146,
+          "high": 0.0016807,
+          "flux": 0.0936054,
+          "pitchHz": 387.1,
+          "meanPitchConfidence": 0.9788951
+        },
+        "mVowel": {
+          "count": 19,
+          "rms": 0.1515583,
+          "low": 0.817894,
+          "high": 0.157653,
+          "flux": 0.0565551,
+          "pitchHz": 391.9,
+          "meanPitchConfidence": 0.9859933
+        },
+        "nOnset": {
+          "count": 6,
+          "rms": 0.1704237,
+          "low": 0.9991393,
+          "high": 0.0006617,
+          "flux": 0.1758286,
+          "pitchHz": 333.3,
+          "meanPitchConfidence": 0.9684941
+        },
+        "nVowel": {
+          "count": 19,
+          "rms": 0.135595,
+          "low": 0.9923815,
+          "high": 0.0053128,
+          "flux": 0.002268,
+          "pitchHz": 329.1,
+          "meanPitchConfidence": 0.9912352
+        },
+        "laVowel": {
+          "count": 18,
+          "rms": 0.1364885,
+          "low": 0.1393736,
+          "high": 0.0096061,
+          "flux": 0.0038519,
+          "pitchHz": 262.8,
+          "meanPitchConfidence": 0.988364
+        },
+        "miVowel": {
+          "count": 19,
+          "rms": 0.1515583,
+          "low": 0.817894,
+          "high": 0.157653,
+          "flux": 0.0565551,
+          "pitchHz": 391.9,
+          "meanPitchConfidence": 0.9859933
+        },
+        "naVowel": {
+          "count": 19,
+          "rms": 0.135595,
+          "low": 0.9923815,
+          "high": 0.0053128,
+          "flux": 0.002268,
+          "pitchHz": 329.1,
+          "meanPitchConfidence": 0.9912352
+        },
+        "laMelisma": {
+          "count": 23,
+          "rms": 0.1636581,
+          "low": 0.6147561,
+          "high": 0.0948409,
+          "flux": 0.0700656,
+          "pitchHz": 356.2,
+          "meanPitchConfidence": 0.9173592
+        }
+      },
+      "featureWindows": 500,
+      "spectralOnsetCandidates": 19,
+      "pitchSupportedWindows": 472
+    }
+  },
+  "audioContextStateAfterClose": "closed",
+  "recognizesPhonemes": false,
+  "declaredDetector": "Shipped Ear energy/silence, plus parallel first-party Ear spectral feature worklet. Neither performs phoneme recognition; the fixed shipped note is a placeholder, not pitch",
+  "earDevelopmentSelection": {
+    "baseline": "articulated",
+    "criterion": "stronger nasal onset high-band attenuation, unchanged sustained vowels",
+    "humanIntelligibility": "unsupported-not-measured",
+    "songAcceptance": "pending-independent-recognizer",
+    "expressiveTake": "retain as independent performance option",
+    "fixedMIDI2Note48IsNotPitch": true
+  }
+}

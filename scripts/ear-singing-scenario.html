@@ -1,0 +1,95 @@
+<!doctype html><meta charset="utf-8"><title>Sing Ear — real worklet listening scenario</title>
+<script>
+'use strict';
+window.earResult = {status:'idle'};
+window.runEarAudition = async function() {
+  const cfg = [
+    ['plain','f4826365089889eafef579f5e0b3cf6f77d7bf570fcc0fa6e1d5f85ef191cf24'],
+    ['articulated','1d285c6b0a9dd2f7b7be58aac1509b5f55bcac5e3636c530cbec25f20db8f505'],
+    ['expressive','b7390503bdcb4669235fc417e0d21f8008c578f59228ab7ee0817e3df3ff8d27']
+  ];
+  const ctx = new AudioContext({sampleRate: 48000, latencyHint: 'interactive'});
+  await ctx.audioWorklet.addModule('./ear-original.js');
+  await ctx.audioWorklet.addModule('./ear-features.js');
+  await ctx.resume();
+  const results = {};
+  window.earResult = {status:'running',engine:'source-extracted-Teatro-EarAnalysisProcessor',sampleRate:ctx.sampleRate,results};
+  const handles = [];
+  const start = ctx.currentTime+0.15;
+  for (const [name,sha] of cfg) {
+    const response = await fetch('./'+name+'.wav', {cache:'no-store'});
+    if (!response.ok) throw Error('WAV unavailable '+name+' '+response.status);
+    const bytes = await response.arrayBuffer();
+    // decodeAudioData detaches its input ArrayBuffer; hash bytes first.
+    const fileDigest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(b=>b.toString(16).padStart(2,'0')).join('');
+    if (fileDigest!==sha) throw Error('SHA256 mismatch: '+name+' '+fileDigest);
+    const buffer = await ctx.decodeAudioData(bytes);
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    const sourceId = 'sing:'+name+':'+sha.slice(0,16);
+    const ear = new AudioWorkletNode(ctx,'ear-analysis',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1],processorOptions:{sourceId,sourceKind:'AudioBuffer',sampleRate:ctx.sampleRate,windowSamples:1024,hopSamples:512}});
+    const output = ctx.createGain();
+    output.gain.value=1e-6;
+    source.connect(ear);ear.connect(output);output.connect(ctx.destination);
+    const analysis = new AudioWorkletNode(ctx,'ear-singing-features',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1],processorOptions:{sourceId,sampleRate:ctx.sampleRate}});
+    const analysisSink=ctx.createGain();analysisSink.gain.value=1e-6;
+    source.connect(analysis);analysis.connect(analysisSink);analysisSink.connect(ctx.destination);
+    results[name] = {sourceId,sha256:sha,events:[],silences:0,features:[]};
+    analysis.port.onmessage = evt=>{if(evt.data?.type==='ear.acoustic_features'&&evt.data.sourceIdentity===sourceId)results[name].features.push(evt.data)};
+    ear.port.onmessage = evt => {
+      if (evt.data.type==='ear.ump') results[name].events.push(evt.data);
+      else if (evt.data.type==='ear.silence') results[name].silences++;
+    };
+    source.start(start);
+    handles.push({source,ear,output,analysis,analysisSink});
+  }
+  await new Promise(resolve=>setTimeout(resolve,5850));
+  for (const [name] of cfg) {
+    const item=results[name];
+    const valid=item.events.filter(x=>x.event.sourceIdentity===item.sourceId);
+    const rms=valid.map(x=>x.event.measurement.rms);
+    item.observedCount=valid.length;
+    item.silentWindows=item.silences;
+    item.meanRms=+(rms.reduce((a,b)=>a+b,0)/Math.max(rms.length,1)).toFixed(8);
+    item.maxRms=+(Math.max(0,...rms)).toFixed(8);
+    item.onsetCount=valid.filter(x=>x.event.onset).length;
+    item.fixedNoteCount=valid.filter(x=>x.event.note===48).length;
+    item.firstTimestamp=valid[0]?.event.timestamp;
+    item.lastTimestamp=valid[valid.length-1]?.event.timestamp;
+    const features=item.features.filter(x=>x.sourceIdentity===item.sourceId);
+    // Align to Ear's first non-silent source onset, not the AudioContext start.
+    // AudioWorklet processors receive leading zeros before a scheduled buffer starts.
+    const timeOffset=valid[0].event.timestamp-1024/ctx.sampleRate;
+    function segment(start,end) {
+      const selected=features.filter(x=>{
+        const relative=x.timestamp-timeOffset;
+        return relative>=start&&relative<end&&x.measurement.rms>0.002;
+      });
+      if(!selected.length)return {count:0};
+      const average=field=>+ (selected.reduce((a,x)=>a+x.measurement[field],0)/selected.length).toFixed(7);
+      const pitched=selected.filter(x=>x.measurement.fundamentalHz!==null);
+      return {count:selected.length,rms:average('rms'),low:average('lowBandRatio'),high:average('highBandRatio'),flux:average('spectralFlux'),
+        pitchHz: pitched.length ? +(pitched.reduce((a,x)=>a+x.measurement.fundamentalHz,0)/pitched.length).toFixed(1):null,
+        meanPitchConfidence:average('pitchConfidence')};
+    }
+    item.acousticFeatures={
+      mOnset:segment(2.18,2.235), mVowel:segment(2.48,2.68),
+      nOnset:segment(3.38,3.435), nVowel:segment(3.72,3.92),
+      laVowel:segment(0.3,0.5), miVowel:segment(2.48,2.68),
+      naVowel:segment(3.72,3.92),
+      laMelisma:segment(1.58,1.83)
+    };
+    item.featureWindows=features.length;
+    item.spectralOnsetCandidates=features.filter(x=>x.measurement.onsetCandidate).length;
+    item.pitchSupportedWindows=features.filter(x=>x.measurement.fundamentalHz!==null).length;
+    delete item.events;delete item.features;
+  }
+  handles.forEach(({source,ear,output,analysis,analysisSink})=>{source.disconnect();ear.port.close();ear.disconnect();output.disconnect();analysis.port.close();analysis.disconnect();analysisSink.disconnect();});
+  await ctx.close();
+  window.earResult.audioContextStateAfterClose=ctx.state;
+  window.earResult.status='finished';
+  window.earResult.recognizesPhonemes=false;
+  window.earResult.declaredDetector="Shipped Ear energy/silence, plus parallel first-party Ear spectral feature worklet. Neither performs phoneme recognition; the fixed shipped note is a placeholder, not pitch";
+  return window.earResult;
+};
+</script>
