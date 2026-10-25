@@ -256,6 +256,7 @@ def main() -> None:
                 human_sung_timing["publicMedia"] != "not-admitted"):
                 raise RuntimeError("Sung timing cannot be promoted to qualified phones")
         allphone = None
+        phone_boundary = None
         activity_holdout = None
         if args.allphone_python:
             # Python in macOS venv is a symlink to Homebrew's interpreter:
@@ -303,6 +304,28 @@ def main() -> None:
             if (allphone["activityScreenStatus"] != "independent-diagnostic-not-qualified"
                 or allphone["activityScreenIsPhonemeConfidence"] is not False):
                 raise RuntimeError("WebRTC VAD cannot be promoted to phone confidence")
+            # Phone identity and BOTH temporal boundaries are compared ONLY
+            # AFTER the original source-blind all-phone decoder finished.
+            # Published same-singer HTK labels are not a second independent
+            # human annotation and cannot authorize Sing or publication.
+            phone_boundary_path = stage / "human-sung-phone-boundaries.json"
+            command([
+                str(phone_python),
+                str(SCRIPTS / "ear_private_phone_boundary_gate.py"),
+                "--allphone", str(stage / "allphone.json"),
+                "--human-sung-reference",
+                str(private_path(args.human_sung_timing_reference)),
+                "--report", str(phone_boundary_path)
+            ], timeout=35)
+            phone_boundary = json.loads(phone_boundary_path.read_text())
+            if (phone_boundary["status"] !=
+                    "BOUNDED_PHONE_TIME_DIAGNOSTIC_ONLY_RECOGNITION_BLOCKED"
+                or phone_boundary["phonemeIdentityRecognitionQualified"] is not False
+                or phone_boundary["independentSecondSinger"] is not False
+                or phone_boundary["humanTimedLabelsIndependentlyReaudited"] is not False
+                or phone_boundary["mediaPublished"] is not False
+                or len(phone_boundary["witnesses"]) != 2):
+                raise RuntimeError("Post-inference timed phone evidence was falsely promoted")
             if args.activity_controls_manifest:
                 controls_manifest = json.loads(
                     private_path(args.activity_controls_manifest).read_text())
@@ -427,6 +450,7 @@ def main() -> None:
                 if human_challenge is not None else None),
             "humanSungTimingReference": human_sung_timing,
             "allphone": allphone,
+            "humanSungPhoneBoundaries": phone_boundary,
             "activityHoldout": activity_holdout,
             "nativeSound": native_sound,
             "phonemeRecognition": (
@@ -458,6 +482,14 @@ def main() -> None:
                                row["strict"]["phoneErrorRate"]
                                for row in result["allphone"]["humanSungReference"]["evaluation"]]}
                           if result["allphone"] else "not-requested"),
+                      "humanSungPhoneBoundaries": (
+                          {"status": result["humanSungPhoneBoundaries"]["status"],
+                           "f1At50ms": [
+                               x["sourceBlindPhoneAndBothBoundariesAtMs"]["50"]["strictF1"]
+                               for x in result["humanSungPhoneBoundaries"]["witnesses"]],
+                           "singerDisjoint": False,
+                           "phonemeRecognitionQualified": False}
+                          if result["humanSungPhoneBoundaries"] else "not-requested"),
                       "nativeSound": (
                           {"status": result["nativeSound"]["status"],
                            "knownVocalRetained": result["nativeSound"]["knownVocalEvidenceRetained"],
