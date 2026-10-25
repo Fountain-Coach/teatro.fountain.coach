@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Composing by Ear — Private Audition · Teatro</title>
+<style>
+:root{color-scheme:dark;--page:#1d1b18;--ink:#ece7dc;--muted:#c0b8ad;--line:#665f53;--accent:#dfac76}
+*{box-sizing:border-box}
+html{background:var(--page);color:var(--ink)}
+body{max-width:760px;margin:0 auto;padding:clamp(1.4rem,5vw,3.5rem) clamp(1rem,4vw,2.3rem);
+font-family:Georgia,"Times New Roman",serif;font-size:1.09rem;line-height:1.65}
+header{border-bottom:1px solid var(--line);padding-bottom:1.5rem;margin-bottom:2rem}
+h1{font-size:clamp(2.15rem,5.8vw,3.55rem);font-weight:400;line-height:1.1;margin:.35rem 0 1.1rem}
+h2{font-size:1.22rem;font-weight:500;line-height:1.4}
+h3{font-size:1.13rem;font-weight:500;line-height:1.4}
+.eyebrow,small,.meta,dt,dd,footer{font-family:system-ui,-apple-system,sans-serif}
+.eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.13rem;max-width:42rem}
+p{margin:1rem 0}a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:.2em}
+a:focus-visible,audio:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.card{border:1px solid var(--line);padding:clamp(.9rem,3vw,1.45rem);margin:1.4rem 0}
+.card h2{margin:.2rem 0 .4rem}
+audio{width:100%;display:block;margin:.9rem 0 .25rem;color-scheme:light}
+.meta{font-size:.82rem;color:var(--muted);line-height:1.5}
+dl{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;padding:1rem 0;margin:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+dt{font-size:.78rem;color:var(--muted)}dd{margin:.25rem 0 0;font-size:1.42rem;font-variant-numeric:tabular-nums}
+footer{font-size:.83rem;line-height:1.65;color:var(--muted);border-top:1px solid var(--line);margin-top:2.4rem;padding-top:1rem}
+@media(max-width:460px){dl{gap:.6rem}body{font-size:1rem}}
+</style>
+<link rel="icon" href="data:,">
+</head><body>
+<header><div class="eyebrow">TEATRO · PRIVATE LISTENING / 01</div>
+<h1>Composing by Ear</h1>
+<p class="lede">One existing vocal phrase becomes the excitation of another instrument. <strong>Sing</strong> makes sound. <strong>Ear</strong> listens. <strong>MIDI 2.0</strong> carries a measured gesture. <strong>Csound Teatro</strong> responds. Ear then observes the result.</p>
+<p class="meta">A bounded private rehearsal, not a released performance. Both players use real recorded Csound output from the same exact source. Nothing plays automatically.</p></header>
+<main>
+<section class="card" aria-labelledby="control">
+<h2 id="control">01 / Csound alone</h2>
+<p>Unmodulated Csound wind at its constant resting setting. The same Sing source was measured, but Ear's events did not change Csound.</p>
+<audio controls preload="metadata" src="./csound-control.m4a" aria-label="Listen to Csound alone"></audio>
+<p class="meta">Csound recording, 48 kHz stereo · first six seconds · after equal audition gain.</p>
+</section>
+<section class="card" aria-labelledby="composition">
+<h2 id="composition">02 / Csound, composing by Ear</h2>
+<p>The original articulated Sing phrase passes through the shipped Ear worklet. Its measured acoustic level enters the existing MIDI 2.0 event bus and modulates Csound's <code>wind_mix</code> port.</p>
+<audio controls preload="metadata" src="./csound-by-ear.m4a" aria-label="Listen to the composition created by Ear and Csound"></audio>
+<p class="meta">Actual Csound recording · same playback gain as control · the original Sing voice is a control source, not mixed into this rendered sound.</p>
+</section>
+<h2>What happened</h2>
+<dl>
+<div><dt>MIDI 2.0 controller events</dt><dd>{{UMP_EVENTS}}</dd></div>
+<div><dt>Applied Csound parameter changes</dt><dd>{{APPLIED}}</dd></div>
+<div><dt>Measured output RMS change</dt><dd>{{RATIO}}×</dd></div>
+<div><dt>Dropped / rejected events</dt><dd>{{DROPPED}}</dd></div>
+</dl>
+<p>Ear listened to <strong>488 real source windows</strong>. The same Ear observed real Csound output independently. The source audio is the existing <a href="https://fountain.coach/essays/the-ear-that-learns/">Sing articulated take</a>, not a newly invented singer or a teaching exercise.</p>
+<p>Our first composition maps measured amplitude—not discovered pitch, syllables, or a musical motif. Its meaning is the audible transformation, and our next experiments can replace that mapping with richer independently observed gestures.</p>
+</main>
+<footer>
+<p><strong>Evidence and limits.</strong> Original Sing source SHA-256 <code>{{SOURCE_DIGEST}}</code>. Original Ear source is digest-pinned, not reimplemented; UMP is the source-owned 64-bit in-browser MIDI 2.0 controller plane, not a separately connected physical MIDI device. Csound is the original browser AudioWorklet engine. Measured RMS was calculated on unamplified Csound PCM; both audition files received the same 120× safe playback gain before AAC encoding.</p>
+<p>No feedback from the Csound result into the performance control, no phoneme recognition, no MIDI 1.0 fallback, no public release, and no human singer recording. This page is available only on the existing owner-WLAN preview. It makes no claims about native iPad Csound execution.</p>
+</footer>
+</body></html>
