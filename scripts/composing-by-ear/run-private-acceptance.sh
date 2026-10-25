@@ -33,6 +33,9 @@ node "$here/verify-browser.mjs" "$stage/evidence"
 # Regenerate only our three private derived listening files; the original
 # Sing input and the WAV evidence are never deleted by this command.
 projection="$stage/stage-overlay/teatro/experiments/composing-by-ear"
+# Source replay rebuilds only source-derived artifacts. Any old estate
+# source-lock is a disposable receipt from the previous private candidate.
+[ ! -f "$stage/stage-overlay/source-lock.json" ] || rm "$stage/stage-overlay/source-lock.json"
 for name in index.html csound-control.m4a csound-by-ear.m4a; do
   [ ! -f "$projection/$name" ] || rm "$projection/$name"
 done
