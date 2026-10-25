@@ -1,6 +1,8 @@
 # Composing by Ear — original Sing → Ear → MIDI 2.0 → Csound Teatro
 
-**25 October 2026 · Private source-owned running scenario. No public deployment or host MIDI bridge.**
+**25 October 2026 · Historical recorded-source acoustic experiment, not a live Csound Teatro Scenario. No public deployment or host MIDI bridge.**
+
+**Semantic correction (25 October):** This browser run began from a **previously rendered Sing WAV**. It measured real Ear windows, emitted real browser-local MIDI 2.0 UMP controller events, and changed an actual Csound AudioWorklet's `wind_mix` parameter. It did **not** connect the independently running Sing instrument to Ear, did **not** admit an authored Csound Teatro Scenario via its DSL, and did **not** create a live playable patch. The Csound wind sound is an engine output, **not Sing**; the Scenario is a relationship contract, **not an FCIS instrument**. These measurements remain valid only as finite acoustic evidence. The live, unadmitted grammar 0.1 candidate and source-driven patch visualization are separately owned in [scenarios/csound-teatro/README.md](../../scenarios/csound-teatro/README.md). Do not reuse this recording proof to claim live execution.
 
 ## Author's goal and observed implementation
 

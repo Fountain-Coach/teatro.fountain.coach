@@ -1,0 +1,198 @@
+{
+  "kind": "CsoundTeatroScenario",
+  "scenarioID": "teatro.composing-by-ear.live.01",
+  "grammarVersion": "0.1",
+  "schemaVersion": "0.1",
+  "status": "candidate-unadmitted",
+  "mode": "live-rehearsal",
+  "sourceAuthority": "Fountain-Coach/Reframe-Refactoring/docs/151-csound-teatro-speaking-sound-in-space.md",
+  "GIVEN": {
+    "entities": [
+      {
+        "id": "Sing.01",
+        "kind": "INSTRUMENT",
+        "owner": "Fountain-Coach/sing",
+        "capability": "SingVoice.RealtimeSinger",
+        "runtime": "native Swift",
+        "binding": null
+      },
+      {
+        "id": "Ear.Sing.01",
+        "kind": "EAR",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "ear-analysis AudioWorklet",
+        "runtime": "Web Audio",
+        "binding": "ear-analysis"
+      },
+      {
+        "id": "Wind.Field.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "Csound Teatro wind scene",
+        "runtime": "@csound/browser",
+        "binding": "BookCsoundHost"
+      },
+      {
+        "id": "Ear.Wind.01",
+        "kind": "EAR",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "ear-analysis AudioWorklet",
+        "runtime": "Web Audio",
+        "binding": "BookCsoundHost.attachEar"
+      }
+    ],
+    "ports": [
+      {
+        "id": "Sing.01.audio",
+        "owner": "Sing.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "RealtimeSinger.render"
+      },
+      {
+        "id": "Ear.Sing.01.audio",
+        "owner": "Ear.Sing.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "AudioWorkletNode"
+      },
+      {
+        "id": "Ear.Sing.01.rms",
+        "owner": "Ear.Sing.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized-linear-rms",
+        "domain": [0, 0.2],
+        "capability": "ear.ump measurement"
+      },
+      {
+        "id": "Wind.Field.01.wind_mix",
+        "owner": "Wind.Field.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [0.25, 1.0],
+        "capability": "Csound.setControlChannel"
+      },
+      {
+        "id": "Wind.Field.01.audio",
+        "owner": "Wind.Field.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound AudioWorklet"
+      },
+      {
+        "id": "Ear.Wind.01.audio",
+        "owner": "Ear.Wind.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "AudioWorkletNode"
+      }
+    ],
+    "source": {
+      "kind": "live-instrument-output",
+      "entityID": "Sing.01",
+      "portID": "Sing.01.audio",
+      "transport": null,
+      "recordedFile": null,
+      "required": true
+    }
+  },
+  "TRANSFORM": {
+    "relations": [
+      {
+        "id": "rel.ear-hears-sing",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Sing.01",
+        "object": "Sing.01",
+        "fromPort": "Sing.01.audio",
+        "toPort": "Ear.Sing.01.audio"
+      },
+      {
+        "id": "rel.observation-modulates-wind",
+        "predicate": "MODULATES",
+        "subject": "Ear.Sing.01",
+        "object": "Wind.Field.01",
+        "fromPort": "Ear.Sing.01.rms",
+        "toPort": "Wind.Field.01.wind_mix"
+      },
+      {
+        "id": "rel.ear-hears-wind",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Wind.01",
+        "object": "Wind.Field.01",
+        "fromPort": "Wind.Field.01.audio",
+        "toPort": "Ear.Wind.01.audio"
+      }
+    ],
+    "mappings": [
+      {
+        "id": "map.sing-rms-to-wind-mix",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Sing.01.rms",
+        "targetPort": "Wind.Field.01.wind_mix",
+        "sourceDomain": [0, 0.2],
+        "targetDomain": [0.25, 1.0],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 75
+      }
+    ],
+    "midi2": {
+      "authority": "Fountain-Coach/midi2",
+      "plane": "local-UMP",
+      "messageType": "midi2-channel-voice-control-change-64",
+      "controller": 74,
+      "group": 0,
+      "channel": 0,
+      "valueBits": 32,
+      "routing": "same-scenario-identity-and-sequence"
+    }
+  },
+  "CONSTRAINTS": {
+    "mutationScope": ["Wind.Field.01.wind_mix"],
+    "requiresAdmissionBeforeEffects": true,
+    "liveSourceRequired": true,
+    "recordingAsSourceForbidden": true,
+    "sourceOwnedBySing": true,
+    "csoundEngineNotAnFCISInstrument": true,
+    "patchIsNotAnInstrument": true,
+    "earPlaceholderNoteForbidden": true,
+    "midi1FallbackForbidden": true,
+    "uncontrolledFeedbackForbidden": true,
+    "autoplayForbidden": true,
+    "publicPublicationAuthorized": false,
+    "termination": "writer-controlled-stop",
+    "timingClock": "browser-audio-clock",
+    "maxGestureUpdatesPerSecond": 14
+  },
+  "EXPECT": {
+    "liveSource": "Sing.01.audio",
+    "csoundChangesAudibleWithoutPreRender": true,
+    "mappedCsoundPort": "Wind.Field.01.wind_mix",
+    "midi2EventsCorrelated": true,
+    "outputObservableBy": "Ear.Wind.01",
+    "audioRecordsOptionalEvidenceOnly": true
+  },
+  "VERIFY": {
+    "requiredEvidence": [
+      "source-adapter-identified",
+      "scenario-admission-receipt",
+      "live-Sing-PCM",
+      "typed-MIDI2-events",
+      "Csound-control-channel-effects",
+      "Ear-measured-live-Csound-output",
+      "bounded-stop-and-silent-termination"
+    ],
+    "noOfflinePlaybackAsLiveProof": true,
+    "noPresentationOnlyAcceptance": true
+  }
+}
