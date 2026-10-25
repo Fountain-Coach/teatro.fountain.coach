@@ -1,0 +1,213 @@
+{
+  "kind": "CsoundTeatroScenario",
+  "scenarioID": "teatro.satzfunk-player-ear-wind.01",
+  "grammarVersion": "0.1",
+  "schemaVersion": "0.1",
+  "status": "candidate-unadmitted",
+  "mode": "live-rehearsal",
+  "sourceAuthority": "Governance chapter 151 \u2014 Csound Teatro: Speaking Sound in Space; reuses the source scenario grammar from teatro.fountain.coach",
+  "GIVEN": {
+    "entities": [
+      {
+        "id": "SatzfunkPlayer.01",
+        "kind": "INSTRUMENT",
+        "owner": "Fountain-Coach/SatzfunkPlayer",
+        "capability": "SatzfunkPlayerElement.sameOriginPlayback",
+        "runtime": "browser media element",
+        "binding": "src/satzfunk-player.mjs"
+      },
+      {
+        "id": "Ear.Player.01",
+        "kind": "EAR",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "Ear AudioWorklet observation",
+        "runtime": "Web Audio",
+        "binding": null
+      },
+      {
+        "id": "Wind.Field.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "Csound Teatro wind scene",
+        "runtime": "@csound/browser",
+        "binding": "BookCsoundHost"
+      },
+      {
+        "id": "Ear.Wind.01",
+        "kind": "EAR",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "Ear AudioWorklet observation",
+        "runtime": "Web Audio",
+        "binding": "BookCsoundHost.attachEar"
+      }
+    ],
+    "ports": [
+      {
+        "id": "SatzfunkPlayer.01.audio",
+        "owner": "SatzfunkPlayer.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "HTMLMediaElement playback output"
+      },
+      {
+        "id": "Ear.Player.01.audio",
+        "owner": "Ear.Player.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "AudioWorkletNode"
+      },
+      {
+        "id": "Ear.Player.01.rms",
+        "owner": "Ear.Player.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized-linear-rms",
+        "domain": [
+          0,
+          0.2
+        ],
+        "capability": "Ear measurement output; adapter unverified"
+      },
+      {
+        "id": "Wind.Field.01.wind_mix",
+        "owner": "Wind.Field.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0.25,
+          1.0
+        ],
+        "capability": "Csound.setControlChannel"
+      },
+      {
+        "id": "Wind.Field.01.audio",
+        "owner": "Wind.Field.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound AudioWorklet"
+      },
+      {
+        "id": "Ear.Wind.01.audio",
+        "owner": "Ear.Wind.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "AudioWorkletNode"
+      }
+    ],
+    "source": {
+      "kind": "live-instrument-output",
+      "entityID": "SatzfunkPlayer.01",
+      "portID": "SatzfunkPlayer.01.audio",
+      "transport": null,
+      "recordedFile": null,
+      "required": true
+    }
+  },
+  "TRANSFORM": {
+    "relations": [
+      {
+        "id": "rel.ear-hears-satzfunk-player",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Player.01",
+        "object": "SatzfunkPlayer.01",
+        "fromPort": "SatzfunkPlayer.01.audio",
+        "toPort": "Ear.Player.01.audio"
+      },
+      {
+        "id": "rel.player-observation-modulates-wind",
+        "predicate": "MODULATES",
+        "subject": "Ear.Player.01",
+        "object": "Wind.Field.01",
+        "fromPort": "Ear.Player.01.rms",
+        "toPort": "Wind.Field.01.wind_mix"
+      },
+      {
+        "id": "rel.ear-hears-wind",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Wind.01",
+        "object": "Wind.Field.01",
+        "fromPort": "Wind.Field.01.audio",
+        "toPort": "Ear.Wind.01.audio"
+      }
+    ],
+    "mappings": [
+      {
+        "id": "map.player-rms-to-wind-mix",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Player.01.rms",
+        "targetPort": "Wind.Field.01.wind_mix",
+        "sourceDomain": [
+          0,
+          0.2
+        ],
+        "targetDomain": [
+          0.25,
+          1.0
+        ],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 75
+      }
+    ],
+    "midi2": {
+      "authority": "Fountain-Coach/midi-backplane schema/idl.yaml",
+      "sourceCommit": "25e5ac3b9169856258ac030ef0ba9131c347defe",
+      "schemaVersion": "0.2.0",
+      "availableTopicsInspected": [
+        "stage/audio.cue",
+        "stage/midi.events.put"
+      ],
+      "playerPlaybackTopic": null,
+      "status": "not-used; the proposed audio path is browser Web Audio and local Csound host routing; the current IDL defines no Player operation"
+    }
+  },
+  "CONSTRAINTS": {
+    "mutationScope": [
+      "Wind.Field.01.wind_mix"
+    ],
+    "requiresAdmissionBeforeEffects": true,
+    "liveSourceRequired": true,
+    "recordingAsSourceForbidden": true,
+    "sourceOwnedBySatzfunkPlayer": true,
+    "playerMustUseHostAdmittedEdition": true,
+    "csoundEngineNotAnFCISInstrument": true,
+    "patchIsNotAnInstrument": true,
+    "midi1FallbackForbidden": true,
+    "uncontrolledFeedbackForbidden": true,
+    "autoplayForbidden": true,
+    "publicPublicationAuthorized": false,
+    "termination": "writer-controlled-stop",
+    "timingClock": "browser-audio-clock",
+    "maxGestureUpdatesPerSecond": 14
+  },
+  "EXPECT": {
+    "liveSource": "SatzfunkPlayer.01.audio",
+    "csoundChangesAudibleWithoutPreRender": true,
+    "mappedCsoundPort": "Wind.Field.01.wind_mix",
+    "midi2EventsCorrelated": false,
+    "outputObservableBy": "Ear.Wind.01",
+    "audioRecordsOptionalEvidenceOnly": true
+  },
+  "VERIFY": {
+    "requiredEvidence": [
+      "host-admitted-edition-identity",
+      "scenario-admission-receipt",
+      "SatzfunkPlayer-live-PCM-connected-to-Ear",
+      "Ear-measured-live-player-output",
+      "owner-admitted-local-audio-to-Csound-control-routing",
+      "bounded-stop-and-silent-termination"
+    ],
+    "noOfflinePlaybackAsLiveProof": true,
+    "noPresentationOnlyAcceptance": true,
+    "noMIDI2AdmissionClaimFromThisCandidate": true
+  }
+}

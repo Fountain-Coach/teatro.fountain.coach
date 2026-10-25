@@ -115,3 +115,27 @@ This source review found **no demonstrated need to extend the predicate
 vocabulary yet**. It DID identify the missing live native PCM adapter and the
 unimplemented Csound Teatro Scenario admission/engine binding. Neither is
 silently replaced by an independently authored web player or invented clock.
+
+## SatzfunkPlayer source candidate (25 October 2026)
+
+The separate SatzfunkPlayer source repository now contains a reusable browser
+media component with a host-owned Web Audio output seam. This Teatro-owned
+candidate is stored at
+[scenarios/satzfunk-player/ear-wind.candidate.json](../satzfunk-player/ear-wind.candidate.json)
+and uses the existing Csound Teatro Scenario 0.1 structure. It treats
+SatzfunkPlayer as the source-owning instrument and the host-admitted edition
+track as its input; the media file itself is not promoted to instrument
+identity.
+
+The candidate remains unadmitted. The current owner MIDI2 IDL
+Fountain-Coach/midi-backplane@25e5ac3b9169856258ac030ef0ba9131c347defe
+(schema 0.2.0) has no Player playback, source-audio routing, or Player
+lifecycle topic. The Teatro build now imports the Player package from its
+owner checkout, pinned to commit
+`7dd23cd397dc1c5b43983f3c54ec1377ffdd22b8`; the build rejects a dirty or
+mismatched Player checkout and records module digests. Its reader loader only
+registers the custom element. No track is admitted or instantiated in First
+Hearing. The receiving Ear binding, Ear-to-Csound runtime edge, native
+Scenario admission, audible Csound effect, and live witness are still absent.
+The proposed Player audio path uses Web Audio; MIDI2 remains unused here. Do
+not dispatch an assumed CC or use an unrelated stage topic as a substitute.

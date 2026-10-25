@@ -22,14 +22,24 @@ SLUG="teatro-an-unfinished-composition"
 BOOK="editions/first-hearing/"
 CANON="https://teatro.fountain.coach/"+BOOK
 SCORE="teatro-score-memory-vector-human-condition.svg"
+SATZFUNK_PLAYER_SHA="7dd23cd397dc1c5b43983f3c54ec1377ffdd22b8"
 def sha(data):return hashlib.sha256(data).hexdigest()
 def git_sha(path):return subprocess.check_output(["git","-C",str(path),"rev-parse","HEAD"],text=True).strip()
+def git_dirty(path):
+ return bool(subprocess.check_output(
+  ["git","-C",str(path),"status","--porcelain","--untracked-files=all"],text=True).strip())
 
-def main(fountain,satzfunk,press,stage_source):
+def main(fountain,satzfunk,press,stage_source,satzfunk_player):
  fountain=fountain.resolve()
  satzfunk=satzfunk.resolve()
  press=press.resolve()
  stage_source=stage_source.resolve()
+ satzfunk_player=satzfunk_player.resolve()
+ player_revision=git_sha(satzfunk_player)
+ if git_dirty(satzfunk_player):
+  raise ValueError("SatzfunkPlayer source checkout must be clean and committed")
+ if player_revision!=SATZFUNK_PLAYER_SHA:
+  raise ValueError("SatzfunkPlayer source revision mismatch: "+player_revision+" expected "+SATZFUNK_PLAYER_SHA)
  sys.path.insert(0,str(press/"runtime"))
  from bookshelf import render_bookshelf
  upstream=fountain/"site/editions/essays"/SLUG/"index.html"
@@ -134,6 +144,27 @@ def main(fountain,satzfunk,press,stage_source):
  for media_name in ('book-midi2.mjs','book-player.css'):
   shutil.copyfile(press/'runtime'/media_name,output_assets/media_name)
  shutil.copyfile(ROOT/'scripts/book-player.mjs',output_assets/'book-player.mjs')
+ # Package the canonical reusable Player from its owner checkout. Keep the
+ # instrument implementation out of Teatro and record the exact source bytes.
+ player_sources={
+  "index.mjs":satzfunk_player/"src/index.mjs",
+  "satzfunk-player.mjs":satzfunk_player/"src/satzfunk-player.mjs",
+  "player-media.mjs":satzfunk_player/"src/player-media.mjs"
+ }
+ player_dir=output_assets/"satzfunk-player";player_dir.mkdir(parents=True,exist_ok=True)
+ player_runtime=[]
+ player_hashes={}
+ for name,source_path in player_sources.items():
+  raw=source_path.read_bytes()
+  (player_dir/name).write_bytes(raw)
+  digest=sha(raw)
+  player_hashes[name]=digest
+  player_runtime.append({"name":"satzfunk-player/"+name,"sha256":digest})
+ player_source_digest=sha(json.dumps(
+  player_hashes,sort_keys=True,separators=(",",":")).encode())
+ player_host=ROOT/"scripts/satzfunk-player-host.mjs"
+ shutil.copyfile(player_host,output_assets/"satzfunk-player-host.mjs")
+ player_runtime.append({"name":"satzfunk-player-host.mjs","sha256":sha(player_host.read_bytes())})
  csound_host=stage_source/'dist-book-csound/book-csound-host.js'
  assert csound_host.stat().st_size>100_000, 'Compile source-owned Csound book host'
  shutil.copyfile(csound_host,SITE/'assets/book-csound-host.js')
@@ -153,6 +184,7 @@ def main(fountain,satzfunk,press,stage_source):
  document=document.replace('</head>',
      '<link rel="stylesheet" href="/assets/linotype/teatro.css">\n'
      '<link rel="stylesheet" href="/assets/satzfunk/satzfunk-book.css">\n'
+     '<script type="module" src="/assets/linotype/satzfunk-player-host.mjs"></script>\n'
      '<meta name="satzfunk-edition-url" content="'+CANON+'">\n'
      '<meta name="satzfunk-source-sha256" content="'+bare_sha+'">\n'
      '<script type="module" src="/assets/satzfunk/satzfunk-book.mjs"></script>\n</head>')
@@ -282,7 +314,11 @@ def main(fountain,satzfunk,press,stage_source):
   "originalScorePlateSHA256":manuscript["images"][0]["sha256"],
   "readerSourceHTMLSHA256":sha(source),
   "bookHTMLBeforeSatzfunkSHA256":bare_sha,
-  "runtimeFiles":runtime,
+  "runtimeFiles":runtime+player_runtime,
+  "satzfunkPlayerSourceRepository":"Fountain-Coach/SatzfunkPlayer",
+  "satzfunkPlayerSourceCommit":player_revision,
+  "satzfunkPlayerSourceSHA256":player_source_digest,
+  "satzfunkPlayerRuntimeState":"bundled-source-candidate; component registered, no edition track admitted",
   "fountainPressCommit":git_sha(press),
   "sceneAnchorId":"teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId":"teatro:unfinished-composition:spatial-relation-01",
@@ -336,5 +372,6 @@ if __name__=="__main__":
  p.add_argument("--satzfunk-source",type=Path,required=True)
  p.add_argument("--press-source",type=Path,required=True)
  p.add_argument("--stage-source",type=Path,required=True)
+ p.add_argument("--satzfunk-player-source",type=Path,required=True)
  a=p.parse_args()
- main(a.fountain_source,a.satzfunk_source,a.press_source,a.stage_source)
+ main(a.fountain_source,a.satzfunk_source,a.press_source,a.stage_source,a.satzfunk_player_source)
