@@ -9,7 +9,7 @@
     "url": "git+https://github.com/Fountain-Coach/teatro.fountain.coach.git"
   },
   "scripts": {
-    "build": "python3 scripts/build_first_hearing.py --fountain-source ../fountain.coach --satzfunk-source ../../Satzfunk --press-source ../../fountain-press --stage-source ../../solstice-caddy-20261012/apps/teatro-stage-web",
+    "build": "python3 scripts/build_first_hearing.py",
     "check": "python3 scripts/verify_first_hearing.py",
     "browser": "node scripts/verify_teatro_browser.mjs",
     "browser:audio": "node scripts/verify_secure_local_audio.mjs",
