@@ -6,9 +6,9 @@
   "repository": "Fountain-Coach/teatro.fountain.coach",
   "capturedAt": "2026-10-14T10:28:47Z",
   "publicationState": "source-candidate-Linotype-bookshelf-first-hearing-not-publicly-deployed",
-  "fileCount": 60,
-  "indexPages": 5,
-  "sourceSha256Inventory": "5832034a43b732b3ae6ede6b2fa54ef148e11fb126cb7388d404a285c171fd59",
+  "fileCount": 67,
+  "indexPages": 6,
+  "sourceSha256Inventory": "824ea4b1fe31c6c80cb744ced1d75f8f661c19e1057b0242cba85efca6659fdc",
   "sourceNote": "Entire known local public site route inventory re-fetched via live HTTPS; initial Git revision is a snapshot, not an automated deployment.",
   "deployControl": "EstatePublisher exact-host, authorized release and complete independent HTTPS readback",
   "baselineGitCommit": "609122db395ff442ee62cb193663ea71d216c65f",
@@ -17,7 +17,7 @@
   "editorialLanding": "editions/",
   "firstAudioSurface": "editions/first-hearing/#book-live-stage",
   "stageAudioClaim": "browser-Csound on explicit interaction, not released narration",
-  "sourceAuthority": "Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
+  "sourceAuthority": "Fountain-Coach/teatro.fountain.coach (book and scenario resource); Fountain-Coach/SatzfunkPlayer (instrument runtime); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
   "embeddedInteractiveScene": "editions/stage/embed/",
   "sceneComposition": "authored-paragraph-anchored-mixed-media",
   "bookshelfBooks": [
@@ -42,5 +42,7 @@
       "host": "teatro",
       "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
     }
-  ]
+  ],
+  "teatroScenarioResource": "/scenarios/satzfunk-player/ear-wind/",
+  "teatroScenarioStatus": "candidate-unadmitted"
 }

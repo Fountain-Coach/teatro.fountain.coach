@@ -15,6 +15,7 @@ import subprocess
 import sys
 from integrate_interactive_plate import integrate
 from score_navigation import admit_score_first
+from teatro_scenario_resource import write_scenario_resource
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/"site"
@@ -22,7 +23,7 @@ SLUG="teatro-an-unfinished-composition"
 BOOK="editions/first-hearing/"
 CANON="https://teatro.fountain.coach/"+BOOK
 SCORE="teatro-score-memory-vector-human-condition.svg"
-SATZFUNK_PLAYER_SHA="7dd23cd397dc1c5b43983f3c54ec1377ffdd22b8"
+SATZFUNK_PLAYER_SHA="376747d96f0df9e0b95f43ab35114a4a8c88f33c"
 def sha(data):return hashlib.sha256(data).hexdigest()
 def git_sha(path):return subprocess.check_output(["git","-C",str(path),"rev-parse","HEAD"],text=True).strip()
 def git_dirty(path):
@@ -141,6 +142,7 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
  # One reusable Press Bookshelf state serves the outer edition landing.
  shutil.copyfile(press/"runtime/bookshelf.css",output_assets/"bookshelf.css")
  shutil.copyfile(press/"runtime/identity-circle.css",output_assets/"identity-circle.css")
+ runtime.append({"name":"identity-circle.css","sha256":sha((output_assets/"identity-circle.css").read_bytes())})
  for media_name in ('book-midi2.mjs','book-player.css'):
   shutil.copyfile(press/'runtime'/media_name,output_assets/media_name)
  shutil.copyfile(ROOT/'scripts/book-player.mjs',output_assets/'book-player.mjs')
@@ -149,7 +151,8 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
  player_sources={
   "index.mjs":satzfunk_player/"src/index.mjs",
   "satzfunk-player.mjs":satzfunk_player/"src/satzfunk-player.mjs",
-  "player-media.mjs":satzfunk_player/"src/player-media.mjs"
+  "player-media.mjs":satzfunk_player/"src/player-media.mjs",
+  "teatro-scenario-runtime.mjs":satzfunk_player/"src/teatro-scenario-runtime.mjs"
  }
  player_dir=output_assets/"satzfunk-player";player_dir.mkdir(parents=True,exist_ok=True)
  player_runtime=[]
@@ -189,7 +192,7 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
      '<meta name="satzfunk-source-sha256" content="'+bare_sha+'">\n'
      '<script type="module" src="/assets/satzfunk/satzfunk-book.mjs"></script>\n</head>')
  document=document.replace('<div class="book-tools">',
-     '<div class="book-tools"><a class="teatro-stage-link" href="/editions/stage/" aria-label="Open the live Teatro stage, where interactive sound can be activated">Stage ↗</a>')
+     '<div class="book-tools"><a class="teatro-stage-link" href="/editions/stage/" aria-label="Open the live Teatro stage, where interactive sound can be activated">Stage ↗</a><a class="teatro-stage-link" href="/scenarios/satzfunk-player/ear-wind/" aria-label="Inspect the SatzfunkPlayer Ear to Csound scenario resource">Scenario ↗</a>')
  document=document.replace('<button type="button" id="book-toc-button"',
      '<button type="button" id="satzfunk-hear" aria-controls="satzfunk-hearing-rail" aria-expanded="false">Hear</button>\n    <button type="button" id="book-toc-button"')
  hearing='<aside id="satzfunk-hearing-rail" class="satzfunk-hearing" aria-label="Satzfunk first hearing" hidden data-satzfunk-controls>\n' + (
@@ -216,6 +219,17 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
   style.write((ROOT/"scripts/score-navigation.css").read_text())
  assert document.count('data-teatro-book-stage')==1
 
+ # Publish the versioned candidate as a first-class Linotype resource route.
+ # The route is inspectable and linked from the book, but never claims a live
+ # admission or public performance. The Player owner runtime is shipped above.
+ scenario_path=ROOT/"scenarios/satzfunk-player/ear-wind.candidate.json"
+ scenario_bytes=scenario_path.read_bytes()
+ scenario=json.loads(scenario_bytes)
+ assert scenario["scenarioID"]=="teatro.satzfunk-player-ear-wind.01"
+ assert scenario["status"]=="candidate-unadmitted"
+ scenario_sha,scenario_route_sha=write_scenario_resource(SITE,scenario,scenario_bytes)
+ assert 'href="/scenarios/satzfunk-player/ear-wind/"' in document
+
  # A bookshelf is a Linotype state, not a rival website or another book.
  # The v16 accepted reader remains byte-identical at its direct edition URL;
  # root and /editions/ become the same source-admitted shelf.
@@ -239,7 +253,7 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
  assert sha(brand.read_bytes())=="8c5fad1c3db56138d5959da75991dc8034a0be537ce46da6ffcc0d9655e7f729"
  shutil.copyfile(brand,collections/"fountain-coach-logo-transparent.png")
  books=[]
- solstice_source=ROOT.parent/"solstice.fountain.coach"
+ solstice_source=fountain.parent/"solstice.fountain.coach"
  solstice_reader=solstice_source/"site/editions/first-reading/index.html"
  solstice_image=solstice_source/"site/assets/edition/post-2025-12-22-b0e6cf8252aca0da.jpg"
  assert solstice_reader.is_file() and solstice_image.is_file()
@@ -318,7 +332,15 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
   "satzfunkPlayerSourceRepository":"Fountain-Coach/SatzfunkPlayer",
   "satzfunkPlayerSourceCommit":player_revision,
   "satzfunkPlayerSourceSHA256":player_source_digest,
-  "satzfunkPlayerRuntimeState":"bundled-source-candidate; component registered, no edition track admitted",
+  "satzfunkPlayerRuntimeState":"owner-runtime-bundled; no edition track admitted",
+  "teatroScenario":{
+    "scenarioID":scenario["scenarioID"],"grammarVersion":scenario["grammarVersion"],
+    "status":scenario["status"],"route":"/scenarios/satzfunk-player/ear-wind/",
+    "resource":"/scenarios/satzfunk-player/ear-wind/scenario.json",
+    "resourceSHA256":scenario_sha,"routeHTMLSHA256":scenario_route_sha,
+    "runtimeAuthority":"Fountain-Coach/SatzfunkPlayer",
+    "liveAccepted":False,"midi2PlayerOperation":"not-claimed"
+  },
   "fountainPressCommit":git_sha(press),
   "sceneAnchorId":"teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId":"teatro:unfinished-composition:spatial-relation-01",
@@ -356,9 +378,11 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
      for book in books],
   "firstAudioSurface":"editions/first-hearing/#book-live-stage",
   "sceneComposition":"authored-paragraph-anchored-mixed-media",
+  "teatroScenarioResource":"/scenarios/satzfunk-player/ear-wind/",
+  "teatroScenarioStatus":"candidate-unadmitted",
   "embeddedInteractiveScene":"editions/stage/embed/",
   "stageAudioClaim":"browser-Csound on explicit interaction, not released narration",
-  "sourceAuthority":"Fountain-Coach/teatro.fountain.coach (book); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
+  "sourceAuthority":"Fountain-Coach/teatro.fountain.coach (book and scenario resource); Fountain-Coach/SatzfunkPlayer (instrument runtime); Fountain-Coach/fountain.coach (verbatim manuscript); Fountain-Coach/Satzfunk (hearing rail)",
   "fileCount":len(assetpaths),
   "indexPages":sum(p.name=="index.html" for p in assetpaths),
   "sourceSha256Inventory":sha(inventory.encode()),

@@ -22,6 +22,25 @@ def main():
  assert manifest["originalParagraphs"]==22
  assert manifest["approvedNarration"] is False
  assert manifest["hearingStatus"]=="not-yet-released"
+ scenario_receipt=manifest["teatroScenario"]
+ assert scenario_receipt["scenarioID"]=="teatro.satzfunk-player-ear-wind.01"
+ assert scenario_receipt["grammarVersion"]=="0.1"
+ assert scenario_receipt["status"]=="candidate-unadmitted"
+ assert scenario_receipt["liveAccepted"] is False
+ assert scenario_receipt["midi2PlayerOperation"]=="not-claimed"
+ scenario_path=SITE/"scenarios/satzfunk-player/ear-wind/scenario.json"
+ scenario=json.loads(scenario_path.read_text())
+ assert scenario["scenarioID"]==scenario_receipt["scenarioID"]
+ assert scenario["status"]==scenario_receipt["status"]
+ assert sha(scenario_path.read_bytes())==scenario_receipt["resourceSHA256"]
+ assert scenario_path.read_bytes()==(ROOT/"scenarios/satzfunk-player/ear-wind.candidate.json").read_bytes()
+ route=(SITE/"scenarios/satzfunk-player/ear-wind/index.html").read_text()
+ assert sha(route.encode())==scenario_receipt["routeHTMLSHA256"]
+ assert "not admitted" in route and "not live-accepted" in route
+ assert "does not claim a MIDI 2.0 Player operation" in route
+ runtime_entry=next(row for row in manifest["runtimeFiles"] if row["name"]=="satzfunk-player/teatro-scenario-runtime.mjs")
+ assert sha((SITE/"assets/linotype/satzfunk-player/teatro-scenario-runtime.mjs").read_bytes())==runtime_entry["sha256"]
+ assert manifest["satzfunkPlayerSourceCommit"]=="376747d96f0df9e0b95f43ab35114a4a8c88f33c"
  assert manifest["sourceMutation"] is False
  assert sha((SITE/"assets/edition/teatro-score-memory-vector-human-condition.svg").read_bytes())==manifest["originalScorePlateSHA256"]
  mapping=manifest["scoreNavigation"]
@@ -97,6 +116,7 @@ def main():
   assert "worker-src 'self' blob:" in book
   assert 'href="/assets/linotype/book-player.css"' in book
   assert 'data-edition-id="teatro-first-hearing"' in book
+  assert 'href="/scenarios/satzfunk-player/ear-wind/"' in book
   assert 'id="book-viewport"' in book and 'id="book-page-atlas"' in book
   assert 'PUBLISHED SOURCE · FOUNTAIN.COACH / TEATRO' in book
   assert 'id="book-live-stage"' in book
@@ -151,7 +171,8 @@ def main():
  assert root.count('data-preview-host="teatro"')==1
  assert 'src="/assets/edition/teatro-score-memory-vector-human-condition.svg"' in root
  assert root.count('class="bookshelf-brand fc-identity-circle"')==1
- assert (SITE/'assets/linotype/identity-circle.css').read_bytes()==(ROOT.parent.parent/'fountain-press/runtime/identity-circle.css').read_bytes()
+ identity_asset=next(row for row in manifest["runtimeFiles"] if row["name"]=="identity-circle.css")
+ assert sha((SITE/"assets/linotype/identity-circle.css").read_bytes())==identity_asset["sha256"]
  assert '@import url("./identity-circle.css")' in (SITE/'assets/linotype/book-player.css').read_text()
  assert 'class="bookshelf-wordmark"' not in root
  assert 'FOUNTAIN COACH</span>' not in root

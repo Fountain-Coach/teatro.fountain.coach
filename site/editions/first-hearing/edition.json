@@ -46,6 +46,30 @@
     {
       "name": "essays.css",
       "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
+    },
+    {
+      "name": "identity-circle.css",
+      "sha256": "31483c04941087e607f86b31c2dd0697e86b4f4faaf0c07238042acc9a1c9772"
+    },
+    {
+      "name": "satzfunk-player/index.mjs",
+      "sha256": "e073c91a478fd755c11be04b4441b44608d2fc3e77eb5086b981f41c0589b82d"
+    },
+    {
+      "name": "satzfunk-player/satzfunk-player.mjs",
+      "sha256": "eb982b78e827c3dcd6376c80490ca4400e4e9f6d63897b3609ad5dd7c2e46736"
+    },
+    {
+      "name": "satzfunk-player/player-media.mjs",
+      "sha256": "59da08595d7d5f23052d044e61ccfca5226ed1eff2ad66ba1d8bd884c4d9617c"
+    },
+    {
+      "name": "satzfunk-player/teatro-scenario-runtime.mjs",
+      "sha256": "cd6e36e0d364188553663694ad9fdbebdedd8e521b39b78fbe699b875e3994c6"
+    },
+    {
+      "name": "satzfunk-player-host.mjs",
+      "sha256": "196df9294891babccceee80e67986f9b22b271c60b7b8a41a42c45934e161021"
     }
   ],
   "fountainPressCommit": "04bf97351117f38e07df336ff40c18623729af50",
@@ -125,5 +149,20 @@
       "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
     }
   ],
-  "sourceMutation": false
+  "sourceMutation": false,
+  "satzfunkPlayerSourceCommit": "376747d96f0df9e0b95f43ab35114a4a8c88f33c",
+  "satzfunkPlayerSourceSHA256": "4fd826b6d4bf4be1739e117c873549539e21a771b8212973bc7e8923cb7c16f3",
+  "satzfunkPlayerRuntimeState": "owner-runtime-bundled; no edition track admitted",
+  "teatroScenario": {
+    "scenarioID": "teatro.satzfunk-player-ear-wind.01",
+    "grammarVersion": "0.1",
+    "status": "candidate-unadmitted",
+    "route": "/scenarios/satzfunk-player/ear-wind/",
+    "resource": "/scenarios/satzfunk-player/ear-wind/scenario.json",
+    "resourceSHA256": "c474ea1d852458aa7c80f0c5f594a09cef2f81626535edf8c627567a7afedf9d",
+    "routeHTMLSHA256": "3e60d06c2685a708ff14c7d14e44684bbda85914e445f2ba232d180ac3d6bce6",
+    "runtimeAuthority": "Fountain-Coach/SatzfunkPlayer",
+    "liveAccepted": false,
+    "midi2PlayerOperation": "not-claimed"
+  }
 }
