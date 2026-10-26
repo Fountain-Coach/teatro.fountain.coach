@@ -324,6 +324,24 @@
       "sourceOwner": "Fountain-Coach/midi2-gpu-fabric",
       "sourceCommit": "8c0ab06735d7987af52e6e232d24d4bf4d5d563e",
       "browserRehearsalOnly": true
+    },
+    "patchTopology": {
+      "engine": "one @csound/browser AudioWorklet, two independent Csound voice/clock/mixer graphs",
+      "patchIDs": [
+        "a",
+        "b"
+      ],
+      "patchChannelSuffixes": [
+        "_a",
+        "_b"
+      ],
+      "graphA": "Csound instruments 101-107 and 199",
+      "graphB": "Csound instruments 201-207 and 299",
+      "crossfadeInstrument": "Csound instr 900",
+      "crossfadeInput": "crossfade",
+      "earTap": "Ear.Techno.01 observes the real final Csound stereo output",
+      "sourceBranch": "codex/teatro-ab-morph-preset-crossfade-20261026",
+      "sourceCommit": "1f3d2e2541b4bdbf9a96f149a4f54abc80bd860e"
     }
   },
   "TRANSFORM": {
@@ -497,6 +515,39 @@
       "law": "equal-power",
       "minimumSmoothingMilliseconds": 90,
       "noAdditionalWebAudioInstruments": true
+    },
+    "performanceOperations": {
+      "softMutateAll": {
+        "semantics": "bounded parameter-wide perturbation of one independent patch with smoothstep interpolation",
+        "targetScope": "tempo, six channel levels, cutoff, drive, delay, swing, master, Ear depth",
+        "durationsSeconds": [
+          2,
+          4,
+          8,
+          16
+        ],
+        "discreteMuteSoloAndRouting": "unchanged",
+        "controlTransport": "typed bounded Csound setControlChannel calls; no alternate scenario predicate"
+      },
+      "presetBank": {
+        "factoryPresets": 8,
+        "browserLocalUserSlots": 4,
+        "recallInterpolationMilliseconds": 1800,
+        "ownedBy": "Teatro Stage Web browser UI, not a new FCIS instrument"
+      },
+      "clonePatch": {
+        "from": "selected patch",
+        "to": "other patch",
+        "identityPolicy": "deep copy of complete patch snapshot; following edits independent",
+        "enginePolicy": "two independent Csound graphs remain scheduled in the same engine"
+      },
+      "crossfade": {
+        "CsoundChannel": "crossfade",
+        "formula": "gainA=cos(pi/2*x), gainB=sin(pi/2*x), x in [0,1]",
+        "smoothingSeconds": 0.09,
+        "audioLocation": "Csound instr 900 real stereo summing bus",
+        "earObservation": "single Ear tap after Csound crossfade before browser destination"
+      }
     }
   },
   "CONSTRAINTS": {
@@ -538,19 +589,25 @@
     "crossfadeIsCsoundOutput": true,
     "runtimeGraphCount": 2,
     "csoundAudioWorkletInstanceCount": 1,
-    "userPresetStorageScope": "client-local only; no server upload"
+    "userPresetStorageScope": "client-local only; no server upload",
+    "dualPatchIndependenceRequired": true,
+    "noRandomDiscreteMuteSoloOrRouting": true,
+    "softMutationBounded": true,
+    "presetStorage": "browser-local owner slots only; no cloud or public personal data",
+    "zeroOrSilentBMasterAtFullBRequiresSilentOutput": true,
+    "nativeScenarioAdmissionAvailable": false
   },
   "EXPECT": {
     "rhythm": "four-on-floor kick, clap beats 2 and 4, offbeat hats, C-minor bass and stab",
-    "primaryView": "mixing-deck-no-puppet",
+    "primaryView": "dual-patch-mixing-deck-no-puppet",
     "outputObservableBy": "Ear.Techno.01",
     "audioEngine": "Csound AudioWorklet",
-    "earFeedback": "Ear measures the real crossfaded stereo output and controls bass filter depths independently in both Csound graphs",
+    "earFeedback": "single real Ear observation of the audible crossfaded output modulates both distinct bass graphs through separately scoped controls and depths",
     "patches": "Two independently editable Csound techno patch graphs in the same engine; one musician-operated crossfade",
-    "patchClone": "Copy complete A or B patch snapshot to the other, never share mutable state",
-    "softMutateAll": "Glide all continuous parameters with bounded gentle changes; preserve mute, solo, and musical structure",
-    "presetBank": "Eight factory patches and four separately writable browser-local user slots; recall glides while playing",
-    "crossfade": "Actual equal-power Csound audio mix of both running patches, not display-only faders"
+    "patchClone": "the other patch becomes an independent complete copy; later mutation affects only selected patch",
+    "softMutateAll": "changes tempo, six levels and all six effect controls gradually; preserves mutes, solo, routing and Ear policy",
+    "presetBank": "eight named factory presets, four browser-local user slots, smoothly recalled",
+    "crossfade": "true audible equal-power blend of two active Csound patch graphs, not a UI fader simulation"
   },
   "VERIFY": {
     "requiredEvidence": [
@@ -570,7 +627,14 @@
       "user-preset-store-and-reload",
       "equal-power-crossfade-real-Csound-output-A-midpoint-B",
       "stop-both-graphs-and-close-AudioContext",
-      "HTTPS-WLAN-stage-promotion-and-route-readback"
+      "HTTPS-WLAN-stage-promotion-and-route-readback",
+      "two-independent-Csound-patch-graphs",
+      "soft-mutation-affects-all-continuous-parameters-without-random-mute",
+      "eight-factory-and-four-local-user-presets-with-recall",
+      "clone-A-to-B-copy-by-value",
+      "actual-stereo-audio-crossfade-endpoint-silence-proof",
+      "on-off-ear-feedback-through-real-PCM",
+      "both-graphs-silent-and-browser-AudioContext-closed-on-stop"
     ],
     "unmetBoundary": "Browser Csound A/B live rehearsal was tested; native Csound Teatro Scenario admission remains not implemented/proven, no hardware MIDI2/MIDI-CI claim",
     "noPresentationOnlyAcceptance": true
