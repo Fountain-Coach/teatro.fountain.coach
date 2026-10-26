@@ -1,0 +1,4071 @@
+{
+  "kind": "CsoundTeatroScenario",
+  "scenarioID": "teatro.ball-plank-impulse-synth-ab.rehearsal.01",
+  "grammarVersion": "0.1",
+  "schemaVersion": "0.1",
+  "status": "candidate-unadmitted",
+  "mode": "live-rehearsal-candidate",
+  "sourceAuthority": "https://governance.fountain.coach/chapters/151-csound-teatro-speaking-sound-in-space/",
+  "GIVEN": {
+    "engine": "one @csound/browser AudioWorklet with two independent oscillator-and-envelope graph instances",
+    "sourceOwner": "Fountain-Coach/midi2-gpu-fabric",
+    "sourceCommit": "83d9fc27a8f4cba8a5c2aa63cca81f53d9d19573",
+    "stageRoute": "/teatro/experiments/classic-techno-deck/",
+    "intent": "Two physical sounding scenes A/B: a ball actually collides with a plank to excite the existing six-voice ADSR Csound synth of that scene; the camera rotates silently and instrument sound comes only from physical impulses.",
+    "entities": [
+      {
+        "id": "Ear.Synth.01",
+        "kind": "EAR",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "real Ear AudioWorklet RMS of crossfaded Csound output"
+      },
+      {
+        "id": "Synth.Mix.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 190",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Kick.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 101 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Snare.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 102 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Metal.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 103 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Bass.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 104 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Chord.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 105 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Air.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 106 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Mix.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 290",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Kick.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 201 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Snare.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 202 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Metal.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 203 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Bass.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 204 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Chord.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 205 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Air.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 206 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Crossfade.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 900 stereo equal-power crossfade cos/sin"
+      },
+      {
+        "id": "Ball.A.01",
+        "kind": "BODY",
+        "owner": "Fountain-Coach/TeatroStageEngine",
+        "capability": "physics-owned ball and contact normal speed",
+        "binding": null
+      },
+      {
+        "id": "Plank.A.01",
+        "kind": "BODY",
+        "owner": "Fountain-Coach/TeatroStageEngine",
+        "capability": "physical sounding plank with contact zones",
+        "binding": null
+      },
+      {
+        "id": "Ball.B.01",
+        "kind": "BODY",
+        "owner": "Fountain-Coach/TeatroStageEngine",
+        "capability": "physics-owned ball and contact normal speed",
+        "binding": null
+      },
+      {
+        "id": "Plank.B.01",
+        "kind": "BODY",
+        "owner": "Fountain-Coach/TeatroStageEngine",
+        "capability": "physical sounding plank with contact zones",
+        "binding": null
+      }
+    ],
+    "ports": [
+      {
+        "id": "Synth.Mix.A.audio",
+        "owner": "Synth.Mix.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.A.audio",
+        "owner": "Synth.Kick.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.A.gate",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.level",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.attack",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.decay",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.sustain",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.release",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.pitch",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.tone",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_kick_a)"
+      },
+      {
+        "id": "Synth.Snare.A.audio",
+        "owner": "Synth.Snare.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Snare.A.gate",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.level",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.attack",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.decay",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.sustain",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.release",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.pitch",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.tone",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_snare_a)"
+      },
+      {
+        "id": "Synth.Metal.A.audio",
+        "owner": "Synth.Metal.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Metal.A.gate",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.level",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.attack",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.decay",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.sustain",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.release",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.pitch",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.tone",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_metal_a)"
+      },
+      {
+        "id": "Synth.Bass.A.audio",
+        "owner": "Synth.Bass.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Bass.A.gate",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.level",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.attack",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.decay",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.sustain",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.release",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.pitch",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.tone",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_bass_a)"
+      },
+      {
+        "id": "Synth.Chord.A.audio",
+        "owner": "Synth.Chord.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Chord.A.gate",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.level",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.attack",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.decay",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.sustain",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.release",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.pitch",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.tone",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_chord_a)"
+      },
+      {
+        "id": "Synth.Air.A.audio",
+        "owner": "Synth.Air.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Air.A.gate",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.level",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.attack",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.decay",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.sustain",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.release",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.pitch",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.tone",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_air_a)"
+      },
+      {
+        "id": "Synth.Mix.B.audio",
+        "owner": "Synth.Mix.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.B.audio",
+        "owner": "Synth.Kick.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.B.gate",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.level",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.attack",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.decay",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.sustain",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.release",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.pitch",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.tone",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_kick_b)"
+      },
+      {
+        "id": "Synth.Snare.B.audio",
+        "owner": "Synth.Snare.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Snare.B.gate",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.level",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.attack",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.decay",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.sustain",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.release",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.pitch",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.tone",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_snare_b)"
+      },
+      {
+        "id": "Synth.Metal.B.audio",
+        "owner": "Synth.Metal.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Metal.B.gate",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.level",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.attack",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.decay",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.sustain",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.release",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.pitch",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.tone",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_metal_b)"
+      },
+      {
+        "id": "Synth.Bass.B.audio",
+        "owner": "Synth.Bass.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Bass.B.gate",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.level",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.attack",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.decay",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.sustain",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.release",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.pitch",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.tone",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_bass_b)"
+      },
+      {
+        "id": "Synth.Chord.B.audio",
+        "owner": "Synth.Chord.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Chord.B.gate",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.level",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.attack",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.decay",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.sustain",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.release",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.pitch",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.tone",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_chord_b)"
+      },
+      {
+        "id": "Synth.Air.B.audio",
+        "owner": "Synth.Air.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Air.B.gate",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.level",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.attack",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.decay",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.sustain",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.release",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.pitch",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.tone",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_air_b)"
+      },
+      {
+        "id": "Synth.Crossfade.01.a",
+        "owner": "Synth.Crossfade.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Crossfade.01.b",
+        "owner": "Synth.Crossfade.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Crossfade.01.audio",
+        "owner": "Synth.Crossfade.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Crossfade.01.position",
+        "owner": "Synth.Crossfade.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(crossfade)"
+      },
+      {
+        "id": "Ear.Synth.01.audio",
+        "owner": "Ear.Synth.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Ear.Synth.01.rms",
+        "owner": "Ear.Synth.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized-linear-rms",
+        "domain": [
+          0.001,
+          0.12
+        ]
+      },
+      {
+        "id": "Synth.Bass.A.ear_follow",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_follow_a)"
+      },
+      {
+        "id": "Synth.Bass.B.ear_follow",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_follow_b)"
+      },
+      {
+        "id": "Ball.A.01.normalVelocity",
+        "owner": "Ball.A.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "m/s",
+        "domain": [
+          0,
+          7
+        ],
+        "capability": "actual physics contact-normal speed"
+      },
+      {
+        "id": "Plank.A.01.excitation",
+        "owner": "Plank.A.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physical excitation target"
+      },
+      {
+        "id": "Plank.A.01.impulseGate",
+        "owner": "Plank.A.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.A.01.impactStrength",
+        "owner": "Plank.A.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.A.01.strikePosition",
+        "owner": "Plank.A.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.A.01.tension",
+        "owner": "Plank.A.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.A.01.persistence",
+        "owner": "Plank.A.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.A.01.roughness",
+        "owner": "Plank.A.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Synth.Mix.A.master",
+        "owner": "Synth.Mix.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(master_a)"
+      },
+      {
+        "id": "Synth.Mix.A.drive",
+        "owner": "Synth.Mix.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(drive_a)"
+      },
+      {
+        "id": "Ball.B.01.normalVelocity",
+        "owner": "Ball.B.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "m/s",
+        "domain": [
+          0,
+          7
+        ],
+        "capability": "actual physics contact-normal speed"
+      },
+      {
+        "id": "Plank.B.01.excitation",
+        "owner": "Plank.B.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physical excitation target"
+      },
+      {
+        "id": "Plank.B.01.impulseGate",
+        "owner": "Plank.B.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.B.01.impactStrength",
+        "owner": "Plank.B.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.B.01.strikePosition",
+        "owner": "Plank.B.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.B.01.tension",
+        "owner": "Plank.B.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.B.01.persistence",
+        "owner": "Plank.B.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Plank.B.01.roughness",
+        "owner": "Plank.B.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "physics-owned contact/sounding-body state; binding pending"
+      },
+      {
+        "id": "Synth.Mix.B.master",
+        "owner": "Synth.Mix.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(master_b)"
+      },
+      {
+        "id": "Synth.Mix.B.drive",
+        "owner": "Synth.Mix.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(drive_b)"
+      }
+    ],
+    "excitation": {
+      "source": "actual Ball/Plank collision only; a gesture moves the physical body but does not emit Csound gate",
+      "owner": "TeatroStageEngine physics",
+      "noAutoplay": true,
+      "noTempoClock": true,
+      "gatePulseMilliseconds": 60,
+      "perBallRefractoryMilliseconds": 85,
+      "repeatStrikeReleasesGate": true,
+      "allSixExistingVoicesExcitedPerWorld": true
+    },
+    "synthesis": {
+      "voiceNames": [
+        "kick",
+        "snare",
+        "metal",
+        "bass",
+        "chord",
+        "air"
+      ],
+      "envelopeStages": [
+        "attack",
+        "decay",
+        "sustain",
+        "release"
+      ],
+      "envelopeOwner": "Csound instruments 101-106 and 201-206, k-rate four-stage ADSR gate state machine",
+      "oscillatorFamilies": [
+        "pitch-dropping sine",
+        "filtered noise plus tone",
+        "metallic high-pass noise and ring",
+        "sawtooth sub-bass",
+        "three-oscillator minor chord",
+        "resonant air noise and sine"
+      ],
+      "soundControlsPerVoice": [
+        "level",
+        "attack",
+        "decay",
+        "sustain",
+        "release",
+        "pitch",
+        "tone"
+      ]
+    },
+    "performance": {
+      "patchA": {
+        "soundVoices": "Csound 101-106",
+        "mixer": "Csound 190",
+        "controlsSuffix": "_a"
+      },
+      "patchB": {
+        "soundVoices": "Csound 201-206",
+        "mixer": "Csound 290",
+        "controlsSuffix": "_b"
+      },
+      "crossfader": "Csound instr 900; 0..1 equal power; 70ms smoothing",
+      "mutation": "bounded seven continuous sound controls on each of six voices + five FX controls; 2/4/8/16-second smoothstep; does not mutate gate state",
+      "presets": {
+        "factory": 8,
+        "localUserSlots": 4,
+        "scope": "browser localStorage only",
+        "recallMilliseconds": 1800
+      },
+      "clone": "deep copy selected patch timbres and currently held excitation, independence thereafter",
+      "primaryView": "rotating canonical Teatro Stage with physical ball/plank instrumentation; parameters only optional inspector",
+      "initialSceneBank": {
+        "A": "warehouse",
+        "B": "glass"
+      },
+      "sceneClone": "static plank properties, material and Csound patch timbre only; independent identities and no copying live collision state",
+      "softMutateScene": "seeded bounded tension, persistence, roughness, restitution + retained Csound timbre; no gate or event mutation",
+      "orbitDoesNotExcite": true
+    },
+    "sourceScenario": {
+      "scenarioID": "teatro.sound-first-adsr-synth.rehearsal.01",
+      "commit": "5b4317f4d47ccbaa342f2a566f907c84eaa5fb68",
+      "repository": "Fountain-Coach/teatro.fountain.coach",
+      "engineCommit": "83d9fc27a8f4cba8a5c2aa63cca81f53d9d19573",
+      "orchestraUnchanged": true
+    },
+    "properties": [
+      {
+        "id": "Ball.A.01.mass",
+        "owner": "Ball.A.01",
+        "valueType": "number",
+        "value": 0.72,
+        "unit": "kg",
+        "domain": [
+          0.1,
+          2
+        ]
+      },
+      {
+        "id": "Ball.A.01.radius",
+        "owner": "Ball.A.01",
+        "valueType": "number",
+        "value": 0.24,
+        "unit": "m",
+        "domain": [
+          0.1,
+          0.5
+        ]
+      },
+      {
+        "id": "Plank.A.01.length",
+        "owner": "Plank.A.01",
+        "valueType": "number",
+        "value": 3.6,
+        "unit": "stage-world-unit",
+        "domain": [
+          1,
+          5
+        ]
+      },
+      {
+        "id": "Plank.A.01.tension",
+        "owner": "Plank.A.01",
+        "valueType": "number",
+        "value": 0.31,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.A.01.persistence",
+        "owner": "Plank.A.01",
+        "valueType": "number",
+        "value": 0.68,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.A.01.roughness",
+        "owner": "Plank.A.01",
+        "valueType": "number",
+        "value": 0.44,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.A.01.restitution",
+        "owner": "Plank.A.01",
+        "valueType": "number",
+        "value": 0.48,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.A.01.material",
+        "owner": "Plank.A.01",
+        "valueType": "enum",
+        "unit": "material-profile",
+        "value": "wood",
+        "allowedValues": [
+          "wood",
+          "glass-metal",
+          "paper",
+          "steel"
+        ]
+      },
+      {
+        "id": "Ball.B.01.mass",
+        "owner": "Ball.B.01",
+        "valueType": "number",
+        "value": 0.34,
+        "unit": "kg",
+        "domain": [
+          0.1,
+          2
+        ]
+      },
+      {
+        "id": "Ball.B.01.radius",
+        "owner": "Ball.B.01",
+        "valueType": "number",
+        "value": 0.18,
+        "unit": "m",
+        "domain": [
+          0.1,
+          0.5
+        ]
+      },
+      {
+        "id": "Plank.B.01.length",
+        "owner": "Plank.B.01",
+        "valueType": "number",
+        "value": 2.5,
+        "unit": "stage-world-unit",
+        "domain": [
+          1,
+          5
+        ]
+      },
+      {
+        "id": "Plank.B.01.tension",
+        "owner": "Plank.B.01",
+        "valueType": "number",
+        "value": 0.78,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.B.01.persistence",
+        "owner": "Plank.B.01",
+        "valueType": "number",
+        "value": 0.82,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.B.01.roughness",
+        "owner": "Plank.B.01",
+        "valueType": "number",
+        "value": 0.16,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.B.01.restitution",
+        "owner": "Plank.B.01",
+        "valueType": "number",
+        "value": 0.69,
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "Plank.B.01.material",
+        "owner": "Plank.B.01",
+        "valueType": "enum",
+        "unit": "material-profile",
+        "value": "glass-metal",
+        "allowedValues": [
+          "wood",
+          "glass-metal",
+          "paper",
+          "steel"
+        ]
+      }
+    ],
+    "stage": {
+      "owner": "Fountain-Coach/TeatroStageEngine",
+      "renderer": "existing Three.js and Cannon-ES Teatro Stage Web",
+      "room": {
+        "floor": [
+          30,
+          20
+        ],
+        "wallsHeight": 20,
+        "unit": "stage-world-unit; SI conversion of impact speed requires runtime evidence",
+        "paper": "#f4ead6",
+        "ink": "#111111",
+        "defaultPuppet": false
+      },
+      "stations": [
+        {
+          "id": "Scene.A",
+          "ball": "Ball.A.01",
+          "plank": "Plank.A.01",
+          "initialBallPosition": [
+            -6,
+            4.2,
+            0
+          ],
+          "plankPosition": [
+            -6,
+            1.1,
+            0
+          ],
+          "plankMaterial": "wood",
+          "patchSlot": "a",
+          "factorySoundPreset": "warehouse"
+        },
+        {
+          "id": "Scene.B",
+          "ball": "Ball.B.01",
+          "plank": "Plank.B.01",
+          "initialBallPosition": [
+            6,
+            4.6,
+            0
+          ],
+          "plankPosition": [
+            6,
+            1.1,
+            0
+          ],
+          "plankMaterial": "glass-metal",
+          "patchSlot": "b",
+          "factorySoundPreset": "glass"
+        }
+      ],
+      "camera": {
+        "orbit": "canonical orthographic orbit",
+        "idleRadiansPerSecond": 0.12,
+        "dragEmptySpace": true,
+        "pinchZoom": true,
+        "soundCoupling": false
+      },
+      "gestureSemantics": {
+        "drop-or-throw": "move ball; wait for actual collision before Csound excitation",
+        "tilt-plank": "change physical plank orientation, not camera; physics decides contact",
+        "orbit-camera": "rotate view only; never emit a collision or note",
+        "mutate-scene": "bounded continuous physical+synth property interpolation 2/4/8/16 s",
+        "clone-scene": "clone static physical world and sound timbre, not events or identities",
+        "crossfade": "existing Csound instr 900 equal-power A/B output",
+        "inspector": "optional source identity and typed mapping, never the main view",
+        "Stop": "release gates, mute, close AudioContext, terminal Ear observation"
+      }
+    }
+  },
+  "TRANSFORM": {
+    "relations": [
+      {
+        "id": "rel.kick-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Kick.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Kick.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.snare-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Snare.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Snare.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.metal-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Metal.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Metal.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.bass-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Bass.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Bass.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.chord-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Chord.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Chord.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.air-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Air.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Air.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.mix-a-to-xfade",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Mix.A",
+        "object": "Synth.Crossfade.01",
+        "fromPort": "Synth.Mix.A.audio",
+        "toPort": "Synth.Crossfade.01.a"
+      },
+      {
+        "id": "rel.kick-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Kick.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Kick.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.snare-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Snare.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Snare.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.metal-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Metal.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Metal.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.bass-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Bass.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Bass.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.chord-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Chord.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Chord.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.air-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Air.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Air.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.mix-b-to-xfade",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Mix.B",
+        "object": "Synth.Crossfade.01",
+        "fromPort": "Synth.Mix.B.audio",
+        "toPort": "Synth.Crossfade.01.b"
+      },
+      {
+        "id": "rel.ear-listens-to-real-output",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Synth.01",
+        "object": "Synth.Crossfade.01",
+        "fromPort": "Synth.Crossfade.01.audio",
+        "toPort": "Ear.Synth.01.audio"
+      },
+      {
+        "id": "rel.ear-modulates-bass-a",
+        "predicate": "MODULATES",
+        "subject": "Ear.Synth.01",
+        "object": "Synth.Bass.A",
+        "fromPort": "Ear.Synth.01.rms",
+        "toPort": "Synth.Bass.A.ear_follow"
+      },
+      {
+        "id": "rel.ear-modulates-bass-b",
+        "predicate": "MODULATES",
+        "subject": "Ear.Synth.01",
+        "object": "Synth.Bass.B",
+        "fromPort": "Ear.Synth.01.rms",
+        "toPort": "Synth.Bass.B.ear_follow"
+      },
+      {
+        "id": "rel.a.ball-excites-plank",
+        "predicate": "EXCITES",
+        "subject": "Ball.A.01",
+        "object": "Plank.A.01",
+        "fromPort": "Ball.A.01.normalVelocity",
+        "toPort": "Plank.A.01.excitation",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.impact-modulates-mix",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Mix.A",
+        "fromPort": "Plank.A.01.impactStrength",
+        "toPort": "Synth.Mix.A.master",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.plank-excites-kick",
+        "predicate": "EXCITES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Kick.A",
+        "fromPort": "Plank.A.01.impulseGate",
+        "toPort": "Synth.Kick.A.gate",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.kick.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Kick.A",
+        "fromPort": "Plank.A.01.strikePosition",
+        "toPort": "Synth.Kick.A.tone",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.kick.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Kick.A",
+        "fromPort": "Plank.A.01.tension",
+        "toPort": "Synth.Kick.A.pitch",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.kick.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Kick.A",
+        "fromPort": "Plank.A.01.persistence",
+        "toPort": "Synth.Kick.A.release",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.plank-excites-snare",
+        "predicate": "EXCITES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Snare.A",
+        "fromPort": "Plank.A.01.impulseGate",
+        "toPort": "Synth.Snare.A.gate",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.snare.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Snare.A",
+        "fromPort": "Plank.A.01.strikePosition",
+        "toPort": "Synth.Snare.A.tone",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.snare.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Snare.A",
+        "fromPort": "Plank.A.01.tension",
+        "toPort": "Synth.Snare.A.pitch",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.snare.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Snare.A",
+        "fromPort": "Plank.A.01.persistence",
+        "toPort": "Synth.Snare.A.release",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.plank-excites-metal",
+        "predicate": "EXCITES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Metal.A",
+        "fromPort": "Plank.A.01.impulseGate",
+        "toPort": "Synth.Metal.A.gate",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.metal.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Metal.A",
+        "fromPort": "Plank.A.01.strikePosition",
+        "toPort": "Synth.Metal.A.tone",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.metal.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Metal.A",
+        "fromPort": "Plank.A.01.tension",
+        "toPort": "Synth.Metal.A.pitch",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.metal.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Metal.A",
+        "fromPort": "Plank.A.01.persistence",
+        "toPort": "Synth.Metal.A.release",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.plank-excites-bass",
+        "predicate": "EXCITES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Bass.A",
+        "fromPort": "Plank.A.01.impulseGate",
+        "toPort": "Synth.Bass.A.gate",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.bass.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Bass.A",
+        "fromPort": "Plank.A.01.strikePosition",
+        "toPort": "Synth.Bass.A.tone",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.bass.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Bass.A",
+        "fromPort": "Plank.A.01.tension",
+        "toPort": "Synth.Bass.A.pitch",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.bass.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Bass.A",
+        "fromPort": "Plank.A.01.persistence",
+        "toPort": "Synth.Bass.A.release",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.plank-excites-chord",
+        "predicate": "EXCITES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Chord.A",
+        "fromPort": "Plank.A.01.impulseGate",
+        "toPort": "Synth.Chord.A.gate",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.chord.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Chord.A",
+        "fromPort": "Plank.A.01.strikePosition",
+        "toPort": "Synth.Chord.A.tone",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.chord.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Chord.A",
+        "fromPort": "Plank.A.01.tension",
+        "toPort": "Synth.Chord.A.pitch",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.chord.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Chord.A",
+        "fromPort": "Plank.A.01.persistence",
+        "toPort": "Synth.Chord.A.release",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.plank-excites-air",
+        "predicate": "EXCITES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Air.A",
+        "fromPort": "Plank.A.01.impulseGate",
+        "toPort": "Synth.Air.A.gate",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.air.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Air.A",
+        "fromPort": "Plank.A.01.strikePosition",
+        "toPort": "Synth.Air.A.tone",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.air.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Air.A",
+        "fromPort": "Plank.A.01.tension",
+        "toPort": "Synth.Air.A.pitch",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.a.air.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.A.01",
+        "object": "Synth.Air.A",
+        "fromPort": "Plank.A.01.persistence",
+        "toPort": "Synth.Air.A.release",
+        "when": "collision.a"
+      },
+      {
+        "id": "rel.b.ball-excites-plank",
+        "predicate": "EXCITES",
+        "subject": "Ball.B.01",
+        "object": "Plank.B.01",
+        "fromPort": "Ball.B.01.normalVelocity",
+        "toPort": "Plank.B.01.excitation",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.impact-modulates-mix",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Mix.B",
+        "fromPort": "Plank.B.01.impactStrength",
+        "toPort": "Synth.Mix.B.master",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.plank-excites-kick",
+        "predicate": "EXCITES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Kick.B",
+        "fromPort": "Plank.B.01.impulseGate",
+        "toPort": "Synth.Kick.B.gate",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.kick.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Kick.B",
+        "fromPort": "Plank.B.01.strikePosition",
+        "toPort": "Synth.Kick.B.tone",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.kick.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Kick.B",
+        "fromPort": "Plank.B.01.tension",
+        "toPort": "Synth.Kick.B.pitch",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.kick.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Kick.B",
+        "fromPort": "Plank.B.01.persistence",
+        "toPort": "Synth.Kick.B.release",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.plank-excites-snare",
+        "predicate": "EXCITES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Snare.B",
+        "fromPort": "Plank.B.01.impulseGate",
+        "toPort": "Synth.Snare.B.gate",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.snare.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Snare.B",
+        "fromPort": "Plank.B.01.strikePosition",
+        "toPort": "Synth.Snare.B.tone",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.snare.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Snare.B",
+        "fromPort": "Plank.B.01.tension",
+        "toPort": "Synth.Snare.B.pitch",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.snare.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Snare.B",
+        "fromPort": "Plank.B.01.persistence",
+        "toPort": "Synth.Snare.B.release",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.plank-excites-metal",
+        "predicate": "EXCITES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Metal.B",
+        "fromPort": "Plank.B.01.impulseGate",
+        "toPort": "Synth.Metal.B.gate",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.metal.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Metal.B",
+        "fromPort": "Plank.B.01.strikePosition",
+        "toPort": "Synth.Metal.B.tone",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.metal.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Metal.B",
+        "fromPort": "Plank.B.01.tension",
+        "toPort": "Synth.Metal.B.pitch",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.metal.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Metal.B",
+        "fromPort": "Plank.B.01.persistence",
+        "toPort": "Synth.Metal.B.release",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.plank-excites-bass",
+        "predicate": "EXCITES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Bass.B",
+        "fromPort": "Plank.B.01.impulseGate",
+        "toPort": "Synth.Bass.B.gate",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.bass.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Bass.B",
+        "fromPort": "Plank.B.01.strikePosition",
+        "toPort": "Synth.Bass.B.tone",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.bass.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Bass.B",
+        "fromPort": "Plank.B.01.tension",
+        "toPort": "Synth.Bass.B.pitch",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.bass.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Bass.B",
+        "fromPort": "Plank.B.01.persistence",
+        "toPort": "Synth.Bass.B.release",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.plank-excites-chord",
+        "predicate": "EXCITES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Chord.B",
+        "fromPort": "Plank.B.01.impulseGate",
+        "toPort": "Synth.Chord.B.gate",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.chord.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Chord.B",
+        "fromPort": "Plank.B.01.strikePosition",
+        "toPort": "Synth.Chord.B.tone",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.chord.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Chord.B",
+        "fromPort": "Plank.B.01.tension",
+        "toPort": "Synth.Chord.B.pitch",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.chord.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Chord.B",
+        "fromPort": "Plank.B.01.persistence",
+        "toPort": "Synth.Chord.B.release",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.plank-excites-air",
+        "predicate": "EXCITES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Air.B",
+        "fromPort": "Plank.B.01.impulseGate",
+        "toPort": "Synth.Air.B.gate",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.air.strikePosition",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Air.B",
+        "fromPort": "Plank.B.01.strikePosition",
+        "toPort": "Synth.Air.B.tone",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.air.tension",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Air.B",
+        "fromPort": "Plank.B.01.tension",
+        "toPort": "Synth.Air.B.pitch",
+        "when": "collision.b"
+      },
+      {
+        "id": "rel.b.air.persistence",
+        "predicate": "MODULATES",
+        "subject": "Plank.B.01",
+        "object": "Synth.Air.B",
+        "fromPort": "Plank.B.01.persistence",
+        "toPort": "Synth.Air.B.release",
+        "when": "collision.b"
+      }
+    ],
+    "mappings": [
+      {
+        "id": "map.ear-rms-to-bass-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Synth.01.rms",
+        "targetPort": "Synth.Bass.A.ear_follow",
+        "sourceDomain": [
+          0.001,
+          0.12
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 90
+      },
+      {
+        "id": "map.ear-rms-to-bass-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Synth.01.rms",
+        "targetPort": "Synth.Bass.B.ear_follow",
+        "sourceDomain": [
+          0.001,
+          0.12
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 90
+      },
+      {
+        "id": "map.a.speed-to-excitation",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ball.A.01.normalVelocity",
+        "targetPort": "Plank.A.01.excitation",
+        "sourceDomain": [
+          0,
+          7
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "m/s",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.impact-to-master",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.impactStrength",
+        "targetPort": "Synth.Mix.A.master",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.18,
+          0.83
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.roughness-to-drive",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.roughness",
+        "targetPort": "Synth.Mix.A.drive",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.05,
+          0.48
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.kick.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.impulseGate",
+        "targetPort": "Synth.Kick.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.kick.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.strikePosition",
+        "targetPort": "Synth.Kick.A.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.kick.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.tension",
+        "targetPort": "Synth.Kick.A.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.kick.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.persistence",
+        "targetPort": "Synth.Kick.A.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.snare.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.impulseGate",
+        "targetPort": "Synth.Snare.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.snare.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.strikePosition",
+        "targetPort": "Synth.Snare.A.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.snare.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.tension",
+        "targetPort": "Synth.Snare.A.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.snare.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.persistence",
+        "targetPort": "Synth.Snare.A.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.metal.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.impulseGate",
+        "targetPort": "Synth.Metal.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.metal.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.strikePosition",
+        "targetPort": "Synth.Metal.A.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.metal.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.tension",
+        "targetPort": "Synth.Metal.A.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.metal.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.persistence",
+        "targetPort": "Synth.Metal.A.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.bass.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.impulseGate",
+        "targetPort": "Synth.Bass.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.bass.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.strikePosition",
+        "targetPort": "Synth.Bass.A.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.bass.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.tension",
+        "targetPort": "Synth.Bass.A.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.bass.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.persistence",
+        "targetPort": "Synth.Bass.A.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.chord.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.impulseGate",
+        "targetPort": "Synth.Chord.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.chord.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.strikePosition",
+        "targetPort": "Synth.Chord.A.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.chord.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.tension",
+        "targetPort": "Synth.Chord.A.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.chord.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.persistence",
+        "targetPort": "Synth.Chord.A.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.air.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.impulseGate",
+        "targetPort": "Synth.Air.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.air.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.strikePosition",
+        "targetPort": "Synth.Air.A.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.air.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.tension",
+        "targetPort": "Synth.Air.A.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.a.air.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.A.01.persistence",
+        "targetPort": "Synth.Air.A.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.speed-to-excitation",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ball.B.01.normalVelocity",
+        "targetPort": "Plank.B.01.excitation",
+        "sourceDomain": [
+          0,
+          7
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "m/s",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.impact-to-master",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.impactStrength",
+        "targetPort": "Synth.Mix.B.master",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.18,
+          0.83
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.roughness-to-drive",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.roughness",
+        "targetPort": "Synth.Mix.B.drive",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.05,
+          0.48
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.kick.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.impulseGate",
+        "targetPort": "Synth.Kick.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.kick.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.strikePosition",
+        "targetPort": "Synth.Kick.B.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.kick.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.tension",
+        "targetPort": "Synth.Kick.B.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.kick.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.persistence",
+        "targetPort": "Synth.Kick.B.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.snare.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.impulseGate",
+        "targetPort": "Synth.Snare.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.snare.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.strikePosition",
+        "targetPort": "Synth.Snare.B.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.snare.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.tension",
+        "targetPort": "Synth.Snare.B.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.snare.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.persistence",
+        "targetPort": "Synth.Snare.B.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.metal.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.impulseGate",
+        "targetPort": "Synth.Metal.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.metal.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.strikePosition",
+        "targetPort": "Synth.Metal.B.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.metal.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.tension",
+        "targetPort": "Synth.Metal.B.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.metal.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.persistence",
+        "targetPort": "Synth.Metal.B.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.bass.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.impulseGate",
+        "targetPort": "Synth.Bass.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.bass.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.strikePosition",
+        "targetPort": "Synth.Bass.B.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.bass.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.tension",
+        "targetPort": "Synth.Bass.B.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.bass.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.persistence",
+        "targetPort": "Synth.Bass.B.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.chord.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.impulseGate",
+        "targetPort": "Synth.Chord.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.chord.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.strikePosition",
+        "targetPort": "Synth.Chord.B.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.chord.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.tension",
+        "targetPort": "Synth.Chord.B.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.chord.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.persistence",
+        "targetPort": "Synth.Chord.B.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.air.gate",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.impulseGate",
+        "targetPort": "Synth.Air.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.air.strikePosition",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.strikePosition",
+        "targetPort": "Synth.Air.B.tone",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.16,
+          0.9
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.air.tension",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.tension",
+        "targetPort": "Synth.Air.B.pitch",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.14,
+          0.82
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.b.air.persistence",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Plank.B.01.persistence",
+        "targetPort": "Synth.Air.B.release",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0.04,
+          0.85
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "timing": "physics-clock-correlated-to-browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      }
+    ],
+    "soundFlow": "gesture -> actual canonical physics Ball/Plank collision -> finite EXCITES/MAPS_TO relations -> existing ADSR Csound A/B voices -> existing 190/290 patch mixers -> existing instr 900 crossfade -> Ear.Synth.01 real output observation",
+    "mixing": {
+      "kind": "equal-power-crossfade",
+      "owner": "Synth.Crossfade.01",
+      "control": "crossfade",
+      "law": "A=cos(x*pi/2), B=sin(x*pi/2)",
+      "minimumSmoothingMilliseconds": 70,
+      "additionalWebAudioOscillators": false
+    },
+    "earFeedback": {
+      "source": "Ear.Synth.01.rms",
+      "targets": [
+        "Synth.Bass.A.ear_follow",
+        "Synth.Bass.B.ear_follow"
+      ],
+      "type": "bounded analysis-to-control",
+      "rawPCMRecirculation": false,
+      "independentDepths": true
+    },
+    "mutateAll": {
+      "mode": "physical-sounding-scene plus synthesizer",
+      "affectedFields": [
+        "level",
+        "attack",
+        "decay",
+        "sustain",
+        "release",
+        "pitch",
+        "tone",
+        "cutoff",
+        "drive",
+        "delay",
+        "master",
+        "earDepth"
+      ],
+      "excluded": [
+        "gate",
+        "collision event",
+        "physics history",
+        "identity",
+        "routing",
+        "camera as sound controller"
+      ],
+      "durationsSeconds": [
+        2,
+        4,
+        8,
+        16
+      ],
+      "physicalProperties": [
+        "tension",
+        "persistence",
+        "roughness",
+        "restitution"
+      ]
+    },
+    "events": [
+      {
+        "id": "collision.a",
+        "name": "collision",
+        "participants": [
+          "Ball.A.01",
+          "Plank.A.01"
+        ],
+        "owner": "TeatroStageEngine physics",
+        "normalSpeedMetersPerSecond": [
+          0,
+          7
+        ],
+        "minimumSpeedMetersPerSecond": 0.08,
+        "refractoryMilliseconds": 85,
+        "requiresApproachingContact": true,
+        "requiresClockCorrelation": true,
+        "fromCameraOrbit": false
+      },
+      {
+        "id": "collision.b",
+        "name": "collision",
+        "participants": [
+          "Ball.B.01",
+          "Plank.B.01"
+        ],
+        "owner": "TeatroStageEngine physics",
+        "normalSpeedMetersPerSecond": [
+          0,
+          7
+        ],
+        "minimumSpeedMetersPerSecond": 0.08,
+        "refractoryMilliseconds": 85,
+        "requiresApproachingContact": true,
+        "requiresClockCorrelation": true,
+        "fromCameraOrbit": false
+      }
+    ],
+    "stageProjection": {
+      "owner": "Fountain-Coach/TeatroStageEngine",
+      "canonicalEntities": [
+        "Ball.A.01",
+        "Plank.A.01",
+        "Ball.B.01",
+        "Plank.B.01"
+      ],
+      "noPuppet": true,
+      "orbitViewOnly": true,
+      "contactMarksRequirePhysicsWitness": true,
+      "earRMSLightRequiresActualMeasuredRMS": true,
+      "notYetLiveBound": true
+    }
+  },
+  "CONSTRAINTS": {
+    "requiresAdmissionBeforeGovernedEffects": true,
+    "nativeScenarioAdmissionAvailable": false,
+    "browserRehearsalOnly": true,
+    "publicPublicationAuthorized": false,
+    "noSequencerClock": true,
+    "noStepGrid": true,
+    "noScheduledNoteEvents": true,
+    "noMidiEventDependency": true,
+    "userGestureStartsAudio": true,
+    "noUncontrolledFeedback": true,
+    "noRawPCMRecirculation": true,
+    "mutationScope": "bounded continuous Csound timbre controls; never human gesture gate or routing",
+    "presetPersistence": "four browser-local slots; no server upload",
+    "stopBoundary": "release every Csound gate; mute and close audio; stop Ear measurements",
+    "twoIndependentSoundGraphs": true,
+    "oneCsoundAudioWorklet": true,
+    "storyEditionMutationAuthorized": false,
+    "physicsOwnedContactRequired": true,
+    "actualCollisionRequiredForSound": true,
+    "cameraOrbitSilent": true,
+    "physicalTiltDistinctFromOrbit": true,
+    "autoplayForbidden": true,
+    "perBallContactRefractoryMilliseconds": 85,
+    "gateOnMilliseconds": 60,
+    "noMidi1Fallback": true,
+    "midi2HardwareInteropNotClaimed": true,
+    "collisionClockCorrelationRequired": true
+  },
+  "EXPECT": {
+    "primaryView": "rotating 3D Teatro stage containing two playable balls and sounding planks, no default puppet and no sequencer",
+    "initiallySilent": true,
+    "interactiveCause": "ball drop, throw or plank tilt produces an actual physics collision, then distinct existing Csound ADSR sound",
+    "physicsToSound": "impact speed drives excitation; strike position shifts tone; tension maps to pitch; persistence maps to release",
+    "patchCoexistence": "two independently mutable 6-voice synth patches A and B, each with its own ball/plank scene",
+    "clone": "copy static physical world and preset/timbre without duplicating live impact state",
+    "mutate": "bounded 2/4/8/16-second soft mutation of sounding body and Csound timbre",
+    "crossfade": "existing Csound instr 900 equal-power PCM mix",
+    "ear": "real post-crossfade Ear RMS and existing bounded Ear feedback",
+    "stop": "reliable silent closed AudioContext",
+    "story": "future book inserts reference this same semantic scene, never an independent score interpreter"
+  },
+  "VERIFY": {
+    "requiredEvidence": [
+      "exact-schema-candidate-check",
+      "canonical-physics-collision-identity-and-timestamp",
+      "plank-contact-position-and-normal-velocity",
+      "camera-orbit-produces-no-audio",
+      "physical-tilt-affects-contact",
+      "distinct-Csynth-ADSR-audio-A-and-B",
+      "bounded-scene-mutate-and-complete-static-clone",
+      "Csound-900-crossfade",
+      "actual-Ear-crossfade-RMS",
+      "no-sequencer",
+      "real-iPad-gesture-proof-when-claimed",
+      "writer-Stop-and-terminal-silence",
+      "native-Scenario-admission-and-FountainStore-receipts-when-claimed"
+    ],
+    "unimplementedBindings": [
+      "physics owned collision and plank body in current stage host",
+      "timestamped physics-to-Csynth gate and parameter adapter",
+      "A/B physical scene presets, clone and morph in original synth runtime",
+      "native Scenario admission and FountainStore execution receipt",
+      "physical iPad witness of new impulse stage"
+    ],
+    "sourceStatus": "candidate-only: original browser ADSR synth source is real, but ball/plank collisions are not yet bound to it",
+    "noPresentationOnlyAcceptance": true
+  }
+}
