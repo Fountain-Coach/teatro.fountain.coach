@@ -1,0 +1,2311 @@
+{
+  "kind": "CsoundTeatroScenario",
+  "scenarioID": "teatro.sound-first-adsr-synth.rehearsal.01",
+  "grammarVersion": "0.1",
+  "schemaVersion": "0.1",
+  "status": "candidate-unadmitted",
+  "mode": "browser-rehearsal",
+  "sourceAuthority": "Fountain-Coach/Reframe-Refactoring/docs/151-csound-teatro-speaking-sound-in-space.md",
+  "GIVEN": {
+    "engine": "one @csound/browser AudioWorklet with two independent oscillator-and-envelope graph instances",
+    "sourceOwner": "Fountain-Coach/midi2-gpu-fabric",
+    "sourceCommit": "83d9fc27a8f4cba8a5c2aa63cca81f53d9d19573",
+    "stageRoute": "/teatro/experiments/classic-techno-deck/",
+    "intent": "make sound first; play six synth voices by human gestures, whose gates excite Csound ADSR envelopes; no sequence, MIDI event or music timeline",
+    "entities": [
+      {
+        "id": "Performer.Gesture.01",
+        "kind": "BODY",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "gesture/touch/key controlled gate state; not MIDI, not an FCIS instrument"
+      },
+      {
+        "id": "Ear.Synth.01",
+        "kind": "EAR",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "real Ear AudioWorklet RMS of crossfaded Csound output"
+      },
+      {
+        "id": "Synth.Mix.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 190",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Kick.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 101 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Snare.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 102 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Metal.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 103 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Bass.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 104 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Chord.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 105 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Air.A",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 106 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Mix.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 290",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Kick.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 201 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Snare.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 202 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Metal.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 203 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Bass.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 204 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Chord.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 205 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Air.B",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 206 / continuous ADSR-gated oscillator or noise voice",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Synth.Crossfade.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 900 stereo equal-power crossfade cos/sin"
+      }
+    ],
+    "ports": [
+      {
+        "id": "Synth.Mix.A.audio",
+        "owner": "Synth.Mix.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.A.audio",
+        "owner": "Synth.Kick.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.A.gate",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.level",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.attack",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.decay",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.sustain",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.release",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.pitch",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_kick_a)"
+      },
+      {
+        "id": "Synth.Kick.A.tone",
+        "owner": "Synth.Kick.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_kick_a)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_kick_a",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Snare.A.audio",
+        "owner": "Synth.Snare.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Snare.A.gate",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.level",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.attack",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.decay",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.sustain",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.release",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.pitch",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_snare_a)"
+      },
+      {
+        "id": "Synth.Snare.A.tone",
+        "owner": "Synth.Snare.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_snare_a)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_snare_a",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Metal.A.audio",
+        "owner": "Synth.Metal.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Metal.A.gate",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.level",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.attack",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.decay",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.sustain",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.release",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.pitch",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_metal_a)"
+      },
+      {
+        "id": "Synth.Metal.A.tone",
+        "owner": "Synth.Metal.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_metal_a)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_metal_a",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Bass.A.audio",
+        "owner": "Synth.Bass.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Bass.A.gate",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.level",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.attack",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.decay",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.sustain",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.release",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.pitch",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_bass_a)"
+      },
+      {
+        "id": "Synth.Bass.A.tone",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_bass_a)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_bass_a",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Chord.A.audio",
+        "owner": "Synth.Chord.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Chord.A.gate",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.level",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.attack",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.decay",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.sustain",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.release",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.pitch",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_chord_a)"
+      },
+      {
+        "id": "Synth.Chord.A.tone",
+        "owner": "Synth.Chord.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_chord_a)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_chord_a",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Air.A.audio",
+        "owner": "Synth.Air.A",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Air.A.gate",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.level",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.attack",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.decay",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.sustain",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.release",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.pitch",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_air_a)"
+      },
+      {
+        "id": "Synth.Air.A.tone",
+        "owner": "Synth.Air.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_air_a)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_air_a",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Mix.B.audio",
+        "owner": "Synth.Mix.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.B.audio",
+        "owner": "Synth.Kick.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Kick.B.gate",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.level",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.attack",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.decay",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.sustain",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.release",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.pitch",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_kick_b)"
+      },
+      {
+        "id": "Synth.Kick.B.tone",
+        "owner": "Synth.Kick.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_kick_b)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_kick_b",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Snare.B.audio",
+        "owner": "Synth.Snare.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Snare.B.gate",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.level",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.attack",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.decay",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.sustain",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.release",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.pitch",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_snare_b)"
+      },
+      {
+        "id": "Synth.Snare.B.tone",
+        "owner": "Synth.Snare.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_snare_b)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_snare_b",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Metal.B.audio",
+        "owner": "Synth.Metal.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Metal.B.gate",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.level",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.attack",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.decay",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.sustain",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.release",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.pitch",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_metal_b)"
+      },
+      {
+        "id": "Synth.Metal.B.tone",
+        "owner": "Synth.Metal.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_metal_b)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_metal_b",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Bass.B.audio",
+        "owner": "Synth.Bass.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Bass.B.gate",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.level",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.attack",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.decay",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.sustain",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.release",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.pitch",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_bass_b)"
+      },
+      {
+        "id": "Synth.Bass.B.tone",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_bass_b)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_bass_b",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Chord.B.audio",
+        "owner": "Synth.Chord.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Chord.B.gate",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.level",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.attack",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.decay",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.sustain",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.release",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.pitch",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_chord_b)"
+      },
+      {
+        "id": "Synth.Chord.B.tone",
+        "owner": "Synth.Chord.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_chord_b)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_chord_b",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Air.B.audio",
+        "owner": "Synth.Air.B",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Air.B.gate",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(gate_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.level",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(level_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.attack",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(attack_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.decay",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(decay_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.sustain",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(sustain_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.release",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(release_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.pitch",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(pitch_air_b)"
+      },
+      {
+        "id": "Synth.Air.B.tone",
+        "owner": "Synth.Air.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(tone_air_b)"
+      },
+      {
+        "id": "Performer.Gesture.01.gate_air_b",
+        "owner": "Performer.Gesture.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "pointer/keyboard/hold state"
+      },
+      {
+        "id": "Synth.Crossfade.01.a",
+        "owner": "Synth.Crossfade.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Crossfade.01.b",
+        "owner": "Synth.Crossfade.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Crossfade.01.audio",
+        "owner": "Synth.Crossfade.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Synth.Crossfade.01.position",
+        "owner": "Synth.Crossfade.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(crossfade)"
+      },
+      {
+        "id": "Ear.Synth.01.audio",
+        "owner": "Ear.Synth.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Ear.Synth.01.rms",
+        "owner": "Ear.Synth.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized-linear-rms",
+        "domain": [
+          0.001,
+          0.12
+        ]
+      },
+      {
+        "id": "Synth.Bass.A.ear_follow",
+        "owner": "Synth.Bass.A",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_follow_a)"
+      },
+      {
+        "id": "Synth.Bass.B.ear_follow",
+        "owner": "Synth.Bass.B",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_follow_b)"
+      }
+    ],
+    "excitation": {
+      "source": "physical pointer/touch/keyboard 1-6/HOLD control",
+      "sourceRole": "human gesture, not a MIDI event or a metronome",
+      "channelScope": "one gate per one of six synths per independently editable patch",
+      "controlValues": [
+        0,
+        1
+      ],
+      "noAutoplay": true,
+      "noTempoClock": true
+    },
+    "synthesis": {
+      "voiceNames": [
+        "kick",
+        "snare",
+        "metal",
+        "bass",
+        "chord",
+        "air"
+      ],
+      "envelopeStages": [
+        "attack",
+        "decay",
+        "sustain",
+        "release"
+      ],
+      "envelopeOwner": "Csound instruments 101-106 and 201-206, k-rate four-stage ADSR gate state machine",
+      "oscillatorFamilies": [
+        "pitch-dropping sine",
+        "filtered noise plus tone",
+        "metallic high-pass noise and ring",
+        "sawtooth sub-bass",
+        "three-oscillator minor chord",
+        "resonant air noise and sine"
+      ],
+      "soundControlsPerVoice": [
+        "level",
+        "attack",
+        "decay",
+        "sustain",
+        "release",
+        "pitch",
+        "tone"
+      ]
+    },
+    "performance": {
+      "patchA": {
+        "soundVoices": "Csound 101-106",
+        "mixer": "Csound 190",
+        "controlsSuffix": "_a"
+      },
+      "patchB": {
+        "soundVoices": "Csound 201-206",
+        "mixer": "Csound 290",
+        "controlsSuffix": "_b"
+      },
+      "crossfader": "Csound instr 900; 0..1 equal power; 70ms smoothing",
+      "mutation": "bounded seven continuous sound controls on each of six voices + five FX controls; 2/4/8/16-second smoothstep; does not mutate gate state",
+      "presets": {
+        "factory": 8,
+        "localUserSlots": 4,
+        "scope": "browser localStorage only",
+        "recallMilliseconds": 1800
+      },
+      "clone": "deep copy selected patch timbres and currently held excitation, independence thereafter"
+    }
+  },
+  "TRANSFORM": {
+    "relations": [
+      {
+        "id": "rel.gesture-excites-kick-a",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Kick.A",
+        "fromPort": "Performer.Gesture.01.gate_kick_a",
+        "toPort": "Synth.Kick.A.gate"
+      },
+      {
+        "id": "rel.kick-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Kick.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Kick.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.gesture-excites-snare-a",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Snare.A",
+        "fromPort": "Performer.Gesture.01.gate_snare_a",
+        "toPort": "Synth.Snare.A.gate"
+      },
+      {
+        "id": "rel.snare-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Snare.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Snare.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.gesture-excites-metal-a",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Metal.A",
+        "fromPort": "Performer.Gesture.01.gate_metal_a",
+        "toPort": "Synth.Metal.A.gate"
+      },
+      {
+        "id": "rel.metal-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Metal.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Metal.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.gesture-excites-bass-a",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Bass.A",
+        "fromPort": "Performer.Gesture.01.gate_bass_a",
+        "toPort": "Synth.Bass.A.gate"
+      },
+      {
+        "id": "rel.bass-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Bass.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Bass.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.gesture-excites-chord-a",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Chord.A",
+        "fromPort": "Performer.Gesture.01.gate_chord_a",
+        "toPort": "Synth.Chord.A.gate"
+      },
+      {
+        "id": "rel.chord-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Chord.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Chord.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.gesture-excites-air-a",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Air.A",
+        "fromPort": "Performer.Gesture.01.gate_air_a",
+        "toPort": "Synth.Air.A.gate"
+      },
+      {
+        "id": "rel.air-a-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Air.A",
+        "object": "Synth.Mix.A",
+        "fromPort": "Synth.Air.A.audio",
+        "toPort": "Synth.Mix.A.audio"
+      },
+      {
+        "id": "rel.mix-a-to-xfade",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Mix.A",
+        "object": "Synth.Crossfade.01",
+        "fromPort": "Synth.Mix.A.audio",
+        "toPort": "Synth.Crossfade.01.a"
+      },
+      {
+        "id": "rel.gesture-excites-kick-b",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Kick.B",
+        "fromPort": "Performer.Gesture.01.gate_kick_b",
+        "toPort": "Synth.Kick.B.gate"
+      },
+      {
+        "id": "rel.kick-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Kick.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Kick.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.gesture-excites-snare-b",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Snare.B",
+        "fromPort": "Performer.Gesture.01.gate_snare_b",
+        "toPort": "Synth.Snare.B.gate"
+      },
+      {
+        "id": "rel.snare-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Snare.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Snare.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.gesture-excites-metal-b",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Metal.B",
+        "fromPort": "Performer.Gesture.01.gate_metal_b",
+        "toPort": "Synth.Metal.B.gate"
+      },
+      {
+        "id": "rel.metal-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Metal.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Metal.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.gesture-excites-bass-b",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Bass.B",
+        "fromPort": "Performer.Gesture.01.gate_bass_b",
+        "toPort": "Synth.Bass.B.gate"
+      },
+      {
+        "id": "rel.bass-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Bass.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Bass.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.gesture-excites-chord-b",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Chord.B",
+        "fromPort": "Performer.Gesture.01.gate_chord_b",
+        "toPort": "Synth.Chord.B.gate"
+      },
+      {
+        "id": "rel.chord-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Chord.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Chord.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.gesture-excites-air-b",
+        "predicate": "EXCITES",
+        "subject": "Performer.Gesture.01",
+        "object": "Synth.Air.B",
+        "fromPort": "Performer.Gesture.01.gate_air_b",
+        "toPort": "Synth.Air.B.gate"
+      },
+      {
+        "id": "rel.air-b-produces-mix",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Air.B",
+        "object": "Synth.Mix.B",
+        "fromPort": "Synth.Air.B.audio",
+        "toPort": "Synth.Mix.B.audio"
+      },
+      {
+        "id": "rel.mix-b-to-xfade",
+        "predicate": "PRODUCES",
+        "subject": "Synth.Mix.B",
+        "object": "Synth.Crossfade.01",
+        "fromPort": "Synth.Mix.B.audio",
+        "toPort": "Synth.Crossfade.01.b"
+      },
+      {
+        "id": "rel.ear-listens-to-real-output",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Synth.01",
+        "object": "Synth.Crossfade.01",
+        "fromPort": "Synth.Crossfade.01.audio",
+        "toPort": "Ear.Synth.01.audio"
+      },
+      {
+        "id": "rel.ear-modulates-bass-a",
+        "predicate": "MODULATES",
+        "subject": "Ear.Synth.01",
+        "object": "Synth.Bass.A",
+        "fromPort": "Ear.Synth.01.rms",
+        "toPort": "Synth.Bass.A.ear_follow"
+      },
+      {
+        "id": "rel.ear-modulates-bass-b",
+        "predicate": "MODULATES",
+        "subject": "Ear.Synth.01",
+        "object": "Synth.Bass.B",
+        "fromPort": "Ear.Synth.01.rms",
+        "toPort": "Synth.Bass.B.ear_follow"
+      }
+    ],
+    "mappings": [
+      {
+        "id": "map.gesture-gate-kick-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_kick_a",
+        "targetPort": "Synth.Kick.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-snare-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_snare_a",
+        "targetPort": "Synth.Snare.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-metal-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_metal_a",
+        "targetPort": "Synth.Metal.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-bass-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_bass_a",
+        "targetPort": "Synth.Bass.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-chord-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_chord_a",
+        "targetPort": "Synth.Chord.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-air-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_air_a",
+        "targetPort": "Synth.Air.A.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-kick-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_kick_b",
+        "targetPort": "Synth.Kick.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-snare-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_snare_b",
+        "targetPort": "Synth.Snare.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-metal-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_metal_b",
+        "targetPort": "Synth.Metal.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-bass-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_bass_b",
+        "targetPort": "Synth.Bass.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-chord-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_chord_b",
+        "targetPort": "Synth.Chord.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.gesture-gate-air-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Performer.Gesture.01.gate_air_b",
+        "targetPort": "Synth.Air.B.gate",
+        "sourceDomain": [
+          0,
+          1
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "none",
+        "updateMode": "event",
+        "timing": "browser-audio-clock",
+        "minimumIntervalMilliseconds": 0
+      },
+      {
+        "id": "map.ear-rms-to-bass-a",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Synth.01.rms",
+        "targetPort": "Synth.Bass.A.ear_follow",
+        "sourceDomain": [
+          0.001,
+          0.12
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 90
+      },
+      {
+        "id": "map.ear-rms-to-bass-b",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Synth.01.rms",
+        "targetPort": "Synth.Bass.B.ear_follow",
+        "sourceDomain": [
+          0.001,
+          0.12
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 90
+      }
+    ],
+    "soundFlow": "human gesture -> per-synth gate -> explicit Csound ADSR stage -> oscillator/noise -> independent Csound patch mixer -> equal-power stereo crossfade -> Ear PCM observation",
+    "mixing": {
+      "kind": "equal-power-crossfade",
+      "owner": "Synth.Crossfade.01",
+      "control": "crossfade",
+      "law": "A=cos(x*pi/2), B=sin(x*pi/2)",
+      "minimumSmoothingMilliseconds": 70,
+      "additionalWebAudioOscillators": false
+    },
+    "earFeedback": {
+      "source": "Ear.Synth.01.rms",
+      "targets": [
+        "Synth.Bass.A.ear_follow",
+        "Synth.Bass.B.ear_follow"
+      ],
+      "type": "bounded analysis-to-control",
+      "rawPCMRecirculation": false,
+      "independentDepths": true
+    },
+    "mutateAll": {
+      "mode": "sound-parameter morph",
+      "affectedFields": [
+        "level",
+        "attack",
+        "decay",
+        "sustain",
+        "release",
+        "pitch",
+        "tone",
+        "cutoff",
+        "drive",
+        "delay",
+        "master",
+        "earDepth"
+      ],
+      "excluded": [
+        "gate",
+        "port routing",
+        "instrument identities",
+        "midi2"
+      ],
+      "durationsSeconds": [
+        2,
+        4,
+        8,
+        16
+      ]
+    }
+  },
+  "CONSTRAINTS": {
+    "requiresAdmissionBeforeGovernedEffects": true,
+    "nativeScenarioAdmissionAvailable": false,
+    "browserRehearsalOnly": true,
+    "publicPublicationAuthorized": false,
+    "noSequencerClock": true,
+    "noStepGrid": true,
+    "noScheduledNoteEvents": true,
+    "noMidiEventDependency": true,
+    "userGestureStartsAudio": true,
+    "noUncontrolledFeedback": true,
+    "noRawPCMRecirculation": true,
+    "mutationScope": "bounded continuous Csound timbre controls; never human gesture gate or routing",
+    "presetPersistence": "four browser-local slots; no server upload",
+    "stopBoundary": "mute output and close browser AudioContext; all held gate states cleared",
+    "twoIndependentSoundGraphs": true,
+    "oneCsoundAudioWorklet": true
+  },
+  "EXPECT": {
+    "primaryView": "sound-first Csound synthesizer performance deck, no puppet and no sequence",
+    "silenceBeforeExcitation": true,
+    "manualVoiceExcitation": "all six voice outputs individually audible by gate and shaped by attack-decay-sustain-release",
+    "soundMutation": "oscillator, timbre, pitch and ADSR parameters glide while held notes sound",
+    "presetBank": "eight factory timbres and four local user patches",
+    "patchClone": "A and B independent after copying current timbre and excitement",
+    "crossfade": "actual Csound stereo equal-power blend of two patch graphs",
+    "ear": "real observation of crossfaded Csound PCM and bounded bass filter feedback",
+    "stop": "all voices silent; audio context closed"
+  },
+  "VERIFY": {
+    "requiredEvidence": [
+      "native-scenario-admission-if-governed-execution-claimed",
+      "native-Csound-6-18-syntax-plus-zero-runtime-init-errors",
+      "six-independent-Csounding-voice-WAV-RMS-witnesses",
+      "explicit-no-metro-or-sequence-runtime-contract",
+      "browser-silent-before-gesture",
+      "keyboard-and-pointer-excitation-producing-real-Ear-RMS",
+      "ADSR-release-decreasing-measured-audio",
+      "soft-mutate-all-affecting-ADSR-without-changing-gates",
+      "preset-bank-save-recall-across-reload",
+      "clone-preserves-sound-state-but-not-shared-mutation",
+      "true-Csounding-audio-crossfade-and-muted-patch-silence",
+      "stop-closes-AudioContext-and-returns-Ear-to-zero",
+      "owner-WLAN-HTTPS-stage-source-digest-readback"
+    ],
+    "unmetBoundary": "native Scenario admission + FountainStore lifecycle proof not available in this browser rehearsal",
+    "noPresentationOnlyAcceptance": true
+  }
+}
