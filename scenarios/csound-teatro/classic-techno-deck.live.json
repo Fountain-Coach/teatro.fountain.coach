@@ -1,0 +1,269 @@
+{
+  "kind": "CsoundTeatroScenario",
+  "scenarioID": "teatro.classic-techno-deck.rehearsal.01",
+  "grammarVersion": "0.1",
+  "schemaVersion": "0.1",
+  "status": "candidate-unadmitted",
+  "mode": "browser-rehearsal",
+  "sourceAuthority": "Fountain-Coach/Reframe-Refactoring/docs/151-csound-teatro-speaking-sound-in-space.md",
+  "GIVEN": {
+    "tempoBPM": 130,
+    "meter": [
+      4,
+      4
+    ],
+    "tonality": "C minor",
+    "cycleSteps": 16,
+    "engine": "@csound/browser AudioWorklet; Csound is not an FCIS instrument",
+    "entities": [
+      {
+        "id": "Techno.Kick.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 2",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Clap.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 3",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Hat.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 4",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.OpenHat.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 5",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Bass.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 6",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Stab.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 7",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Mix.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 99",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Ear.Techno.01",
+        "kind": "EAR",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "ear-analysis AudioWorklet",
+        "runtime": "Web Audio"
+      }
+    ],
+    "ports": [
+      {
+        "id": "Techno.Mix.01.audio",
+        "owner": "Techno.Mix.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Ear.Techno.01.audio",
+        "owner": "Ear.Techno.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz"
+      },
+      {
+        "id": "Ear.Techno.01.rms",
+        "owner": "Ear.Techno.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized-linear-rms",
+        "domain": [
+          0.001,
+          0.12
+        ]
+      },
+      {
+        "id": "Techno.Bass.01.cutoff",
+        "owner": "Techno.Bass.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(cutoff)"
+      },
+      {
+        "id": "Techno.Bass.01.ear_follow",
+        "owner": "Techno.Bass.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_follow)"
+      },
+      {
+        "id": "Techno.Bass.01.ear_depth",
+        "owner": "Techno.Bass.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_depth)"
+      }
+    ]
+  },
+  "TRANSFORM": {
+    "relations": [
+      {
+        "id": "rel.kick-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Kick.01",
+        "object": "Techno.Mix.01"
+      },
+      {
+        "id": "rel.clap-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Clap.01",
+        "object": "Techno.Mix.01"
+      },
+      {
+        "id": "rel.hat-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Hat.01",
+        "object": "Techno.Mix.01"
+      },
+      {
+        "id": "rel.open-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.OpenHat.01",
+        "object": "Techno.Mix.01"
+      },
+      {
+        "id": "rel.bass-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Bass.01",
+        "object": "Techno.Mix.01"
+      },
+      {
+        "id": "rel.stab-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Stab.01",
+        "object": "Techno.Mix.01"
+      },
+      {
+        "id": "rel.ear-listens-to-output",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Techno.01",
+        "object": "Techno.Mix.01",
+        "fromPort": "Techno.Mix.01.audio",
+        "toPort": "Ear.Techno.01.audio"
+      },
+      {
+        "id": "rel.ear-modulates-bass",
+        "predicate": "MODULATES",
+        "subject": "Ear.Techno.01",
+        "object": "Techno.Bass.01",
+        "fromPort": "Ear.Techno.01.rms",
+        "toPort": "Techno.Bass.01.ear_follow"
+      }
+    ],
+    "mappings": [
+      {
+        "id": "map.ear-rms-to-bass-filter-follow",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Techno.01.rms",
+        "targetPort": "Techno.Bass.01.ear_follow",
+        "sourceDomain": [
+          0.001,
+          0.12
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 90
+      }
+    ]
+  },
+  "CONSTRAINTS": {
+    "mutationScope": [
+      "Techno.Mix.01",
+      "Techno.Kick.01",
+      "Techno.Clap.01",
+      "Techno.Hat.01",
+      "Techno.OpenHat.01",
+      "Techno.Bass.01",
+      "Techno.Stab.01"
+    ],
+    "requiresAdmissionBeforeEffects": true,
+    "nativeAdmissionAvailable": false,
+    "browserRehearsalOnly": true,
+    "autoplayForbidden": true,
+    "uncontrolledFeedbackForbidden": true,
+    "publicPublicationAuthorized": false,
+    "termination": "writer-controlled-stop",
+    "feedbackSource": "Ear.Techno.01.rms measured from Csound master output; not estimated by UI",
+    "feedbackType": "bounded signal-analysis-to-control; raw PCM recirculation prohibited",
+    "feedbackDepthControl": "Techno.Bass.01.ear_depth",
+    "maximumBassCutoffOffsetNormalized": 0.38,
+    "feedbackAttackMilliseconds": 160,
+    "feedbackReleaseMilliseconds": 360,
+    "feedbackStaleResetMilliseconds": 700,
+    "feedbackMustZeroAtStop": true,
+    "earWindowRequiredForFeedback": true
+  },
+  "EXPECT": {
+    "rhythm": "four-on-floor kick, clap beats 2 and 4, offbeat hats, C-minor bass and stab",
+    "primaryView": "mixing-deck-no-puppet",
+    "outputObservableBy": "Ear.Techno.01",
+    "audioEngine": "Csound AudioWorklet",
+    "earFeedback": "Actual Ear RMS modulates the bass cutoff through the declared ear_follow control port, with writer-controlled depth and cutoff"
+  },
+  "VERIFY": {
+    "requiredEvidence": [
+      "native-scenario-admission-before-governed-execution",
+      "exact-Csound-compile-and-start",
+      "user-started-browser-audio",
+      "Ear-measured-live-Csound-output",
+      "bounded-stop-and-silent-termination",
+      "Ear-measurement-to-typed-mapping",
+      "bounded-Csound-ear_follow-updates",
+      "audible-or-measured-bass-cutoff-response",
+      "stale-Ear-measurement-fails-to-neutral",
+      "zero-feedback-on-stop"
+    ],
+    "unmetBoundary": "Candidate and browser rehearsal only; native Scenario admission is not provided by the standalone deck",
+    "noPresentationOnlyAcceptance": true
+  }
+}
