@@ -41,6 +41,10 @@ def main():
  assert 'src="./runner.mjs"' in route and (scenario_path.parent/"runner.mjs").is_file()
  assert "does not claim a physical MIDI 2.0 port" in route
  assert "no live discovery or profile negotiation" in route
+ runner_text=(scenario_path.parent/"runner.mjs").read_text()
+ assert "latestOutputEarRms" in runner_text
+ assert "fountain.teatro.scenario-projection.v1" in runner_text
+ assert 'scenarioID: \"teatro.satzfunk-player-ear-wind.01\"' in runner_text
  runtime_entry=next(row for row in manifest["runtimeFiles"] if row["name"]=="satzfunk-player/teatro-scenario-runtime.mjs")
  assert sha((SITE/"assets/linotype/satzfunk-player/teatro-scenario-runtime.mjs").read_bytes())==runtime_entry["sha256"]
  assert manifest["satzfunkPlayerSourceCommit"]=="24024c0348e58491e1fabb37856ded167593fcfb"

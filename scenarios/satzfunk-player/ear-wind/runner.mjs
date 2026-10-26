@@ -28,6 +28,7 @@ let csoundInput = null;
 let updateTimer = null;
 let stopping = false;
 let outputEarWindows = 0;
+let latestOutputEarRms = 0;
 
 function status(value) { statusNode.textContent = value; }
 
@@ -67,7 +68,7 @@ function report() {
       hardwareInteroperability: false,
       midiCi: "envelope codec available; no live discovery or negotiation"
     },
-    csound: { outputEarRmsWindows: outputEarWindows, parameter: "wind_mix" }
+    csound: { outputEarRmsWindows: outputEarWindows, latestOutputEarRms, parameter: "wind_mix" }
   }, null, 2);
 }
 
@@ -134,7 +135,10 @@ async function prepare() {
     start: async () => csoundHost.start(event => {
       if (event?.type === "ear.ump" &&
           event.event?.sourceIdentity === "teatro-csound-ear-worklet" &&
-          Number.isFinite(event.event?.measurement?.rms)) outputEarWindows++;
+          Number.isFinite(event.event?.measurement?.rms)) {
+        outputEarWindows++;
+        latestOutputEarRms = event.event.measurement.rms;
+      }
     }),
     acceptUmp: (...args) => csoundInput.acceptUmp(...args),
     stop: async () => { csoundInput.stop(); await csoundHost.stop(); }
