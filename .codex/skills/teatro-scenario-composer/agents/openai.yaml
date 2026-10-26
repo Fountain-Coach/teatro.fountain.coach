@@ -1,0 +1,15 @@
+interface:
+  display_name: Teatro Scenario Composer
+  short_description: Compose live patches from musical intention
+  default_prompt: Use $teatro-scenario-composer to make a live patch from this musical
+    intention.
+  icon: drama
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
