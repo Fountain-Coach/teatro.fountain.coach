@@ -1834,7 +1834,7 @@
         ]
       },
       {
-        "id": "Plank.A.01.tension",
+        "id": "Plank.A.01.tension.property",
         "owner": "Plank.A.01",
         "valueType": "number",
         "value": 0.31,
@@ -1842,10 +1842,11 @@
         "domain": [
           0,
           1
-        ]
+        ],
+        "note": "physical sounding-body source property; the like-named typed output port is its runtime projection"
       },
       {
-        "id": "Plank.A.01.persistence",
+        "id": "Plank.A.01.persistence.property",
         "owner": "Plank.A.01",
         "valueType": "number",
         "value": 0.68,
@@ -1853,10 +1854,11 @@
         "domain": [
           0,
           1
-        ]
+        ],
+        "note": "physical sounding-body source property; the like-named typed output port is its runtime projection"
       },
       {
-        "id": "Plank.A.01.roughness",
+        "id": "Plank.A.01.roughness.property",
         "owner": "Plank.A.01",
         "valueType": "number",
         "value": 0.44,
@@ -1864,7 +1866,8 @@
         "domain": [
           0,
           1
-        ]
+        ],
+        "note": "physical sounding-body source property; the like-named typed output port is its runtime projection"
       },
       {
         "id": "Plank.A.01.restitution",
@@ -1924,7 +1927,7 @@
         ]
       },
       {
-        "id": "Plank.B.01.tension",
+        "id": "Plank.B.01.tension.property",
         "owner": "Plank.B.01",
         "valueType": "number",
         "value": 0.78,
@@ -1932,10 +1935,11 @@
         "domain": [
           0,
           1
-        ]
+        ],
+        "note": "physical sounding-body source property; the like-named typed output port is its runtime projection"
       },
       {
-        "id": "Plank.B.01.persistence",
+        "id": "Plank.B.01.persistence.property",
         "owner": "Plank.B.01",
         "valueType": "number",
         "value": 0.82,
@@ -1943,10 +1947,11 @@
         "domain": [
           0,
           1
-        ]
+        ],
+        "note": "physical sounding-body source property; the like-named typed output port is its runtime projection"
       },
       {
-        "id": "Plank.B.01.roughness",
+        "id": "Plank.B.01.roughness.property",
         "owner": "Plank.B.01",
         "valueType": "number",
         "value": 0.16,
@@ -1954,7 +1959,8 @@
         "domain": [
           0,
           1
-        ]
+        ],
+        "note": "physical sounding-body source property; the like-named typed output port is its runtime projection"
       },
       {
         "id": "Plank.B.01.restitution",
