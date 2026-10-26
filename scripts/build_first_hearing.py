@@ -23,19 +23,42 @@ SLUG="teatro-an-unfinished-composition"
 BOOK="editions/first-hearing/"
 CANON="https://teatro.fountain.coach/"+BOOK
 SCORE="teatro-score-memory-vector-human-condition.svg"
-SATZFUNK_PLAYER_SHA="376747d96f0df9e0b95f43ab35114a4a8c88f33c"
+SATZFUNK_PLAYER_SHA="24024c0348e58491e1fabb37856ded167593fcfb"
+STAGE_WEB_SHA="a1d2ec578181c3916627834d56d739e582cd7880"
+STAGE_WEB_BUNDLE="index-BYTRORXG.js"
+STAGE_WEB_BUNDLE_SHA256=""
 def sha(data):return hashlib.sha256(data).hexdigest()
 def git_sha(path):return subprocess.check_output(["git","-C",str(path),"rev-parse","HEAD"],text=True).strip()
 def git_dirty(path):
  return bool(subprocess.check_output(
   ["git","-C",str(path),"status","--porcelain","--untracked-files=all"],text=True).strip())
 
-def main(fountain,satzfunk,press,stage_source,satzfunk_player):
+def main(fountain,satzfunk,press,stage_source,satzfunk_player,stage_web_source):
  fountain=fountain.resolve()
  satzfunk=satzfunk.resolve()
  press=press.resolve()
  stage_source=stage_source.resolve()
  satzfunk_player=satzfunk_player.resolve()
+ stage_web_source=stage_web_source.resolve()
+ stage_web_revision=git_sha(stage_web_source)
+ if git_dirty(stage_web_source):
+  raise ValueError("Stage Web source checkout must be clean and committed")
+ if stage_web_revision!=STAGE_WEB_SHA:
+  raise ValueError("Stage Web source revision mismatch: "+stage_web_revision+" expected "+STAGE_WEB_SHA)
+ stage_app=stage_web_source/"apps/teatro-stage-web"
+ subprocess.run(["npm","--prefix",str(stage_app),"run","build"],check=True)
+ stage_dist=stage_app/"dist"
+ stage_html=(stage_dist/"index.html").read_text()
+ stage_asset=re.search(r'src="\./assets/([^" ]+\.js)"',stage_html)
+ if not stage_asset or stage_asset.group(1)!=STAGE_WEB_BUNDLE:
+  raise ValueError("Stage Web production bundle name mismatch")
+ stage_bundle=stage_dist/"assets"/STAGE_WEB_BUNDLE
+ stage_web_bundle_sha=sha(stage_bundle.read_bytes())
+ if STAGE_WEB_BUNDLE_SHA256 and stage_web_bundle_sha!=STAGE_WEB_BUNDLE_SHA256:
+  raise ValueError("Stage Web bundle bytes mismatch: "+stage_web_bundle_sha)
+ (SITE/"assets").mkdir(parents=True,exist_ok=True)
+ for built_asset in (stage_dist/"assets").iterdir():
+  if built_asset.is_file(): shutil.copyfile(built_asset,SITE/"assets"/built_asset.name)
  player_revision=git_sha(satzfunk_player)
  if git_dirty(satzfunk_player):
   raise ValueError("SatzfunkPlayer source checkout must be clean and committed")
@@ -55,7 +78,7 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
  assert document.count('data-book-chapter=')==1
  assert document.count('src="/essays/')==1
  assert 'id="book-viewport"' in document
- assert 'class="edition-rail"' in document
+ assert 'class="book-toolbar"' in document
 
  # Preserve the entire original interactive Csound stage as a nested Stage
  # edition. Never edit the minified renderer or supply fixture sound.
@@ -65,7 +88,8 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
   original=(stage/"index.html").read_text()
  else:
   original=current_stage.read_text()
- assert 'src="/assets/index-CY5_5ULO.js"' in original
+ assert ('src="/assets/index-CY5_5ULO.js"' in original or 'src="/assets/'+STAGE_WEB_BUNDLE+'"' in original)
+ original=original.replace("/assets/index-CY5_5ULO.js","/assets/"+STAGE_WEB_BUNDLE)
  assert 'id="root"' in original
  if 'data-teatro-stage-return' not in original:
   original=original.replace('<main id="main"',
@@ -84,8 +108,8 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
                            'Teatro — An Unfinished Composition · First Hearing')
  document=document.replace('Three complete essays by Benedikt Eickhoff, in the measured Linotype reader.',
                            'Teatro. The original essay opens as a Linotype book; performance and sound follow by invitation.')
- document=document.replace('<body class="book-app" data-edition-id="essays-'+SLUG+'">',
-                           '<body class="book-app" data-edition-id="teatro-first-hearing">')
+ document=re.sub(r'<body class="book-app"[^>]*>',
+                  '<body class="book-app" data-edition-id="teatro-first-hearing">',document,count=1)
  document=document.replace('href="/editions/essays/" aria-label="Back to Essays"',
                            'href="/editions/" aria-label="Teatro editions"')
  document=document.replace('<span>Essays</span></a>','<span>Teatro Editions</span></a>')
@@ -114,7 +138,7 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
                            '<a href="/editions/">Teatro editions →</a>')
  assert document.count('data-book-chapter=')==1
  assert document.count('src="/assets/edition/')==1
- assert document.count('aria-current="page"')==1, "Teatro should be the active rail"
+ assert 'data-edition-id="teatro-first-hearing"' in document, "Teatro book identity must remain explicit"
  assert document.count('data-book-toc-target=')==2
  assert 'href="'+CANON+'"' in document
 
@@ -152,7 +176,9 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
   "index.mjs":satzfunk_player/"src/index.mjs",
   "satzfunk-player.mjs":satzfunk_player/"src/satzfunk-player.mjs",
   "player-media.mjs":satzfunk_player/"src/player-media.mjs",
-  "teatro-scenario-runtime.mjs":satzfunk_player/"src/teatro-scenario-runtime.mjs"
+  "teatro-scenario-runtime.mjs":satzfunk_player/"src/teatro-scenario-runtime.mjs",
+  "midi2-codec.mjs":satzfunk_player/"src/midi2-codec.mjs",
+  "csound-midi2-ump-input.mjs":satzfunk_player/"src/csound-midi2-ump-input.mjs"
  }
  player_dir=output_assets/"satzfunk-player";player_dir.mkdir(parents=True,exist_ok=True)
  player_runtime=[]
@@ -165,11 +191,20 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
   player_runtime.append({"name":"satzfunk-player/"+name,"sha256":digest})
  player_source_digest=sha(json.dumps(
   player_hashes,sort_keys=True,separators=(",",":")).encode())
+ midi2_source=satzfunk_player/"vendor/midi2/midi2.js/dist/index.js"
+ midi2_dir=output_assets/"midi2";midi2_dir.mkdir(parents=True,exist_ok=True)
+ shutil.copyfile(midi2_source,midi2_dir/"index.js")
+ runtime.append({"name":"midi2/index.js","sha256":sha((midi2_dir/"index.js").read_bytes())})
+ midi2_boot=ROOT/"scripts/midi2-bootstrap.mjs"
+ if not midi2_boot.is_file():
+  midi2_boot=output_assets/"midi2-bootstrap.mjs"
+ shutil.copyfile(midi2_boot,output_assets/"midi2-bootstrap.mjs")
+ runtime.append({"name":"midi2-bootstrap.mjs","sha256":sha((output_assets/"midi2-bootstrap.mjs").read_bytes())})
  player_host=ROOT/"scripts/satzfunk-player-host.mjs"
  shutil.copyfile(player_host,output_assets/"satzfunk-player-host.mjs")
  player_runtime.append({"name":"satzfunk-player-host.mjs","sha256":sha(player_host.read_bytes())})
- csound_host=stage_source/'dist-book-csound/book-csound-host.js'
- assert csound_host.stat().st_size>100_000, 'Compile source-owned Csound book host'
+ csound_host=stage_source/'site/assets/book-csound-host.js'
+ assert csound_host.stat().st_size>100_000, 'Use the canonical Teatro-owned Csound book host'
  shutil.copyfile(csound_host,SITE/'assets/book-csound-host.js')
  adapter=satzfunk/"station/satzfunk-book.mjs"
  adapter_css=satzfunk/"station/satzfunk-book.css"
@@ -210,8 +245,8 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
 
  # Compile the fallback in the stage's original source owner; never invent
  # a second puppet in this HTML publisher. Copy exactly its existing build.
- fallback=stage_source/"dist-book-fallback/book-puppet-fallback.js"
- assert fallback.is_file() and fallback.stat().st_size>1000, "Build canonical StageEngine fallback first"
+ fallback=stage_source/"site/assets/book-puppet-fallback.js"
+ assert fallback.is_file() and fallback.stat().st_size>1000, "Use the canonical Teatro-owned Stage fallback"
  shutil.copyfile(fallback,SITE/"assets/book-puppet-fallback.js")
  document=integrate(document,output_assets,press/"runtime/mixed-media.css",manuscript["sourceSHA256"])
  document,score_navigation=admit_score_first(document,manuscript["sourceSHA256"],art.read_bytes())
@@ -227,7 +262,8 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
  scenario=json.loads(scenario_bytes)
  assert scenario["scenarioID"]=="teatro.satzfunk-player-ear-wind.01"
  assert scenario["status"]=="candidate-unadmitted"
- scenario_sha,scenario_route_sha=write_scenario_resource(SITE,scenario,scenario_bytes)
+ scenario_sha,scenario_route_sha=write_scenario_resource(
+  SITE,scenario,scenario_bytes,ROOT/"scenarios/satzfunk-player/ear-wind")
  assert 'href="/scenarios/satzfunk-player/ear-wind/"' in document
 
  # A bookshelf is a Linotype state, not a rival website or another book.
@@ -313,6 +349,12 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
  index.parent.mkdir(parents=True,exist_ok=True)
  index.write_text(shelf)
 
+ # Re-hash mutable generated Linotype files after the book and navigation
+ # integrations have finished modifying their owner-shipped bytes.
+ for row in runtime:
+  row["sha256"]=sha((output_assets/row["name"]).read_bytes())
+ for row in player_runtime:
+  row["sha256"]=sha((output_assets/row["name"]).read_bytes())
  receipt={
   "schema":"teatro.fountain.press.first-hearing.v1",
   "edition":"Teatro — An Unfinished Composition · First Hearing",
@@ -332,14 +374,16 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
   "satzfunkPlayerSourceRepository":"Fountain-Coach/SatzfunkPlayer",
   "satzfunkPlayerSourceCommit":player_revision,
   "satzfunkPlayerSourceSHA256":player_source_digest,
-  "satzfunkPlayerRuntimeState":"owner-runtime-bundled; no edition track admitted",
+  "satzfunkPlayerRuntimeState":"owner-runtime-bundled; stage route requires secure user-activated admission",
   "teatroScenario":{
     "scenarioID":scenario["scenarioID"],"grammarVersion":scenario["grammarVersion"],
     "status":scenario["status"],"route":"/scenarios/satzfunk-player/ear-wind/",
     "resource":"/scenarios/satzfunk-player/ear-wind/scenario.json",
     "resourceSHA256":scenario_sha,"routeHTMLSHA256":scenario_route_sha,
     "runtimeAuthority":"Fountain-Coach/SatzfunkPlayer",
-    "liveAccepted":False,"midi2PlayerOperation":"not-claimed"
+    "liveAccepted":False,
+    "midi2PlayerOperation":"typed-32-bit-UMP-CC74-software-peer; no native hardware connection",
+    "midiCiStatus":"envelope-codec-only; no live discovery or negotiation"
   },
   "fountainPressCommit":git_sha(press),
   "sceneAnchorId":"teatro:unfinished-composition:empty-chair-attention",
@@ -355,6 +399,10 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player):
   "puppetFallbackRuntimeSHA256":sha(fallback.read_bytes()),
   "puppetFallbackSource":"midi2-gpu-fabric/apps/teatro-stage-web/src/embedded/book-puppet-fallback.tsx",
   "puppetFallbackSourceCommit":git_sha(stage_source),
+  "teatroStageWebSourceRepository":"Fountain-Coach/midi2-gpu-fabric",
+  "teatroStageWebSourceCommit":stage_web_revision,
+  "teatroStageWebBundle":"/assets/"+STAGE_WEB_BUNDLE,
+  "teatroStageWebBundleSHA256":stage_web_bundle_sha,
   "satzfunkSourceRepository":"Fountain-Coach/Satzfunk",
   "satzfunkCommit":git_sha(satzfunk),
   "satzfunkAdapterSHA256":sha(adapter.read_bytes()),
@@ -397,5 +445,6 @@ if __name__=="__main__":
  p.add_argument("--press-source",type=Path,required=True)
  p.add_argument("--stage-source",type=Path,required=True)
  p.add_argument("--satzfunk-player-source",type=Path,required=True)
+ p.add_argument("--stage-web-source",type=Path,required=True)
  a=p.parse_args()
- main(a.fountain_source,a.satzfunk_source,a.press_source,a.stage_source,a.satzfunk_player_source)
+ main(a.fountain_source,a.satzfunk_source,a.press_source,a.stage_source,a.satzfunk_player_source,a.stage_web_source)

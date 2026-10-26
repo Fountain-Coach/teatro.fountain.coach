@@ -34,8 +34,8 @@ def admit_score_first(document, source_digest, score_bytes):
     figure = found.group("figure")
     assert figure.count('src="/assets/edition/'+SCORE+'"') == 1
     document = document[:found.start()] + document[found.end():]
-    cover = re.search(r'<section class="book-cover"[^>]*>.*?</section>', document, flags=re.S)
-    if not cover or document.count('class="book-cover"') != 1:
+    cover = re.search(r'<section class="book-cover[^"]*"[^>]*>.*?</section>', document, flags=re.S)
+    if not cover or len(re.findall(r'<section class="book-cover[^"]*"', document)) != 1:
         raise ValueError("Unexpected conventional cover structure")
     document = document[:cover.start()] + document[cover.end():]
     assert 'class="book-cover"' not in document

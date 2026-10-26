@@ -33,6 +33,7 @@ export class SatzfunkPlayerElement extends customElementBase() {
   #tracks = new Map();
   #origin = null;
   #editionPoster = null;
+  #mediaBasePrefix = "/";
   #activeTrack = null;
   #media = null;
   #audioSourceNode = null;
@@ -99,7 +100,7 @@ export class SatzfunkPlayerElement extends customElementBase() {
    * Bind a host-owned edition list. Authorization remains a host assertion;
    * the player enforces same-origin URL shape and refuses unadmitted records.
    */
-  setEdition({ origin, tracks, editionPoster = null, activeTrackID = null } = {}) {
+  setEdition({ origin, tracks, editionPoster = null, mediaBasePrefix = "/", activeTrackID = null } = {}) {
     if (this.#disposed) throw new Error("SatzfunkPlayer is disposed");
     if (typeof origin !== "string" || !Array.isArray(tracks) || tracks.length > MAX_TRACKS ||
         !tracks.every(validTrack) || new Set(tracks.map(t => t.id)).size !== tracks.length) {
@@ -109,8 +110,13 @@ export class SatzfunkPlayerElement extends customElementBase() {
     let parsedOrigin;
     try {
       const parsed = new URL(origin);
-      if (parsed.protocol !== "https:" || parsed.username || parsed.password) {
-        throw new TypeError("HTTPS origin without credentials is required");
+      const loopback = parsed.protocol === "http:" &&
+        (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1" || parsed.hostname === "[::1]");
+      if ((!loopback && parsed.protocol !== "https:") || parsed.username || parsed.password) {
+        throw new TypeError("HTTPS origin or secure loopback without credentials is required");
+      }
+      if (typeof mediaBasePrefix !== "string" || !/^\/(?:[a-z0-9._-]+\/)*$/i.test(mediaBasePrefix) || mediaBasePrefix.includes("..")) {
+        throw new TypeError("A safe same-origin media base prefix is required");
       }
       parsedOrigin = parsed.origin;
     } catch {
@@ -123,6 +129,7 @@ export class SatzfunkPlayerElement extends customElementBase() {
     }
     this.#origin = parsedOrigin;
     this.#editionPoster = editionPoster;
+    this.#mediaBasePrefix = mediaBasePrefix;
     this.#tracks = nextTracks;
     this.#renderOptions();
     if (initial !== null) {
@@ -152,7 +159,7 @@ export class SatzfunkPlayerElement extends customElementBase() {
   select(trackID) {
     const track = this.#tracks.get(trackID);
     if (!track) throw new RangeError("Unknown track identity");
-    const binding = playbackBinding(track, this.#origin, this.#editionPoster);
+    const binding = playbackBinding(track, this.#origin, this.#editionPoster, this.#mediaBasePrefix);
     this.#disposeMedia();
     this.#activeTrack = track;
     this.#renderOptions();
@@ -266,6 +273,7 @@ export class SatzfunkPlayerElement extends customElementBase() {
     this.#tracks.clear();
     this.#origin = null;
     this.#editionPoster = null;
+    this.#mediaBasePrefix = "/";
     this.#activeTrack = null;
     this.#disposed = true;
   }

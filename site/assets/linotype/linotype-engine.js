@@ -390,7 +390,9 @@ class Linotype {
       this.positions.set(traceId,matches[0]);
     }
     this.pages=this.leaves.length;
-    if(this.pages<Math.max(4,Number(this.source.dataset.minLeaves||4)))throw Error("Insufficient typeset leaves");
+    const minLeaves=this.source.dataset.minLeaves===undefined?4:Number(this.source.dataset.minLeaves);
+    if(!Number.isSafeInteger(minLeaves)||minLeaves<1||this.pages<minLeaves)
+      throw Error("Insufficient typeset leaves");
     // Byte-for-byte equivalent text content across every deliberate split.
     // Paragraph boundaries and inline emphasis remain represented in DOM.
     for(const original of this.source.querySelectorAll(".book-chapter-text")){

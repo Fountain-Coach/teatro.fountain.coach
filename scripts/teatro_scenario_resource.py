@@ -21,7 +21,7 @@ Wind.Field.01.audio → Ear.Wind.01.audio</pre><p>The mapping clamps RMS 0–0.2
 """
 
 
-def write_scenario_resource(site, scenario, scenario_bytes=None):
+def write_scenario_resource(site, scenario, scenario_bytes=None, route_source=None):
     site = Path(site)
     scenario_bytes = scenario_bytes or (json.dumps(scenario, indent=2, ensure_ascii=False) + "\n").encode()
     if json.loads(scenario_bytes) != scenario:
@@ -30,5 +30,18 @@ def write_scenario_resource(site, scenario, scenario_bytes=None):
     route_dir = site / "scenarios/satzfunk-player/ear-wind"
     route_dir.mkdir(parents=True, exist_ok=True)
     (route_dir / "scenario.json").write_bytes(scenario_bytes)
-    (route_dir / "index.html").write_text(route)
-    return sha(scenario_bytes), sha(route.encode())
+    if route_source is not None:
+        route_source = Path(route_source)
+        page_source = route_source / "index.html"
+        runner_source = route_source / "runner.mjs"
+        if not page_source.is_file() or not runner_source.is_file():
+            raise ValueError("Executable Scenario route requires source-owned index.html and runner.mjs")
+        page_bytes = page_source.read_bytes()
+        runner_bytes = runner_source.read_bytes()
+        (route_dir / "index.html").write_bytes(page_bytes)
+        (route_dir / "runner.mjs").write_bytes(runner_bytes)
+        route_digest = sha(page_bytes)
+    else:
+        (route_dir / "index.html").write_text(route)
+        route_digest = sha(route.encode())
+    return sha(scenario_bytes), route_digest

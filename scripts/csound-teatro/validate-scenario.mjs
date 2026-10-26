@@ -30,9 +30,136 @@ function normalizedPort(s,id){
 }
 const sortIDs=a=>a.map(x=>x.id).sort();
 
+function validatePlayerScenario(s){
+  requireTrue(s.kind==='CsoundTeatroScenario'&&s.grammarVersion===GRAMMAR&&
+    s.schemaVersion===GRAMMAR,'version mismatch; incompatible grammar requires explicit versioned extension');
+  requireTrue(s.scenarioID==='teatro.satzfunk-player-ear-wind.01'&&
+    s.status==='candidate-unadmitted'&&s.mode==='live-rehearsal',
+    'unrecognized Player Scenario identity or status');
+  for(const key of ['GIVEN','TRANSFORM','CONSTRAINTS','EXPECT','VERIFY'])
+    requireTrue(s[key]&&typeof s[key]==='object'&&!Array.isArray(s[key]),key+' required');
+  const entities=s.GIVEN.entities,ports=s.GIVEN.ports;
+  const relations=s.TRANSFORM.relations,mappings=s.TRANSFORM.mappings;
+  requireTrue(Array.isArray(entities)&&entities.length===4&&unique(entities.map(x=>x.id)),
+    'four unique Player/Ear/Csound entities are required');
+  const byID=new Map(entities.map(x=>[x.id,x]));
+  for(const [id,kind] of [['SatzfunkPlayer.01','INSTRUMENT'],['Ear.Player.01','EAR'],
+    ['Wind.Field.01','FIELD'],['Ear.Wind.01','EAR']])
+    requireTrue(byID.get(id)?.kind===kind,'unrecognized or missing entity '+id);
+  requireTrue(byID.get('SatzfunkPlayer.01').owner==='Fountain-Coach/SatzfunkPlayer'&&
+    byID.get('SatzfunkPlayer.01').capability==='SatzfunkPlayerElement.teatroScenarioRuntime',
+    'Player must retain source ownership');
+  requireTrue(byID.get('Wind.Field.01').runtime==='@csound/browser'&&
+    byID.get('Wind.Field.01').binding==='BookCsoundHost',
+    'Csound must remain the bound FIELD engine');
+  requireTrue(Array.isArray(ports)&&ports.length===8&&unique(ports.map(p=>p.id)),
+    'all eight unique typed Player/Ear/Csound ports are required');
+  for(const port of ports){
+    requireTrue(byID.has(port.owner)&&port.id.startsWith(port.owner+'.'),
+      'invalid port owner '+port.id);
+    requireTrue(['in','out'].includes(port.direction)&&nonBlank(port.unit)&&
+      nonBlank(port.capability),'invalid port declaration '+port.id);
+    if(port.valueType==='number')requireTrue(finiteRange(port.domain),
+      'invalid numeric domain '+port.id);
+  }
+  const expectedPorts={
+    'SatzfunkPlayer.01.audio':['out','audio'],
+    'SatzfunkPlayer.01.midi2.ump':['out','midi2-ump'],
+    'Wind.Field.01.midi2.ump':['in','midi2-ump'],
+    'Ear.Player.01.audio':['in','audio'],
+    'Ear.Player.01.rms':['out','number'],
+    'Wind.Field.01.wind_mix':['in','number'],
+    'Wind.Field.01.audio':['out','audio'],
+    'Ear.Wind.01.audio':['in','audio']};
+  for(const [id,[direction,type]] of Object.entries(expectedPorts)){
+    const port=normalizedPort(s,id);
+    requireTrue(port.direction===direction&&port.valueType===type,
+      'invalid type or direction '+id);
+  }
+  const signatures=[
+    ['LISTENS_TO','Ear.Player.01','SatzfunkPlayer.01','SatzfunkPlayer.01.audio','Ear.Player.01.audio'],
+    ['LISTENS_TO','Ear.Wind.01','Wind.Field.01','Wind.Field.01.audio','Ear.Wind.01.audio'],
+    ['MODULATES','Ear.Player.01','SatzfunkPlayer.01','Ear.Player.01.rms','SatzfunkPlayer.01.midi2.ump'],
+    ['MODULATES','SatzfunkPlayer.01','Wind.Field.01','SatzfunkPlayer.01.midi2.ump','Wind.Field.01.midi2.ump']];
+  requireTrue(Array.isArray(relations)&&relations.length===signatures.length&&
+    unique(relations.map(r=>r.id)),'four explicit Player/Ear/Csound relations are required');
+  for(const [predicate,subject,object,fromPort,toPort] of signatures){
+    requireTrue(relations.some(r=>r.predicate===predicate&&r.subject===subject&&
+      r.object===object&&r.fromPort===fromPort&&r.toPort===toPort),
+      'required relation missing: '+subject+' '+predicate+' '+object);
+    requireTrue(PREDICATES.has(predicate)&&byID.has(subject)&&byID.has(object),
+      'unknown relation predicate or endpoint');
+  }
+  const listen=relations.filter(r=>r.predicate==='LISTENS_TO');
+  for(const r of listen){
+    const from=normalizedPort(s,r.fromPort),to=normalizedPort(s,r.toPort);
+    requireTrue(from.direction==='out'&&to.direction==='in'&&from.valueType===to.valueType,
+      'LISTENS_TO must connect typed sound output to input');
+  }
+  const rms=normalizedPort(s,'Ear.Player.01.rms');
+  const playerUMP=normalizedPort(s,'SatzfunkPlayer.01.midi2.ump');
+  const csoundUMP=normalizedPort(s,'Wind.Field.01.midi2.ump');
+  requireTrue(rms.unit==='normalized-linear-rms'&&finiteRange(rms.domain)&&
+    playerUMP.unit==='UMP MIDI 2.0 Channel Voice'&&csoundUMP.unit===playerUMP.unit,
+    'typed RMS-to-MIDI2 operation path is invalid');
+  requireTrue(Array.isArray(mappings)&&mappings.length===1,'one explicit bounded mapping is required');
+  const mapping=mappings[0],target=normalizedPort(s,'Wind.Field.01.wind_mix');
+  requireTrue(mapping.id==='map.player-rms-to-wind-mix'&&mapping.predicate==='MAPS_TO'&&
+    mapping.sourcePort===rms.id&&mapping.targetPort===target.id&&
+    mapping.sourceUnit===rms.unit&&mapping.targetUnit===target.unit&&
+    JSON.stringify(mapping.sourceDomain)===JSON.stringify(rms.domain)&&
+    JSON.stringify(mapping.targetDomain)===JSON.stringify(target.domain)&&
+    finiteRange(mapping.sourceDomain)&&finiteRange(mapping.targetDomain)&&
+    mapping.transfer==='linear'&&mapping.interpolation==='linear'&&
+    mapping.updateMode==='event'&&mapping.clamp===true&&
+    Number.isInteger(mapping.minimumIntervalMilliseconds)&&
+    mapping.minimumIntervalMilliseconds>=75,
+    'invalid, unbounded or unsupported RMS mapping');
+  const carrier=s.TRANSFORM.midi2,op=carrier?.umpOperation;
+  requireTrue(carrier.authority==='Fountain-Coach/midi2'&&carrier.plane==='local-UMP'&&
+    carrier.status==='software-ump-cc74'&&carrier.ownerLibrary==='@fountain-coach/midi2'&&
+    carrier.ownerPackageVersion==='0.12.8'&&op?.kind==='controlChange'&&
+    op.valueEncoding==='unsigned-32-bit'&&op.group===0&&op.channel===0&&op.controller===74&&
+    carrier.softwarePeer==='in-process; no native MIDI endpoint'&&
+    carrier.hardwareInteroperabilityClaim===false&&
+    carrier.midiCiStatus==='envelope-codec-only; no live CI transaction'&&
+    carrier.midiCiTransportImplemented===false,
+    'MIDI2 must be the pinned typed software UMP CC74 path with no hardware or CI claim');
+  const source=s.GIVEN.source,rules=s.CONSTRAINTS;
+  requireTrue(source.kind==='live-instrument-output'&&source.entityID==='SatzfunkPlayer.01'&&
+    source.portID==='SatzfunkPlayer.01.audio'&&source.recordedFile===null&&source.required===true,
+    'pre-recorded audio cannot satisfy the Player live source');
+  requireTrue(rules.sourceOwnedBySatzfunkPlayer===true&&rules.playerMustUseHostAdmittedEdition===true&&
+    rules.requiresAdmissionBeforeEffects===true&&rules.liveSourceRequired===true&&
+    rules.recordingAsSourceForbidden===true&&rules.csoundEngineNotAnFCISInstrument===true&&
+    rules.patchIsNotAnInstrument===true&&rules.midi1FallbackForbidden===true&&
+    rules.uncontrolledFeedbackForbidden===true&&rules.autoplayForbidden===true&&
+    rules.publicPublicationAuthorized===false&&rules.termination==='writer-controlled-stop'&&
+    rules.timingClock==='browser-audio-clock'&&rules.maxGestureUpdatesPerSecond<=14,
+    'one or more Player Scenario constraints were removed');
+  requireTrue(s.EXPECT.liveSource==='SatzfunkPlayer.01.audio'&&
+    s.EXPECT.mappedCsoundPort===target.id&&s.EXPECT.outputObservableBy==='Ear.Wind.01'&&
+    s.EXPECT.csoundChangesAudibleWithoutPreRender===true&&
+    s.EXPECT.audioRecordsOptionalEvidenceOnly===true&&s.EXPECT.midi2EventsCorrelated===true,
+    'Player Scenario expected live behavior was substituted');
+  requireTrue(Array.isArray(s.VERIFY.requiredEvidence)&&s.VERIFY.requiredEvidence.length>=6&&
+    s.VERIFY.noOfflinePlaybackAsLiveProof===true&&s.VERIFY.noPresentationOnlyAcceptance===true&&
+    s.VERIFY.hardwareMIDI2InteroperabilityClaim===false,
+    'independent Player Scenario evidence requirements are missing');
+  return Object.freeze({scenarioID:s.scenarioID,grammarVersion:GRAMMAR,
+    status:'valid-candidate-not-admitted',legalPredicates:['LISTENS_TO','MODULATES','MAPS_TO'],
+    bindings:{player:'FCIS instrument',ear:'FCIS observing instrument',csound:'engine',
+      scenario:'Csound Teatro Scenario'},
+    mapping:{source:mapping.sourcePort,target:mapping.targetPort,controller:op.controller,
+      group:op.group,channel:op.channel,sourceDomain:mapping.sourceDomain,targetDomain:mapping.targetDomain},
+    admissible:false,execution:'refused',
+    blockers:['No native Csound Teatro Scenario admission and MIDI2 operation receipt']});
+}
+
 export function validateScenario(s){
   requireTrue(s&&typeof s==='object'&&!Array.isArray(s),'scenario object required');
   requireTrue(s.kind==='CsoundTeatroScenario','scenario is not an instrument');
+  if(s.scenarioID==='teatro.satzfunk-player-ear-wind.01')return validatePlayerScenario(s);
   requireTrue(s.grammarVersion===GRAMMAR&&s.schemaVersion===GRAMMAR,
     'version mismatch; incompatible grammar requires explicit versioned extension');
   requireTrue(nonBlank(s.scenarioID)&&s.scenarioID==='teatro.composing-by-ear.live.01',

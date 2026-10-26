@@ -1,3 +1,4 @@
+import { encodeControlChange } from "./midi2-codec.mjs";
 import { playbackBinding } from "./player-media.mjs";
 
 const clamp = value => Math.max(0, Math.min(1, value));
@@ -18,7 +19,7 @@ function requireThat(value, message) {
  */
 export function createTeatroScenarioRuntime({
   scenario, player, track, origin, audioContext, earInput, csound,
-  sourceIdentity, now = () => globalThis.performance.now()
+  sourceIdentity, runID = globalThis.crypto?.randomUUID?.(), now = () => globalThis.performance.now()
 } = {}) {
   requireThat(scenario?.kind === "CsoundTeatroScenario" &&
     scenario.grammarVersion === "0.1" && scenario.schemaVersion === "0.1",
@@ -44,9 +45,10 @@ export function createTeatroScenarioRuntime({
   requireThat(earInput?.port && typeof earInput.connect === "function",
     "owner-supplied Ear AudioWorklet input is unavailable");
   requireThat(csound && typeof csound.start === "function" &&
-    typeof csound.setParameter === "function" &&
+    typeof csound.acceptUmp === "function" &&
     typeof csound.stop === "function",
-    "owner-supplied Csound control endpoint is unavailable");
+    "owner-supplied Csound MIDI 2.0 UMP input adapter is unavailable");
+  requireThat(nonBlank(runID), "a unique run identity is required");
   requireThat(sourceIdentity === "satzfunk-player:" + track.id + ":" + track.sha256.slice(0, 16),
     "Ear identity must bind to the exact admitted source");
 
@@ -55,7 +57,7 @@ export function createTeatroScenarioRuntime({
   const mapping = scenario.TRANSFORM?.mappings?.[0];
   const source = scenario.GIVEN?.source;
   requireThat(entities.get("SatzfunkPlayer.01")?.owner === "Fountain-Coach/SatzfunkPlayer" &&
-    entities.get("SatzfunkPlayer.01")?.capability === "SatzfunkPlayerElement.sameOriginPlayback",
+    entities.get("SatzfunkPlayer.01")?.capability === "SatzfunkPlayerElement.teatroScenarioRuntime",
     "Player must retain source ownership");
   requireThat(entities.get("Ear.Player.01")?.kind === "EAR" &&
     entities.get("Wind.Field.01")?.kind === "FIELD" &&
@@ -73,13 +75,23 @@ export function createTeatroScenarioRuntime({
     relation.fromPort === "SatzfunkPlayer.01.audio" &&
     relation.toPort === "Ear.Player.01.audio"),
     "live Player PCM → Ear edge is missing");
-  requireThat(scenario.TRANSFORM?.relations?.some(relation =>
-    relation.predicate === "MODULATES" &&
-    relation.subject === "Ear.Player.01" &&
-    relation.object === "Wind.Field.01" &&
-    relation.fromPort === "Ear.Player.01.rms" &&
-    relation.toPort === "Wind.Field.01.wind_mix"),
-    "Ear RMS → Csound FIELD edge is missing");
+  requireThat(ports.get("SatzfunkPlayer.01.midi2.ump")?.direction === "out" &&
+    ports.get("SatzfunkPlayer.01.midi2.ump")?.valueType === "midi2-ump" &&
+    ports.get("Wind.Field.01.midi2.ump")?.direction === "in" &&
+    ports.get("Wind.Field.01.midi2.ump")?.valueType === "midi2-ump" &&
+    scenario.TRANSFORM?.relations?.some(relation =>
+      relation.predicate === "MODULATES" &&
+      relation.subject === "Ear.Player.01" &&
+      relation.object === "SatzfunkPlayer.01" &&
+      relation.fromPort === "Ear.Player.01.rms" &&
+      relation.toPort === "SatzfunkPlayer.01.midi2.ump") &&
+    scenario.TRANSFORM?.relations?.some(relation =>
+      relation.predicate === "MODULATES" &&
+      relation.subject === "SatzfunkPlayer.01" &&
+      relation.object === "Wind.Field.01" &&
+      relation.fromPort === "SatzfunkPlayer.01.midi2.ump" &&
+      relation.toPort === "Wind.Field.01.midi2.ump"),
+    "typed Ear RMS → Player UMP → Csound input path is missing");
   requireThat(ports.get("Ear.Player.01.rms")?.unit === "normalized-linear-rms" &&
     validRange(ports.get("Ear.Player.01.rms")?.domain) &&
     ports.get("Wind.Field.01.wind_mix")?.unit === "normalized" &&
@@ -102,10 +114,12 @@ export function createTeatroScenarioRuntime({
     scenario.CONSTRAINTS?.uncontrolledFeedbackForbidden === true &&
     scenario.CONSTRAINTS?.publicPublicationAuthorized === false,
     "required safety or release boundaries were removed");
-  requireThat(scenario.TRANSFORM?.midi2?.status?.startsWith("not-used;") &&
-    scenario.EXPECT?.midi2EventsCorrelated === false &&
-    scenario.VERIFY?.noMIDI2AdmissionClaimFromThisCandidate === true,
-    "this audio path must not claim a MIDI 2.0 Player operation");
+  requireThat(scenario.TRANSFORM?.midi2?.status === "software-ump-cc74" &&
+    scenario.TRANSFORM?.midi2?.ownerLibrary === "@fountain-coach/midi2" &&
+    scenario.TRANSFORM?.midi2?.midiCiStatus === "envelope-codec-only; no live CI transaction" &&
+    scenario.EXPECT?.midi2EventsCorrelated === true &&
+    scenario.VERIFY?.hardwareMIDI2InteroperabilityClaim === false,
+    "the declared software UMP profile or honest capability boundary is missing");
 
   const receipt = Object.freeze({
     schema: "fountaincoach.satzfunk-player.teatro-admission.v0.1",
@@ -116,8 +130,10 @@ export function createTeatroScenarioRuntime({
     bindings: Object.freeze({
       player: "SatzfunkPlayerElement.sameOriginPlayback",
       earInput: sourceIdentity,
-      csoundControl: "BookCsoundHost.setParameter:wind_mix"
+      midi2: "@fountain-coach/midi2@0.12.8#b596c7e8b2f1b1fd12b430b72cb79dae54c23a8a",
+      csoundInput: "SatzfunkPlayer.createCsoundMidi2UmpInput.acceptUmp:CC74"
     }),
+    run: Object.freeze({ runID }),
     mapping: Object.freeze({
       source: mapping.sourcePort,
       target: mapping.targetPort,
@@ -133,7 +149,9 @@ export function createTeatroScenarioRuntime({
   let csoundStarted = false;
   let lastObservationAt = -Infinity;
   let writes = 0;
+  let umpOperations = 0;
   let rejected = 0;
+  let sequence = 0;
   let inFlight = false;
   const observations = [];
   const measurementHandler = event => {
@@ -150,10 +168,27 @@ export function createTeatroScenarioRuntime({
       value * (mapping.targetDomain[1] - mapping.targetDomain[0]);
     if (inFlight) { rejected++; return; }
     inFlight = true;
-    void csound.setParameter("wind_mix", target).then(() => {
+    const umpWords = encodeControlChange({
+      kind: "controlChange", group: 0, channel: 0, controller: 74,
+      value: Math.round(clamp((target - mapping.targetDomain[0]) /
+        (mapping.targetDomain[1] - mapping.targetDomain[0])) * 0xffffffff) >>> 0
+    });
+    const correlation = Object.freeze({
+      scenarioID: scenario.scenarioID, runID, sourceIdentity, sequence: ++sequence
+    });
+    void csound.acceptUmp(umpWords, correlation).then(result => {
+      if (!result?.accepted || result.receipt?.runID !== runID ||
+          result.receipt?.scenarioID !== scenario.scenarioID ||
+          result.receipt?.sequence !== correlation.sequence) {
+        rejected++;
+        return;
+      }
       writes++;
+      umpOperations++;
       if (observations.length < 128) observations.push(Object.freeze({
-        sourceIdentity, rms, normalized: value, windMix: target, observedAt
+        sourceIdentity, scenarioID: scenario.scenarioID, runID,
+        rms, normalized: value, windMix: result.receipt.value,
+        ump: Object.freeze([...umpWords]), sequence: correlation.sequence, observedAt
       }));
     }).catch(() => { rejected++; }).finally(() => { inFlight = false; });
   };
@@ -165,6 +200,7 @@ export function createTeatroScenarioRuntime({
         state: stopped ? "stopped" : started ? "running" : "admitted",
         observations: observations.length,
         writes,
+        umpOperations,
         rejected
       });
     },
@@ -176,7 +212,14 @@ export function createTeatroScenarioRuntime({
         await audioContext.resume();
         await csound.start(() => {});
         csoundStarted = true;
-        await csound.setParameter("wind_mix", mapping.targetDomain[0]);
+        const baselineWords = encodeControlChange({
+          kind: "controlChange", group: 0, channel: 0, controller: 74, value: 0
+        });
+        const baseline = await csound.acceptUmp(baselineWords, Object.freeze({
+          scenarioID: scenario.scenarioID, runID, sourceIdentity, sequence: ++sequence
+        }));
+        requireThat(baseline?.accepted === true && baseline.receipt?.runID === runID,
+          "Csound refused the correlated MIDI 2.0 baseline UMP operation");
         const sourceNode = player.connectAudioGraph(audioContext, earInput);
         sourceNode.connect(audioContext.destination);
         earInput.port.addEventListener?.("message", measurementHandler);
@@ -200,7 +243,12 @@ export function createTeatroScenarioRuntime({
       player.pause();
       player.disconnectAudioGraph();
       if (csoundStarted) {
-        await csound.setParameter("wind_mix", mapping.targetDomain[0]).catch(() => {});
+        const baselineWords = encodeControlChange({
+          kind: "controlChange", group: 0, channel: 0, controller: 74, value: 0
+        });
+        await csound.acceptUmp(baselineWords, Object.freeze({
+          scenarioID: scenario.scenarioID, runID, sourceIdentity, sequence: ++sequence
+        })).catch(() => {});
         await csound.stop();
         csoundStarted = false;
       }

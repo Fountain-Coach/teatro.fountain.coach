@@ -5,16 +5,16 @@
   "schemaVersion": "0.1",
   "status": "candidate-unadmitted",
   "mode": "live-rehearsal",
-  "sourceAuthority": "Governance chapter 151 \u2014 Csound Teatro: Speaking Sound in Space; reuses the source scenario grammar from teatro.fountain.coach",
+  "sourceAuthority": "Governance chapter 151 — Csound Teatro: Speaking Sound in Space; reuses the source scenario grammar from teatro.fountain.coach",
   "GIVEN": {
     "entities": [
       {
         "id": "SatzfunkPlayer.01",
         "kind": "INSTRUMENT",
         "owner": "Fountain-Coach/SatzfunkPlayer",
-        "capability": "SatzfunkPlayerElement.sameOriginPlayback",
+        "capability": "SatzfunkPlayerElement.teatroScenarioRuntime",
         "runtime": "browser media element",
-        "binding": "src/satzfunk-player.mjs"
+        "binding": "src/teatro-scenario-runtime.mjs"
       },
       {
         "id": "Ear.Player.01",
@@ -22,7 +22,7 @@
         "owner": "Fountain-Coach/teatro.fountain.coach",
         "capability": "Ear AudioWorklet observation",
         "runtime": "Web Audio",
-        "binding": null
+        "binding": "SatzfunkPlayerElement.connectAudioGraph -> owner Ear AudioWorkletNode"
       },
       {
         "id": "Wind.Field.01",
@@ -51,6 +51,22 @@
         "capability": "HTMLMediaElement playback output"
       },
       {
+        "id": "SatzfunkPlayer.01.midi2.ump",
+        "owner": "SatzfunkPlayer.01",
+        "direction": "out",
+        "valueType": "midi2-ump",
+        "unit": "UMP MIDI 2.0 Channel Voice",
+        "capability": "In-process software peer; group 0/channel 0/CC74"
+      },
+      {
+        "id": "Wind.Field.01.midi2.ump",
+        "owner": "Wind.Field.01",
+        "direction": "in",
+        "valueType": "midi2-ump",
+        "unit": "UMP MIDI 2.0 Channel Voice",
+        "capability": "SatzfunkPlayer.createCsoundMidi2UmpInput.acceptUmp"
+      },
+      {
         "id": "Ear.Player.01.audio",
         "owner": "Ear.Player.01",
         "direction": "in",
@@ -68,7 +84,7 @@
           0,
           0.2
         ],
-        "capability": "Ear measurement output; adapter unverified"
+        "capability": "Owner Ear AudioWorklet RMS observation bound to the admitted Player source identity"
       },
       {
         "id": "Wind.Field.01.wind_mix",
@@ -80,7 +96,7 @@
           0.25,
           1.0
         ],
-        "capability": "Csound.setControlChannel"
+        "capability": "CsoundTeatro MIDI2 UMP CC74 input adapter maps to setControlChannel"
       },
       {
         "id": "Wind.Field.01.audio",
@@ -103,7 +119,7 @@
       "kind": "live-instrument-output",
       "entityID": "SatzfunkPlayer.01",
       "portID": "SatzfunkPlayer.01.audio",
-      "transport": null,
+      "transport": "same-origin HTMLMediaElement AudioNode -> owner Ear AudioWorkletNode on a secure origin",
       "recordedFile": null,
       "required": true
     }
@@ -119,20 +135,28 @@
         "toPort": "Ear.Player.01.audio"
       },
       {
-        "id": "rel.player-observation-modulates-wind",
-        "predicate": "MODULATES",
-        "subject": "Ear.Player.01",
-        "object": "Wind.Field.01",
-        "fromPort": "Ear.Player.01.rms",
-        "toPort": "Wind.Field.01.wind_mix"
-      },
-      {
         "id": "rel.ear-hears-wind",
         "predicate": "LISTENS_TO",
         "subject": "Ear.Wind.01",
         "object": "Wind.Field.01",
         "fromPort": "Wind.Field.01.audio",
         "toPort": "Ear.Wind.01.audio"
+      },
+      {
+        "id": "rel.player-rms-emits-midi2-ump",
+        "predicate": "MODULATES",
+        "subject": "Ear.Player.01",
+        "object": "SatzfunkPlayer.01",
+        "fromPort": "Ear.Player.01.rms",
+        "toPort": "SatzfunkPlayer.01.midi2.ump"
+      },
+      {
+        "id": "rel.player-midi2-ump-enters-csound",
+        "predicate": "MODULATES",
+        "subject": "SatzfunkPlayer.01",
+        "object": "Wind.Field.01",
+        "fromPort": "SatzfunkPlayer.01.midi2.ump",
+        "toPort": "Wind.Field.01.midi2.ump"
       }
     ],
     "mappings": [
@@ -159,15 +183,24 @@
       }
     ],
     "midi2": {
-      "authority": "Fountain-Coach/midi-backplane schema/idl.yaml",
-      "sourceCommit": "25e5ac3b9169856258ac030ef0ba9131c347defe",
-      "schemaVersion": "0.2.0",
-      "availableTopicsInspected": [
-        "stage/audio.cue",
-        "stage/midi.events.put"
-      ],
-      "playerPlaybackTopic": null,
-      "status": "not-used; the proposed audio path is browser Web Audio and local Csound host routing; the current IDL defines no Player operation"
+      "authority": "Fountain-Coach/midi2",
+      "plane": "local-UMP",
+      "ownerLibrary": "@fountain-coach/midi2",
+      "ownerCommit": "b596c7e8b2f1b1fd12b430b72cb79dae54c23a8a",
+      "ownerPackageVersion": "0.12.8",
+      "status": "software-ump-cc74",
+      "umpOperation": {
+        "kind": "controlChange",
+        "group": 0,
+        "channel": 0,
+        "controller": 74,
+        "valueEncoding": "unsigned-32-bit"
+      },
+      "route": "Ear.Player.01.rms -> SatzfunkPlayer.01.midi2.ump -> Wind.Field.01.midi2.ump -> wind_mix",
+      "softwarePeer": "in-process; no native MIDI endpoint",
+      "hardwareInteroperabilityClaim": false,
+      "midiCiStatus": "envelope-codec-only; no live CI transaction",
+      "midiCiTransportImplemented": false
     }
   },
   "CONSTRAINTS": {
@@ -193,7 +226,7 @@
     "liveSource": "SatzfunkPlayer.01.audio",
     "csoundChangesAudibleWithoutPreRender": true,
     "mappedCsoundPort": "Wind.Field.01.wind_mix",
-    "midi2EventsCorrelated": false,
+    "midi2EventsCorrelated": true,
     "outputObservableBy": "Ear.Wind.01",
     "audioRecordsOptionalEvidenceOnly": true
   },
@@ -203,11 +236,12 @@
       "scenario-admission-receipt",
       "SatzfunkPlayer-live-PCM-connected-to-Ear",
       "Ear-measured-live-player-output",
-      "owner-admitted-local-audio-to-Csound-control-routing",
-      "bounded-stop-and-silent-termination"
+      "bounded-stop-and-silent-termination",
+      "correlated-MIDI2-UMP-CC74-to-Csound-input-adapter"
     ],
     "noOfflinePlaybackAsLiveProof": true,
     "noPresentationOnlyAcceptance": true,
-    "noMIDI2AdmissionClaimFromThisCandidate": true
+    "noMIDI2AdmissionClaimFromThisCandidate": false,
+    "hardwareMIDI2InteroperabilityClaim": false
   }
 }

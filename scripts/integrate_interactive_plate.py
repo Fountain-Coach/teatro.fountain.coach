@@ -10,7 +10,7 @@ import re
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/"site"
-STAGE_SCRIPT="/assets/index-CY5_5ULO.js"
+STAGE_SCRIPT="/assets/index-BYTRORXG.js"
 ANCHOR_ID="teatro:unfinished-composition:empty-chair-attention"
 SCENE_ID="teatro:unfinished-composition:spatial-relation-01"
 SOURCE_SENTENCE="This is an old knowledge of theatre. Put an empty chair on a stage and wait long enough. It ceases to be furniture. Attention changes it."
@@ -38,7 +38,7 @@ html,body,#root{width:100%;height:100%;min-height:0;margin:0;overflow:hidden;bac
   padding:0!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 </style>
-<script type="module" src="/assets/index-CY5_5ULO.js"></script>
+<script type="module" src="/assets/index-BYTRORXG.js"></script>
 <script type="module" src="/assets/book-puppet-fallback.js"></script>
 <script>
 let lastBookMotion=0;
@@ -281,13 +281,13 @@ def integrate(document, output_assets, mixed_media_css, source_sha):
     document=document.replace('<script type="module" src="/assets/satzfunk/satzfunk-book.mjs"></script>',
       '<script type="module" src="/assets/linotype/book-player.mjs"></script>')
     contents=bookjs.read_text()
-    marker=' mobileAtlas?.sync();\n store();'
+    marker=' store();\n if(body.dataset.reframeHost==="v1"){'
     assert contents.count(marker)==1
-    contents=contents.replace(marker,''' mobileAtlas?.sync();
+    contents=contents.replace(marker,''' store();
  window.dispatchEvent(new CustomEvent('fountain:book:position',{detail:{
    page:engine.current,total:engine.pages,anchor:engine.currentChapter()
  }}));
- store();''')
+ if(body.dataset.reframeHost==="v1"){''')
     seek='previous?.addEventListener("click",()=>turn(engine.prev(),{animate:true,velocity:.55}));'
     assert contents.count(seek)==1
     contents=contents.replace(seek,'''window.addEventListener('fountain:book:seek',event=>{

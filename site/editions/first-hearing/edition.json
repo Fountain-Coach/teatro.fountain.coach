@@ -6,22 +6,22 @@
   "stageEdition": "editions/stage/",
   "owningRepository": "Fountain-Coach/teatro.fountain.coach",
   "authoredSourceRepository": "Fountain-Coach/fountain.coach",
-  "authoredSourceCommit": "8d790390e926b66c3e73661916ec2464a2747cea",
+  "authoredSourceCommit": "9e5d437081212cccd11df964400b4cffd9ad23e2",
   "authoredSourceURL": "https://fountain.coach/essays/teatro-an-unfinished-composition/",
   "authoredSourceSHA256": "5f77e58bbb59d0802d5b8b0ee48ecea1bbea7d44ebf4b73e3107363b7b95bad8",
   "paragraphsSHA256": "2ab6fa84f8cd166a19535fa0ebe6e0755734bf9cfd379377c4ca15209f3b435c",
   "originalParagraphs": 22,
   "originalScorePlateSHA256": "226e3440690dd8cbeb331c4f3f62ee002fa0bc0e6007fcdf8431f1f578d115e2",
-  "readerSourceHTMLSHA256": "9f32ced72b27129163e242369ee11425d41dc219a291376e2b70b9ff86fa2a66",
-  "bookHTMLBeforeSatzfunkSHA256": "6acd813ac2b1c63ca76a289f2eb26a46b27d8a39877177ebafaae1c969c82d11",
+  "readerSourceHTMLSHA256": "a30fd54a36966f1b9644a62f946df4fc31b916ead096dde73291260eb09b681e",
+  "bookHTMLBeforeSatzfunkSHA256": "c0b91bec03d9461d99e415dbd78f80754c67cd97486a663f9427244acf96dc74",
   "runtimeFiles": [
     {
       "name": "book.css",
-      "sha256": "7adea0e9e7b71d0baeddc7931cac789a60e2c44fdbd72891ef5d3c0c49c5665a"
+      "sha256": "a70d8f96750e5a75fc4ec24f66401d49a2f1b14c8e0d4b744f4d4a45547db9aa"
     },
     {
       "name": "book.js",
-      "sha256": "2732ed5c42e5b568beb5989f7129e81f1556a351794dd9ac0d15b792e6a64ee8"
+      "sha256": "d158f8a7014a70f048f9e9b621636aa3e32170518d2cbdde1d9e06582bd57d4e"
     },
     {
       "name": "book-boot.js",
@@ -33,7 +33,7 @@
     },
     {
       "name": "linotype-engine.js",
-      "sha256": "21f5f0df57d64fc14ee6585beeeeac01bb286e8b7814cd601cee34782188b54c"
+      "sha256": "a29b5eb5ab1bd9b95080dc1bf75c795c9a84ea7a1dfd8f67932d5d41a2102c40"
     },
     {
       "name": "mobile-page-navigation.js",
@@ -45,11 +45,19 @@
     },
     {
       "name": "essays.css",
-      "sha256": "4c5e965b2f045af689f114d6abe822224d5e2320caded673ce2409cea41d7ed5"
+      "sha256": "989525520a0553a50ddbfca007b4fe026a56fcb34146631bce5e41b2a28b02a3"
     },
     {
       "name": "identity-circle.css",
       "sha256": "31483c04941087e607f86b31c2dd0697e86b4f4faaf0c07238042acc9a1c9772"
+    },
+    {
+      "name": "midi2/index.js",
+      "sha256": "97282bbe2a0e0a2f796e9c8f9d8a281a15b4c1c4d346dbebb5662b30bb745590"
+    },
+    {
+      "name": "midi2-bootstrap.mjs",
+      "sha256": "cc2312a80941f1e7435c384b121579c8799f413a027620efd5ab7a79e53036d7"
     },
     {
       "name": "satzfunk-player/index.mjs",
@@ -57,22 +65,47 @@
     },
     {
       "name": "satzfunk-player/satzfunk-player.mjs",
-      "sha256": "eb982b78e827c3dcd6376c80490ca4400e4e9f6d63897b3609ad5dd7c2e46736"
+      "sha256": "87c43d12a104e34325280a89b4d602275be54d0e0ef18d541d3b0ee6fd475376"
     },
     {
       "name": "satzfunk-player/player-media.mjs",
-      "sha256": "59da08595d7d5f23052d044e61ccfca5226ed1eff2ad66ba1d8bd884c4d9617c"
+      "sha256": "3ff164d4ecc9809a5bd23875ba24b459ec092117a510963455a954b61e4b4363"
     },
     {
       "name": "satzfunk-player/teatro-scenario-runtime.mjs",
-      "sha256": "cd6e36e0d364188553663694ad9fdbebdedd8e521b39b78fbe699b875e3994c6"
+      "sha256": "c1118251360ffdcdc07fb6cf2256a18fdbadcf37d7e0ea0b4c2b4ba289bcb716"
+    },
+    {
+      "name": "satzfunk-player/midi2-codec.mjs",
+      "sha256": "006fd84aefba4d8473725719a964c4ca0ffc3426980222e99a6bae363a84afc3"
+    },
+    {
+      "name": "satzfunk-player/csound-midi2-ump-input.mjs",
+      "sha256": "19b90946ecdaca6536f3d9b895ff10c4450a937385d6e47eea6c75a7e0d813ba"
     },
     {
       "name": "satzfunk-player-host.mjs",
-      "sha256": "196df9294891babccceee80e67986f9b22b271c60b7b8a41a42c45934e161021"
+      "sha256": "55072d1b7730630ccad934f5d190105f1594056d697276c0895191bb2e0817c5"
     }
   ],
-  "fountainPressCommit": "04bf97351117f38e07df336ff40c18623729af50",
+  "satzfunkPlayerSourceRepository": "Fountain-Coach/SatzfunkPlayer",
+  "satzfunkPlayerSourceCommit": "24024c0348e58491e1fabb37856ded167593fcfb",
+  "satzfunkPlayerSourceSHA256": "07d00776ab3907e2f396a960e624a7fffe36d9b11b0356dbe1876385a43d75c1",
+  "satzfunkPlayerRuntimeState": "owner-runtime-bundled; stage route requires secure user-activated admission",
+  "teatroScenario": {
+    "scenarioID": "teatro.satzfunk-player-ear-wind.01",
+    "grammarVersion": "0.1",
+    "status": "candidate-unadmitted",
+    "route": "/scenarios/satzfunk-player/ear-wind/",
+    "resource": "/scenarios/satzfunk-player/ear-wind/scenario.json",
+    "resourceSHA256": "eb55e049d3101d0948848189c766e15dbcd83ca002788a910cd3763fd6abc87c",
+    "routeHTMLSHA256": "7c59535d0def712694a59041d491508f4ceac8b8c3686185b7674e4196b249a4",
+    "runtimeAuthority": "Fountain-Coach/SatzfunkPlayer",
+    "liveAccepted": false,
+    "midi2PlayerOperation": "typed-32-bit-UMP-CC74-software-peer; no native hardware connection",
+    "midiCiStatus": "envelope-codec-only; no live discovery or negotiation"
+  },
+  "fountainPressCommit": "8a57e6fa10a3d0acde8a9ff79608663afcdbbef5",
   "sceneAnchorId": "teatro:unfinished-composition:empty-chair-attention",
   "sceneElementId": "teatro:unfinished-composition:spatial-relation-01",
   "scenePlacement": "inside-authored-prose",
@@ -116,9 +149,13 @@
   "bookCsoundHostSHA256": "2a02492a70b6c6bc5352cf405f5203feca4122a3d3dc87a68d38df5ef228e601",
   "puppetFallbackRuntimeSHA256": "b3768d14a6ae5c4b4dc2ef8b31b983b69f67f47f1f50757dc5cdff75646fe166",
   "puppetFallbackSource": "midi2-gpu-fabric/apps/teatro-stage-web/src/embedded/book-puppet-fallback.tsx",
-  "puppetFallbackSourceCommit": "aba0a0ea941a886642bb4d87df5bfd99f674c6d3",
+  "puppetFallbackSourceCommit": "ce9078b83cc6b35c1f9bd0d18fd9b6ce573351c1",
+  "teatroStageWebSourceRepository": "Fountain-Coach/midi2-gpu-fabric",
+  "teatroStageWebSourceCommit": "a1d2ec578181c3916627834d56d739e582cd7880",
+  "teatroStageWebBundle": "/assets/index-BYTRORXG.js",
+  "teatroStageWebBundleSHA256": "f4d18a07eadfd6439b617594d5f90dee35857b70795fa8c1d7926cad93490df4",
   "satzfunkSourceRepository": "Fountain-Coach/Satzfunk",
-  "satzfunkCommit": "fad70097c08a0b610af87d5e5a6fc1057f6adf3d",
+  "satzfunkCommit": "a10262d0a2dc49963740a7b4812aca277d79c7ac",
   "satzfunkAdapterSHA256": "1cd9f3b44561581da8917991bb33b5bffb872d0eda7d5e8d086e2a8a8b646339",
   "hearingStatus": "not-yet-released",
   "approvedNarration": false,
@@ -149,20 +186,5 @@
       "art": "/assets/edition/teatro-score-memory-vector-human-condition.svg"
     }
   ],
-  "sourceMutation": false,
-  "satzfunkPlayerSourceCommit": "376747d96f0df9e0b95f43ab35114a4a8c88f33c",
-  "satzfunkPlayerSourceSHA256": "4fd826b6d4bf4be1739e117c873549539e21a771b8212973bc7e8923cb7c16f3",
-  "satzfunkPlayerRuntimeState": "owner-runtime-bundled; no edition track admitted",
-  "teatroScenario": {
-    "scenarioID": "teatro.satzfunk-player-ear-wind.01",
-    "grammarVersion": "0.1",
-    "status": "candidate-unadmitted",
-    "route": "/scenarios/satzfunk-player/ear-wind/",
-    "resource": "/scenarios/satzfunk-player/ear-wind/scenario.json",
-    "resourceSHA256": "c474ea1d852458aa7c80f0c5f594a09cef2f81626535edf8c627567a7afedf9d",
-    "routeHTMLSHA256": "3e60d06c2685a708ff14c7d14e44684bbda85914e445f2ba232d180ac3d6bce6",
-    "runtimeAuthority": "Fountain-Coach/SatzfunkPlayer",
-    "liveAccepted": false,
-    "midi2PlayerOperation": "not-claimed"
-  }
+  "sourceMutation": false
 }

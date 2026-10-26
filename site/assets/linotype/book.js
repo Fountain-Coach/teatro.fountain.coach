@@ -69,10 +69,21 @@ function update(){
  acceptedPlace={anchor:engine.currentChapter(),
    offset:engine.current-(engine.positions.get(engine.currentChapter())||0)};
  mobileAtlas?.sync();
+ // The atlas can change the viewport AFTER Linotype has composed its sheets.
+ // Scale the existing accepted leaf into that final area; never repaginate it.
+ if(mobileAtlas?.mode)engine.reframe();
+ store();
  window.dispatchEvent(new CustomEvent('fountain:book:position',{detail:{
    page:engine.current,total:engine.pages,anchor:engine.currentChapter()
  }}));
- store();
+ if(body.dataset.reframeHost==="v1"){
+   document.dispatchEvent(new CustomEvent("fountainpress:position",{
+     detail:{sourceAddress:engine.currentChapter(),
+             physicalPageIndex:engine.current,
+             physicalPageCount:engine.pages,
+             layoutMode:engine.css.spread?"spread":"single"}
+   }));
+ }
 }
 function turn(to,{animate=false,velocity=0}={}){
  if(!ready)return;

@@ -704,3 +704,49 @@ html.book-hydrating body.book-app::after {
  .book-pagination.book-reading-pagination{gap:10px;min-height:52px}
  .book-reading-pagination .book-progress{width:clamp(105px,40vw,225px)}
 }
+
+/* Continuous-source fallback is a DOCUMENT, never a half-typeset leaf.
+   Safari may refuse/delay the compositor, or a reader may disable JavaScript.
+   In either case make every authored paragraph readable and withdraw the
+   disabled-looking page-turning controls. The measured reader is unaffected. */
+@media screen {
+  body.book-app:not(.reader-ready):not(.linotype-boot) .book-main {
+    display:block;
+    height:auto;
+    min-height:0;
+    overflow:visible;
+  }
+  body.book-app:not(.reader-ready):not(.linotype-boot) .book-leaf-frame {
+    display:block;
+    height:auto;
+    min-height:0;
+    max-height:none;
+  }
+  body.book-app:not(.reader-ready):not(.linotype-boot) .book-viewport {
+    display:block;
+    height:auto;
+    min-height:0;
+    max-height:none;
+    overflow:visible;
+  }
+  body.book-app:not(.reader-ready):not(.linotype-boot) .book-flow {
+    display:block;
+    height:auto;
+    max-height:none;
+    overflow:visible;
+  }
+  body.book-app:not(.reader-ready):not(.linotype-boot) .book-pagination,
+  body.book-app:not(.reader-ready):not(.linotype-boot) #book-page-atlas {
+    display:none;
+  }
+}
+
+/* Reader toolbar admission at narrow phone widths. All three actions remain
+   visible and keyboard-operable; the existing authored edition mark carries
+   identity where the full series label cannot fit beside them. */
+@media screen and (max-width:600px) {
+  .book-toolbar {column-gap:6px;}
+}
+@media screen and (max-width:390px) {
+  .book-toolbar .book-identity span:last-child {display:none;}
+}

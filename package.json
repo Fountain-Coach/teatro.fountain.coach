@@ -15,6 +15,6 @@
     "browser:audio": "node scripts/verify_secure_local_audio.mjs",
     "browser:navigation": "node scripts/verify_score_navigation.mjs",
     "browser:visual": "SNAPSHOT_TAG=v32 node scripts/verify_score_identity.e2e.mjs && python3 scripts/verify_visual_regression.py",
-    "check:csound-teatro": "node --test scripts/csound-teatro/validate-scenario.test.mjs && node scripts/csound-teatro/check-scenario.mjs scenarios/csound-teatro/composing-by-ear.live.json"
+    "check:csound-teatro": "node --test scripts/csound-teatro/validate-scenario.test.mjs && node scripts/csound-teatro/check-scenario.mjs scenarios/csound-teatro/composing-by-ear.live.json && node scripts/csound-teatro/check-scenario.mjs scenarios/satzfunk-player/ear-wind.candidate.json"
   }
 }

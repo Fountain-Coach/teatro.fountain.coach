@@ -27,7 +27,8 @@ def main():
  assert scenario_receipt["grammarVersion"]=="0.1"
  assert scenario_receipt["status"]=="candidate-unadmitted"
  assert scenario_receipt["liveAccepted"] is False
- assert scenario_receipt["midi2PlayerOperation"]=="not-claimed"
+ assert scenario_receipt["midi2PlayerOperation"]=="typed-32-bit-UMP-CC74-software-peer; no native hardware connection"
+ assert scenario_receipt["midiCiStatus"]=="envelope-codec-only; no live discovery or negotiation"
  scenario_path=SITE/"scenarios/satzfunk-player/ear-wind/scenario.json"
  scenario=json.loads(scenario_path.read_text())
  assert scenario["scenarioID"]==scenario_receipt["scenarioID"]
@@ -36,11 +37,13 @@ def main():
  assert scenario_path.read_bytes()==(ROOT/"scenarios/satzfunk-player/ear-wind.candidate.json").read_bytes()
  route=(SITE/"scenarios/satzfunk-player/ear-wind/index.html").read_text()
  assert sha(route.encode())==scenario_receipt["routeHTMLSHA256"]
- assert "not admitted" in route and "not live-accepted" in route
- assert "does not claim a MIDI 2.0 Player operation" in route
+ assert 'id="scenario-prepare"' in route and 'id="scenario-start"' in route and 'id="scenario-stop"' in route
+ assert 'src="./runner.mjs"' in route and (scenario_path.parent/"runner.mjs").is_file()
+ assert "does not claim a physical MIDI 2.0 port" in route
+ assert "no live discovery or profile negotiation" in route
  runtime_entry=next(row for row in manifest["runtimeFiles"] if row["name"]=="satzfunk-player/teatro-scenario-runtime.mjs")
  assert sha((SITE/"assets/linotype/satzfunk-player/teatro-scenario-runtime.mjs").read_bytes())==runtime_entry["sha256"]
- assert manifest["satzfunkPlayerSourceCommit"]=="376747d96f0df9e0b95f43ab35114a4a8c88f33c"
+ assert manifest["satzfunkPlayerSourceCommit"]=="24024c0348e58491e1fabb37856ded167593fcfb"
  assert manifest["sourceMutation"] is False
  assert sha((SITE/"assets/edition/teatro-score-memory-vector-human-condition.svg").read_bytes())==manifest["originalScorePlateSHA256"]
  mapping=manifest["scoreNavigation"]
@@ -233,12 +236,12 @@ def main():
  assert 'cloneNode(true)' not in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
  assert 'book-atlas-identity' in (SITE/"assets/linotype/mobile-page-navigation.js").read_text()
  stage=(SITE/"editions/stage/index.html").read_text()
- assert 'src="/assets/index-CY5_5ULO.js"' in stage and 'id="root"' in stage
+ assert 'src="/assets/index-BYTRORXG.js"' in stage and 'id="root"' in stage
  assert 'data-teatro-stage-return' in stage
  assert 'href="/editions/first-hearing/"' in stage
  assert 'data-legal-role="company-status"' in stage
  embed=(SITE/"editions/stage/embed/index.html").read_text()
- assert 'src="/assets/index-CY5_5ULO.js"' in embed
+ assert 'src="/assets/index-BYTRORXG.js"' in embed
  assert 'src="/assets/book-puppet-fallback.js"' in embed
  fallback=(SITE/"assets/book-puppet-fallback.js")
  assert fallback.stat().st_size>100_000
@@ -262,6 +265,12 @@ def main():
  original=(SITE/"assets/index-CY5_5ULO.js")
  assert original.is_file() and original.stat().st_size>1000
  print("LIVE_STAGE_PRESERVED",original.stat().st_size,"javascript bytes")
+ projected=(SITE/"assets/index-BYTRORXG.js")
+ assert projected.is_file() and sha(projected.read_bytes())==manifest["teatroStageWebBundleSHA256"]
+ assert manifest["teatroStageWebSourceCommit"]=="a1d2ec578181c3916627834d56d739e582cd7880"
+ projection_source=projected.read_text()
+ assert "fountain.teatro.scenario-projection.v1" in projection_source
+ print("STAGE_WEB_SCENARIO_PROJECTION",manifest["teatroStageWebSourceCommit"],projected.stat().st_size,"javascript bytes")
  files={str(p.relative_to(SITE)):sha(p.read_bytes()) for p in SITE.rglob("*") if p.is_file()}
  inventory={}
  for line in (ROOT/"publication-files.sha256").read_text().splitlines():

@@ -9,6 +9,9 @@ const here=dirname(fileURLToPath(import.meta.url));
 const source=JSON.parse(readFileSync(resolve(here,
   '../../scenarios/csound-teatro/composing-by-ear.live.json'),'utf8'));
 const duplicate=()=>structuredClone(source);
+const playerSource=JSON.parse(readFileSync(resolve(here,
+  '../../scenarios/satzfunk-player/ear-wind.candidate.json'),'utf8'));
+const playerDuplicate=()=>structuredClone(playerSource);
 const err=(change,needle)=>{
  const s=duplicate();change(s);
  assert.throws(()=>validateScenario(s),new RegExp(needle,'i'));
@@ -101,4 +104,30 @@ test('the verifier cannot be replaced by a presentation-only graph',()=>{
      'independent live verification');
  err(s=>s.VERIFY.requiredEvidence=[],
      'independent live verification');
+});
+
+
+test('Player Scenario profile uses the same 0.1 grammar and stays unadmitted',()=>{
+ const result=validateScenario(playerSource);
+ assert.equal(result.scenarioID,'teatro.satzfunk-player-ear-wind.01');
+ assert.equal(result.grammarVersion,'0.1');
+ assert.equal(result.status,'valid-candidate-not-admitted');
+ assert.equal(result.admissible,false);
+ assert.equal(result.execution,'refused');
+ assert.deepEqual(result.legalPredicates,['LISTENS_TO','MODULATES','MAPS_TO']);
+ assert.deepEqual(result.mapping.sourceDomain,[0,0.2]);
+ assert.deepEqual(result.mapping.targetDomain,[0.25,1]);
+ assert.equal(result.mapping.controller,74);
+ assert.match(projectRelations(playerSource),/Ear.Player.01.rms .* MAPS_TO Wind.Field.01.wind_mix/);
+ assert.doesNotMatch(projectRelations(playerSource),/hardware|negotiated|admitted/i);
+});
+test('Player Scenario rejects source, event path, mapping and capability drift',()=>{
+ const bad=change=>{const s=playerDuplicate();change(s);assert.throws(()=>validateScenario(s));};
+ bad(s=>s.GIVEN.source.recordedFile='track.wav');
+ bad(s=>s.TRANSFORM.relations[3].toPort='Wind.Field.01.audio');
+ bad(s=>s.TRANSFORM.mappings[0].targetDomain=[0,2]);
+ bad(s=>s.TRANSFORM.midi2.umpOperation.valueEncoding='unsigned-7-bit');
+ bad(s=>s.TRANSFORM.midi2.midiCiTransportImplemented=true);
+ bad(s=>s.CONSTRAINTS.publicPublicationAuthorized=true);
+ bad(s=>s.VERIFY.hardwareMIDI2InteroperabilityClaim=true);
 });

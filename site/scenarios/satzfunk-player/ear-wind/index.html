@@ -1,5 +1,74 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>SatzfunkPlayer · Ear → Csound | Teatro</title><style>body{max-width:760px;margin:8vh auto;padding:0 22px;background:#f5f0e6;color:#211e1a;font:18px/1.6 Georgia,serif}h1{font-size:clamp(32px,6vw,54px);line-height:1.05}code,pre{font:13px/1.5 ui-monospace,monospace}pre{overflow:auto;padding:18px;background:#eae3d7}a{color:inherit;text-underline-offset:4px}.status{padding:12px 14px;border-left:3px solid #916c3b;background:#eee5d7}nav{font:13px/1.5 ui-monospace,monospace}</style></head>
-<body><nav><a href="/editions/first-hearing/">← First Hearing book</a></nav><main><p>TEATRO SCENARIO · CSOUND DSL 0.1</p><h1>SatzfunkPlayer, heard by Ear, shaping wind</h1><p>This resource describes one bounded live patch: SatzfunkPlayer's live PCM feeds Ear; Ear's measured RMS maps to the Csound FIELD control <code>wind_mix</code>. The Player owns playback, admission, and start/stop runtime. Teatro owns this semantic scenario.</p><p class="status"><strong>Candidate · not admitted · not live-accepted.</strong> The route exposes the versioned scenario and its Player runtime contract. A secure same-origin released track and a witnessed staging run are still required for live acceptance. Nothing starts automatically.</p><h2>Declared control path</h2><pre>SatzfunkPlayer.01.audio → Ear.Player.01.audio
-Ear.Player.01.rms → Wind.Field.01.wind_mix
-Wind.Field.01.audio → Ear.Wind.01.audio</pre><p>The mapping clamps RMS 0–0.20 to <code>wind_mix</code> 0.25–1.0, with a minimum 75 ms interval. The scenario does not claim a MIDI 2.0 Player operation; its audio path is local Web Audio and Csound host routing.</p><p><a href="scenario.json" type="application/json">Read the Csound Teatro Scenario JSON 0.1</a></p><p><a href="/editions/first-hearing/">Return to the book</a></p></main></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="teatro-scenario-id" content="teatro.satzfunk-player-ear-wind.01">
+  <title>SatzfunkPlayer · Ear → UMP → Csound | Teatro</title>
+  <style>
+    :root{color-scheme:light;--paper:#f5f0e6;--ink:#211e1a;--muted:#655f57;--line:#d5cabb;--accent:#765a38}
+    *{box-sizing:border-box}
+    body{max-width:820px;margin:0 auto;padding:clamp(1.2rem,5vw,3.2rem);background:var(--paper);color:var(--ink);font:17px/1.6 Georgia,serif}
+    nav,small,button,.tag,summary{font:600 13px/1.4 ui-monospace,monospace}
+    a{color:inherit;text-underline-offset:4px}
+    h1{font-size:clamp(2.2rem,7vw,4rem);line-height:1.04;font-weight:400;margin:.35em 0}
+    h2{font-size:1.25rem;margin:2.2em 0 .5em}
+    .eyebrow,.muted{color:var(--muted)}
+    .panel{margin:1.5rem 0;padding:1rem 1.2rem;border:1px solid var(--line);border-radius:12px;background:#faf7f0}
+    .controls{display:flex;flex-wrap:wrap;gap:.65rem;margin:1rem 0}
+    button{padding:.8rem 1rem;border:1px solid #6d5740;border-radius:6px;background:#6d5740;color:#fff;cursor:pointer}
+    button:disabled{opacity:.45;cursor:not-allowed}
+    button.secondary{background:transparent;color:var(--ink)}
+    satzfunk-player{display:block;margin:1rem 0;padding:1rem;border:1px solid var(--line);border-radius:8px}
+    pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:1rem;border-radius:8px;background:#eee7dc;font:12px/1.55 ui-monospace,monospace}
+    #scenario-status{min-height:3em}
+    .tag{display:inline-block;padding:.3rem .55rem;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+    .stage-frame{display:block;width:100%;height:clamp(320px,58vh,720px);border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+    footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+  </style>
+</head>
+<body>
+  <nav><a href="../../../editions/first-hearing/">← First Hearing book</a></nav>
+  <main>
+    <p class="eyebrow">TEATRO SCENARIO · CSOUND DSL 0.1</p>
+    <h1>SatzfunkPlayer, heard by Ear, shaping wind</h1>
+    <p>This executable resource binds an already-published Satzfunk source to the same Player instrument, Teatro scenario identity, Ear measurement, typed MIDI 2.0 operation and Csound wind field. The track is verified against the exact source catalog digest before admission.</p>
+    <p class="tag">Candidate · live acceptance pending · explicit Prepare / Start / Stop</p>
+
+    <section class="panel" aria-labelledby="player-heading">
+      <h2 id="player-heading">Source Player</h2>
+      <satzfunk-player label="SatzfunkPlayer · Shaders Track 4"></satzfunk-player>
+      <div class="controls">
+        <button type="button" id="scenario-prepare">Verify source and admit scenario</button>
+        <button type="button" id="scenario-start" disabled>Start live patch</button>
+        <button type="button" id="scenario-stop" class="secondary" disabled>Stop</button>
+      </div>
+      <p id="scenario-status" role="status" aria-live="polite">Nothing runs until you verify the source, admit the scenario, and explicitly press Start. Audio requires a secure browser context.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="stage-heading">
+      <h2 id="stage-heading">Scenario in the canonical Teatro Stage</h2>
+      <p>The existing Stage Engine receives the live Csound wind control value from this correlated Player run. The stage shows the run identity and accepted software UMP count; it receives no audio or MIDI packets.</p>
+      <iframe id="scenario-stage" class="stage-frame" title="Canonical Teatro Stage with the current SatzfunkPlayer Scenario projection" src="../../../editions/stage/embed/" loading="eager"></iframe>
+    </section>
+
+    <h2>Declared and executed route</h2>
+    <pre>SatzfunkPlayer.01.audio
+  → Ear.Player.01.audio / measured RMS
+  → SatzfunkPlayer.01.midi2.ump · MIDI 2.0 CC74, group 0/channel 0
+  → Wind.Field.01.midi2.ump
+  → bounded Csound wind_mix control channel</pre>
+    <p>The mapping clamps measured RMS 0–0.20 to <code>wind_mix</code> 0.25–1.0, with a 75 ms minimum interval. The actual Csound output is separately observed by Teatro Ear. Stop pauses the source, writes the correlated baseline, disconnects Player PCM, and stops the Csound host.</p>
+
+    <h2>Capability boundary</h2>
+    <p>The UMP operation uses the pinned Fountain-Coach MIDI 2.0 codec and an in-process software peer that decodes the packet before applying Csound control. This proves typed UMP composition at the Player boundary; it does not claim a physical MIDI 2.0 port or hardware interoperability. MIDI-CI envelope codecs exist in the owner library, but this runtime performs no live discovery or profile negotiation.</p>
+
+    <h2>Run evidence</h2>
+    <pre id="scenario-evidence" aria-live="polite">{"state":"not-admitted","acceptedSoftwareUmpOperations":0,"hardwareInteroperability":false,"midiCi":"no live discovery or negotiation"}</pre>
+    <p><a href="./scenario.json" type="application/json">Inspect the canonical Csound Teatro Scenario 0.1</a></p>
+  </main>
+  <footer>Source: Fountain-Coach/Satzfunk public catalog · Shaders Track 4 · SHA-256 <code>24abb318154118c6e0bd182fdb1e9ea0260d4c207e51e878efa2143181b670f9</code>. Staging copy only; no private archive media or public deployment.</footer>
+  <script type="module" src="./runner.mjs"></script>
+</body>
+</html>
