@@ -43,6 +43,7 @@ def main():
  assert "no live discovery or profile negotiation" in route
  runner_text=(scenario_path.parent/"runner.mjs").read_text()
  assert "latestOutputEarRms" in runner_text
+ assert "fetch(track.media" in runner_text and "mediaBasePrefix" not in runner_text
  assert "fountain.teatro.scenario-projection.v1" in runner_text
  assert 'scenarioID: \"teatro.satzfunk-player-ear-wind.01\"' in runner_text
  runtime_entry=next(row for row in manifest["runtimeFiles"] if row["name"]=="satzfunk-player/teatro-scenario-runtime.mjs")

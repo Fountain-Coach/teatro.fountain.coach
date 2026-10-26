@@ -19,7 +19,6 @@ const stopButton = document.querySelector("#scenario-stop");
 const player = document.querySelector("satzfunk-player");
 const stageMount = location.pathname.startsWith("/teatro/");
 const assetBase = stageMount ? "/teatro/first-hearing-assets" : "/assets";
-const mediaBasePrefix = stageMount ? "/teatro/" : "/";
 const sourceIdentity = `satzfunk-player:${track.id}:${track.sha256.slice(0, 16)}`;
 let runtime = null;
 let earContext = null;
@@ -76,7 +75,7 @@ async function prepare() {
   prepareButton.disabled = true;
   status("Checking secure origin and exact public source bytes…");
   if (!globalThis.isSecureContext) throw new Error("Open this staged page through the secure localhost tunnel before preparing audio.");
-  const raw = await fetch(`${mediaBasePrefix}media/bandcamp-20261024/shaders/40479.mp4`, { cache: "no-store" });
+  const raw = await fetch(track.media, { cache: "no-store" });
   if (!raw.ok) throw new Error(`Published source unavailable on this stage (${raw.status}).`);
   const bytes = new Uint8Array(await raw.arrayBuffer());
   const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map(value => value.toString(16).padStart(2, "0")).join("");
@@ -91,7 +90,6 @@ async function prepare() {
   registerSatzfunkPlayer();
   player.setEdition({
     origin: location.origin,
-    mediaBasePrefix,
     tracks: [track],
     activeTrackID: track.id
   });

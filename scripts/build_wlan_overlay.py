@@ -42,6 +42,9 @@ def main(source:Path, output:Path):
       output/"first-hearing-assets/linotype/ear-original.js"]
     missing=[str(p.relative_to(output)) for p in required if not p.is_file()]
     if missing: raise SystemExit("overlay is incomplete: "+", ".join(missing))
+    runner=(output/"scenarios/satzfunk-player/ear-wind/runner.mjs").read_text(encoding="utf-8")
+    if 'media: "/teatro/media/' not in runner or "fetch(track.media" not in runner or "mediaBasePrefix" in runner:
+        raise SystemExit("staged SatzfunkPlayer route must fetch its already-rewritten same-origin media path exactly once")
     for path in output.rglob("*"):
         if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES:
             text=path.read_text(encoding="utf-8")
