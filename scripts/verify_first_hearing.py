@@ -48,7 +48,7 @@ def main():
  assert 'scenarioID: \"teatro.satzfunk-player-ear-wind.01\"' in runner_text
  runtime_entry=next(row for row in manifest["runtimeFiles"] if row["name"]=="satzfunk-player/teatro-scenario-runtime.mjs")
  assert sha((SITE/"assets/linotype/satzfunk-player/teatro-scenario-runtime.mjs").read_bytes())==runtime_entry["sha256"]
- assert manifest["satzfunkPlayerSourceCommit"]=="24024c0348e58491e1fabb37856ded167593fcfb"
+ assert manifest["satzfunkPlayerSourceCommit"]=="d40e4a2f25fd77188085730492cc5523642d83f7"
  assert manifest["sourceMutation"] is False
  ear_entry=next(row for row in manifest["runtimeFiles"] if row["name"]=="ear-original.js")
  assert sha((SITE/"assets/linotype/ear-original.js").read_bytes())==ear_entry["sha256"]=="4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427"

@@ -65,7 +65,7 @@
     },
     {
       "name": "satzfunk-player/index.mjs",
-      "sha256": "e073c91a478fd755c11be04b4441b44608d2fc3e77eb5086b981f41c0589b82d"
+      "sha256": "e6d0598abc9b1dd1a641bdda474e9a3b817c092d5a57b266bccb45babd2ad6ed"
     },
     {
       "name": "satzfunk-player/satzfunk-player.mjs",
@@ -93,8 +93,8 @@
     }
   ],
   "satzfunkPlayerSourceRepository": "Fountain-Coach/SatzfunkPlayer",
-  "satzfunkPlayerSourceCommit": "24024c0348e58491e1fabb37856ded167593fcfb",
-  "satzfunkPlayerSourceSHA256": "07d00776ab3907e2f396a960e624a7fffe36d9b11b0356dbe1876385a43d75c1",
+  "satzfunkPlayerSourceCommit": "d40e4a2f25fd77188085730492cc5523642d83f7",
+  "satzfunkPlayerSourceSHA256": "5ea20bffa332a12c3ea5428f9d9391960f81117d820df552784a7757dd8584c8",
   "satzfunkPlayerRuntimeState": "owner-runtime-bundled; stage route requires secure user-activated admission",
   "teatroScenario": {
     "scenarioID": "teatro.satzfunk-player-ear-wind.01",
