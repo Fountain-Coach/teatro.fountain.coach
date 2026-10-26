@@ -139,7 +139,15 @@ async function prepare() {
       }
     }),
     acceptUmp: (...args) => csoundInput.acceptUmp(...args),
-    stop: async () => { csoundInput.stop(); await csoundHost.stop(); }
+    stop: async () => {
+      csoundInput.stop();
+      const activeHost = csoundHost.runtime;
+      if (activeHost?.outputGain) activeHost.outputGain.gain.value = 0;
+      if (activeHost?.context && activeHost.context.state !== "closed") {
+        await activeHost.context.close();
+      }
+      await csoundHost.stop();
+    }
   };
   const scenarioResponse = await fetch("./scenario.json", { cache: "no-store" });
   if (!scenarioResponse.ok) throw new Error("Canonical Teatro Scenario resource is unavailable.");

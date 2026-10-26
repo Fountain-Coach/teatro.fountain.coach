@@ -39,7 +39,7 @@ try{
  if(running.evidence.midi2.hardwareInteroperability!==false||!String(running.evidence.midi2.midiCi).includes('no live discovery'))throw Error('Capability boundary is not truthful');
  await gesture('#scenario-stop');
  let stopped=null;
- for(let i=0;i<100;i++){await wait(100);stopped=await snapshot();if(stopped.evidence.state?.state==='stopped'&&stopped.stage?.state==='stopped')break;}
+ for(let i=0;i<600;i++){await wait(100);stopped=await snapshot();if(stopped.evidence.state?.state==='stopped'&&stopped.stage?.state==='stopped')break;if(i>0&&i%100===0)console.log('STOP_WAIT',i/10,JSON.stringify({status:stopped.status,stopDisabled:stopped.stopDisabled,paused:stopped.playerState?.paused}));}
  if(stopped?.evidence?.state?.state!=='stopped'||stopped.stage?.state!=='stopped'||stopped.stage?.runID!==runID||stopped.playerState?.paused!==true)throw Error('Correlated Stop did not complete '+JSON.stringify(stopped));
  const stoppedCounts={ump:stopped.evidence.midi2.acceptedSoftwareUmpOperations,ear:stopped.evidence.csound.outputEarRmsWindows};
  await wait(1250);

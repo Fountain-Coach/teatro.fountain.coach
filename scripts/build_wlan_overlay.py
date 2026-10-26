@@ -44,7 +44,8 @@ def main(source:Path, output:Path):
     if missing: raise SystemExit("overlay is incomplete: "+", ".join(missing))
     runner=(output/"scenarios/satzfunk-player/ear-wind/runner.mjs").read_text(encoding="utf-8")
     if ('media: "/teatro/media/' not in runner or "fetch(track.media" not in runner or
-        "mediaBasePrefix" in runner or "teatro-csound-audioworklet" not in runner):
+        "mediaBasePrefix" in runner or "teatro-csound-audioworklet" not in runner or
+        "activeHost.context.close()" not in runner):
         raise SystemExit("staged SatzfunkPlayer route must fetch its already-rewritten same-origin media path exactly once")
     for path in output.rglob("*"):
         if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES:
