@@ -132,7 +132,7 @@ async function prepare() {
   const csound = {
     start: async () => csoundHost.start(event => {
       if (event?.type === "ear.ump" &&
-          event.event?.sourceIdentity === "teatro-csound-ear-worklet" &&
+          event.event?.sourceIdentity === "teatro-csound-audioworklet" &&
           Number.isFinite(event.event?.measurement?.rms)) {
         outputEarWindows++;
         latestOutputEarRms = event.event.measurement.rms;
