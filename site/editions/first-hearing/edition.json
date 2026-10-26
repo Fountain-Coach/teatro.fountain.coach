@@ -60,6 +60,10 @@
       "sha256": "cc2312a80941f1e7435c384b121579c8799f413a027620efd5ab7a79e53036d7"
     },
     {
+      "name": "ear-original.js",
+      "sha256": "4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427"
+    },
+    {
       "name": "satzfunk-player/index.mjs",
       "sha256": "e073c91a478fd755c11be04b4441b44608d2fc3e77eb5086b981f41c0589b82d"
     },

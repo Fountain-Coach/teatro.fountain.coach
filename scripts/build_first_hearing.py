@@ -7,6 +7,7 @@ Audio UX: source-bound Satzfunk hearing rail, with NO invented speech/media.
 """
 from pathlib import Path
 import argparse
+import base64
 import hashlib
 import json
 import re
@@ -206,6 +207,16 @@ def main(fountain,satzfunk,press,stage_source,satzfunk_player,stage_web_source):
  csound_host=stage_source/'site/assets/book-csound-host.js'
  assert csound_host.stat().st_size>100_000, 'Use the canonical Teatro-owned Csound book host'
  shutil.copyfile(csound_host,SITE/'assets/book-csound-host.js')
+ ear_match=re.search(r'new URL\("data:text/javascript;base64,([A-Za-z0-9+/=]+)"',csound_host.read_text())
+ if not ear_match:
+  raise ValueError("Canonical Csound host does not include the original Ear worklet")
+ ear_bytes=base64.b64decode(ear_match.group(1),validate=True)
+ ear_sha=sha(ear_bytes)
+ if ear_sha!="4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427":
+  raise ValueError("Canonical Ear worklet bytes changed; re-audit before packaging")
+ ear_path=output_assets/"ear-original.js"
+ ear_path.write_bytes(ear_bytes)
+ runtime.append({"name":"ear-original.js","sha256":ear_sha})
  adapter=satzfunk/"station/satzfunk-book.mjs"
  adapter_css=satzfunk/"station/satzfunk-book.css"
  audio=SITE/"assets/satzfunk";audio.mkdir(parents=True,exist_ok=True)

@@ -45,6 +45,8 @@ def main():
  assert sha((SITE/"assets/linotype/satzfunk-player/teatro-scenario-runtime.mjs").read_bytes())==runtime_entry["sha256"]
  assert manifest["satzfunkPlayerSourceCommit"]=="24024c0348e58491e1fabb37856ded167593fcfb"
  assert manifest["sourceMutation"] is False
+ ear_entry=next(row for row in manifest["runtimeFiles"] if row["name"]=="ear-original.js")
+ assert sha((SITE/"assets/linotype/ear-original.js").read_bytes())==ear_entry["sha256"]=="4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427"
  assert sha((SITE/"assets/edition/teatro-score-memory-vector-human-condition.svg").read_bytes())==manifest["originalScorePlateSHA256"]
  mapping=manifest["scoreNavigation"]
  assert mapping==json.loads((ROOT/'scripts/score-navigation.json').read_text())
