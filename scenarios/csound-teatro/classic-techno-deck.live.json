@@ -20,49 +20,49 @@
         "id": "Techno.Kick.01",
         "kind": "FIELD",
         "owner": "Fountain-Coach/midi2-gpu-fabric",
-        "capability": "Csound instr 2",
+        "capability": "Csound instr 102 / patch A",
         "runtime": "@csound/browser"
       },
       {
         "id": "Techno.Clap.01",
         "kind": "FIELD",
         "owner": "Fountain-Coach/midi2-gpu-fabric",
-        "capability": "Csound instr 3",
+        "capability": "Csound instr 103 / patch A",
         "runtime": "@csound/browser"
       },
       {
         "id": "Techno.Hat.01",
         "kind": "FIELD",
         "owner": "Fountain-Coach/midi2-gpu-fabric",
-        "capability": "Csound instr 4",
+        "capability": "Csound instr 104 / patch A",
         "runtime": "@csound/browser"
       },
       {
         "id": "Techno.OpenHat.01",
         "kind": "FIELD",
         "owner": "Fountain-Coach/midi2-gpu-fabric",
-        "capability": "Csound instr 5",
+        "capability": "Csound instr 105 / patch A",
         "runtime": "@csound/browser"
       },
       {
         "id": "Techno.Bass.01",
         "kind": "FIELD",
         "owner": "Fountain-Coach/midi2-gpu-fabric",
-        "capability": "Csound instr 6",
+        "capability": "Csound instr 106 / patch A",
         "runtime": "@csound/browser"
       },
       {
         "id": "Techno.Stab.01",
         "kind": "FIELD",
         "owner": "Fountain-Coach/midi2-gpu-fabric",
-        "capability": "Csound instr 7",
+        "capability": "Csound instr 107 / patch A",
         "runtime": "@csound/browser"
       },
       {
         "id": "Techno.Mix.01",
         "kind": "FIELD",
         "owner": "Fountain-Coach/midi2-gpu-fabric",
-        "capability": "Csound instr 99",
+        "capability": "Csound instr 199 / patch A",
         "runtime": "@csound/browser"
       },
       {
@@ -71,6 +71,62 @@
         "owner": "Fountain-Coach/midi2-gpu-fabric",
         "capability": "ear-analysis AudioWorklet",
         "runtime": "Web Audio"
+      },
+      {
+        "id": "Techno.Kick.02",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 202 / patch B",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Clap.02",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 203 / patch B",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Hat.02",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 204 / patch B",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.OpenHat.02",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 205 / patch B",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Bass.02",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 206 / patch B",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Stab.02",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 207 / patch B",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Crossfade.01",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 900 / equal-power output mixer",
+        "runtime": "@csound/browser"
+      },
+      {
+        "id": "Techno.Mix.02",
+        "kind": "FIELD",
+        "owner": "Fountain-Coach/midi2-gpu-fabric",
+        "capability": "Csound instr 299 / patch B",
+        "runtime": "@csound/browser"
       }
     ],
     "ports": [
@@ -109,7 +165,7 @@
           0,
           1
         ],
-        "capability": "Csound.setControlChannel(cutoff)"
+        "capability": "Csound.setControlChannel(cutoff_a)"
       },
       {
         "id": "Techno.Bass.01.ear_follow",
@@ -121,7 +177,7 @@
           0,
           1
         ],
-        "capability": "Csound.setControlChannel(ear_follow)"
+        "capability": "Csound.setControlChannel(ear_follow_a)"
       },
       {
         "id": "Techno.Bass.01.ear_depth",
@@ -133,9 +189,142 @@
           0,
           1
         ],
-        "capability": "Csound.setControlChannel(ear_depth)"
+        "capability": "Csound.setControlChannel(ear_depth_a)"
+      },
+      {
+        "id": "Techno.Mix.02.audio",
+        "owner": "Techno.Mix.02",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound instr 299"
+      },
+      {
+        "id": "Techno.Crossfade.01.a",
+        "owner": "Techno.Crossfade.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound instr 900 from patch A"
+      },
+      {
+        "id": "Techno.Crossfade.01.b",
+        "owner": "Techno.Crossfade.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound instr 900 from patch B"
+      },
+      {
+        "id": "Techno.Crossfade.01.audio",
+        "owner": "Techno.Crossfade.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound output to Ear AudioWorklet"
+      },
+      {
+        "id": "Techno.Crossfade.01.position",
+        "owner": "Techno.Crossfade.01",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(crossfade)"
+      },
+      {
+        "id": "Techno.Bass.02.cutoff",
+        "owner": "Techno.Bass.02",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(cutoff_b)"
+      },
+      {
+        "id": "Techno.Bass.02.ear_follow",
+        "owner": "Techno.Bass.02",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_follow_b)"
+      },
+      {
+        "id": "Techno.Bass.02.ear_depth",
+        "owner": "Techno.Bass.02",
+        "direction": "in",
+        "valueType": "number",
+        "unit": "normalized",
+        "domain": [
+          0,
+          1
+        ],
+        "capability": "Csound.setControlChannel(ear_depth_b)"
       }
-    ]
+    ],
+    "performance": {
+      "patchA": {
+        "name": "Techno Patch A",
+        "realization": "Csound instr 101-107 and 199",
+        "mixer": "Techno.Mix.01",
+        "controlsSuffix": "_a",
+        "stateIdentity": "A / independent patch snapshot"
+      },
+      "patchB": {
+        "name": "Techno Patch B",
+        "cloneOf": "A at explicitly requested clone moment",
+        "realization": "Csound instr 201-207 and 299",
+        "mixer": "Techno.Mix.02",
+        "controlsSuffix": "_b",
+        "stateIdentity": "B / separate snapshot; independent after cloning"
+      },
+      "crossfader": {
+        "owner": "Techno.Crossfade.01",
+        "channel": "crossfade",
+        "position": [
+          0,
+          1
+        ],
+        "law": "cos(x*pi/2) for A; sin(x*pi/2) for B",
+        "rampMilliseconds": 90
+      },
+      "softMutateAll": {
+        "scope": "all 6 continuous channel levels, tempo, 5 effects, Ear depth",
+        "preserve": [
+          "scale",
+          "rhythm-pattern",
+          "mute",
+          "solo",
+          "audio-routing"
+        ],
+        "durationSeconds": [
+          2,
+          4,
+          8,
+          16
+        ],
+        "interpolation": "bounded smoothstep source-to-target; 170ms Csound portk"
+      },
+      "presets": {
+        "factory": 8,
+        "userSlots": 4,
+        "persistence": "browser-localStorage per HTTPS origin; safe bounded numeric patch data",
+        "recallInterpolationMilliseconds": 1800
+      },
+      "sourceOwner": "Fountain-Coach/midi2-gpu-fabric",
+      "sourceCommit": "8c0ab06735d7987af52e6e232d24d4bf4d5d563e",
+      "browserRehearsalOnly": true
+    }
   },
   "TRANSFORM": {
     "relations": [
@@ -179,8 +368,8 @@
         "id": "rel.ear-listens-to-output",
         "predicate": "LISTENS_TO",
         "subject": "Ear.Techno.01",
-        "object": "Techno.Mix.01",
-        "fromPort": "Techno.Mix.01.audio",
+        "object": "Techno.Crossfade.01",
+        "fromPort": "Techno.Crossfade.01.audio",
         "toPort": "Ear.Techno.01.audio"
       },
       {
@@ -190,6 +379,66 @@
         "object": "Techno.Bass.01",
         "fromPort": "Ear.Techno.01.rms",
         "toPort": "Techno.Bass.01.ear_follow"
+      },
+      {
+        "id": "rel.kick-b-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Kick.02",
+        "object": "Techno.Mix.02"
+      },
+      {
+        "id": "rel.clap-b-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Clap.02",
+        "object": "Techno.Mix.02"
+      },
+      {
+        "id": "rel.hat-b-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Hat.02",
+        "object": "Techno.Mix.02"
+      },
+      {
+        "id": "rel.openhat-b-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.OpenHat.02",
+        "object": "Techno.Mix.02"
+      },
+      {
+        "id": "rel.bass-b-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Bass.02",
+        "object": "Techno.Mix.02"
+      },
+      {
+        "id": "rel.stab-b-to-mix",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Stab.02",
+        "object": "Techno.Mix.02"
+      },
+      {
+        "id": "rel.mix-a-to-crossfade",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Mix.01",
+        "object": "Techno.Crossfade.01",
+        "fromPort": "Techno.Mix.01.audio",
+        "toPort": "Techno.Crossfade.01.a"
+      },
+      {
+        "id": "rel.mix-b-to-crossfade",
+        "predicate": "PRODUCES",
+        "subject": "Techno.Mix.02",
+        "object": "Techno.Crossfade.01",
+        "fromPort": "Techno.Mix.02.audio",
+        "toPort": "Techno.Crossfade.01.b"
+      },
+      {
+        "id": "rel.ear-modulates-bass-b",
+        "predicate": "MODULATES",
+        "subject": "Ear.Techno.01",
+        "object": "Techno.Bass.02",
+        "fromPort": "Ear.Techno.01.rms",
+        "toPort": "Techno.Bass.02.ear_follow"
       }
     ],
     "mappings": [
@@ -213,8 +462,42 @@
         "interpolation": "linear",
         "updateMode": "event",
         "minimumIntervalMilliseconds": 90
+      },
+      {
+        "id": "map.ear-rms-to-bass-b-filter-follow",
+        "predicate": "MAPS_TO",
+        "sourcePort": "Ear.Techno.01.rms",
+        "targetPort": "Techno.Bass.02.ear_follow",
+        "sourceDomain": [
+          0.001,
+          0.12
+        ],
+        "targetDomain": [
+          0,
+          1
+        ],
+        "sourceUnit": "normalized-linear-rms",
+        "targetUnit": "normalized",
+        "transfer": "linear",
+        "clamp": true,
+        "interpolation": "linear",
+        "updateMode": "event",
+        "minimumIntervalMilliseconds": 90
       }
-    ]
+    ],
+    "mixing": {
+      "kind": "crossfade",
+      "owner": "Techno.Crossfade.01",
+      "ports": [
+        "Techno.Crossfade.01.a",
+        "Techno.Crossfade.01.b"
+      ],
+      "output": "Techno.Crossfade.01.audio",
+      "control": "crossfade",
+      "law": "equal-power",
+      "minimumSmoothingMilliseconds": 90,
+      "noAdditionalWebAudioInstruments": true
+    }
   },
   "CONSTRAINTS": {
     "mutationScope": [
@@ -224,7 +507,15 @@
       "Techno.Hat.01",
       "Techno.OpenHat.01",
       "Techno.Bass.01",
-      "Techno.Stab.01"
+      "Techno.Stab.01",
+      "Techno.Mix.02",
+      "Techno.Kick.02",
+      "Techno.Clap.02",
+      "Techno.Hat.02",
+      "Techno.OpenHat.02",
+      "Techno.Bass.02",
+      "Techno.Stab.02",
+      "Techno.Crossfade.01"
     ],
     "requiresAdmissionBeforeEffects": true,
     "nativeAdmissionAvailable": false,
@@ -241,14 +532,25 @@
     "feedbackReleaseMilliseconds": 360,
     "feedbackStaleResetMilliseconds": 700,
     "feedbackMustZeroAtStop": true,
-    "earWindowRequiredForFeedback": true
+    "earWindowRequiredForFeedback": true,
+    "independentPatchStates": true,
+    "mutationsBoundedToContinuousControls": true,
+    "crossfadeIsCsoundOutput": true,
+    "runtimeGraphCount": 2,
+    "csoundAudioWorkletInstanceCount": 1,
+    "userPresetStorageScope": "client-local only; no server upload"
   },
   "EXPECT": {
     "rhythm": "four-on-floor kick, clap beats 2 and 4, offbeat hats, C-minor bass and stab",
     "primaryView": "mixing-deck-no-puppet",
     "outputObservableBy": "Ear.Techno.01",
     "audioEngine": "Csound AudioWorklet",
-    "earFeedback": "Actual Ear RMS modulates the bass cutoff through the declared ear_follow control port, with writer-controlled depth and cutoff"
+    "earFeedback": "Ear measures the real crossfaded stereo output and controls bass filter depths independently in both Csound graphs",
+    "patches": "Two independently editable Csound techno patch graphs in the same engine; one musician-operated crossfade",
+    "patchClone": "Copy complete A or B patch snapshot to the other, never share mutable state",
+    "softMutateAll": "Glide all continuous parameters with bounded gentle changes; preserve mute, solo, and musical structure",
+    "presetBank": "Eight factory patches and four separately writable browser-local user slots; recall glides while playing",
+    "crossfade": "Actual equal-power Csound audio mix of both running patches, not display-only faders"
   },
   "VERIFY": {
     "requiredEvidence": [
@@ -261,9 +563,16 @@
       "bounded-Csound-ear_follow-updates",
       "audible-or-measured-bass-cutoff-response",
       "stale-Ear-measurement-fails-to-neutral",
-      "zero-feedback-on-stop"
+      "zero-feedback-on-stop",
+      "two-independent-Csounding-voice-and-mixer-graphs",
+      "preset-A-B-independence-and-factory-recall",
+      "soft-mutate-all-bounded-transition",
+      "user-preset-store-and-reload",
+      "equal-power-crossfade-real-Csound-output-A-midpoint-B",
+      "stop-both-graphs-and-close-AudioContext",
+      "HTTPS-WLAN-stage-promotion-and-route-readback"
     ],
-    "unmetBoundary": "Candidate and browser rehearsal only; native Scenario admission is not provided by the standalone deck",
+    "unmetBoundary": "Browser Csound A/B live rehearsal was tested; native Csound Teatro Scenario admission remains not implemented/proven, no hardware MIDI2/MIDI-CI claim",
     "noPresentationOnlyAcceptance": true
   }
 }
