@@ -23,6 +23,7 @@ const sourceIdentity = `satzfunk-player:${track.id}:${track.sha256.slice(0, 16)}
 let runtime = null;
 let earContext = null;
 let csoundHost = null;
+let csoundOutputContext = null;
 let csoundInput = null;
 let updateTimer = null;
 let stopping = false;
@@ -67,7 +68,7 @@ function report() {
       hardwareInteroperability: false,
       midiCi: "envelope codec available; no live discovery or negotiation"
     },
-    csound: { outputEarRmsWindows: outputEarWindows, latestOutputEarRms, parameter: "wind_mix" }
+    csound: { outputEarRmsWindows: outputEarWindows, latestOutputEarRms, outputContextState: csoundOutputContext?.state ?? "not-started", parameter: "wind_mix" }
   }, null, 2);
 }
 
@@ -137,16 +138,20 @@ async function prepare() {
         outputEarWindows++;
         latestOutputEarRms = event.event.measurement.rms;
       }
-    }),
+    }).then(() => { csoundOutputContext = csoundHost.runtime?.context ?? null; }),
     acceptUmp: (...args) => csoundInput.acceptUmp(...args),
     stop: async () => {
       csoundInput.stop();
       const activeHost = csoundHost.runtime;
       if (activeHost?.outputGain) activeHost.outputGain.gain.value = 0;
+      activeHost?.earTap?.disconnect();
+      activeHost?.plateEarTap?.disconnect();
       if (activeHost?.context && activeHost.context.state !== "closed") {
-        await activeHost.context.close();
+        void activeHost.context.close().catch(() => {});
       }
-      await csoundHost.stop();
+      void csoundHost.stop().catch(() => {});
+      setTimeout(report, 250);
+      setTimeout(report, 1000);
     }
   };
   const scenarioResponse = await fetch("./scenario.json", { cache: "no-store" });

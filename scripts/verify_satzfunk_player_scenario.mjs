@@ -39,12 +39,12 @@ try{
  if(running.evidence.midi2.hardwareInteroperability!==false||!String(running.evidence.midi2.midiCi).includes('no live discovery'))throw Error('Capability boundary is not truthful');
  await gesture('#scenario-stop');
  let stopped=null;
- for(let i=0;i<600;i++){await wait(100);stopped=await snapshot();if(stopped.evidence.state?.state==='stopped'&&stopped.stage?.state==='stopped')break;if(i>0&&i%100===0)console.log('STOP_WAIT',i/10,JSON.stringify({status:stopped.status,stopDisabled:stopped.stopDisabled,paused:stopped.playerState?.paused}));}
- if(stopped?.evidence?.state?.state!=='stopped'||stopped.stage?.state!=='stopped'||stopped.stage?.runID!==runID||stopped.playerState?.paused!==true)throw Error('Correlated Stop did not complete '+JSON.stringify(stopped));
+ for(let i=0;i<600;i++){await wait(100);stopped=await snapshot();if(stopped.evidence.state?.state==='stopped'&&stopped.stage?.state==='stopped'&&stopped.evidence.csound?.outputContextState==='closed')break;if(i>0&&i%100===0)console.log('STOP_WAIT',i/10,JSON.stringify({status:stopped.status,stopDisabled:stopped.stopDisabled,paused:stopped.playerState?.paused}));}
+ if(stopped?.evidence?.state?.state!=='stopped'||stopped.stage?.state!=='stopped'||stopped.stage?.runID!==runID||stopped.playerState?.paused!==true||stopped.evidence.csound?.outputContextState!=='closed')throw Error('Correlated Stop did not complete '+JSON.stringify(stopped));
  const stoppedCounts={ump:stopped.evidence.midi2.acceptedSoftwareUmpOperations,ear:stopped.evidence.csound.outputEarRmsWindows};
  await wait(1250);
  const quiet=await snapshot();
- if(quiet.evidence.state?.state!=='stopped'||quiet.evidence.midi2.acceptedSoftwareUmpOperations!==stoppedCounts.ump||quiet.evidence.csound.outputEarRmsWindows!==stoppedCounts.ear)throw Error('Post-stop UMP or Csound output continued '+JSON.stringify({stoppedCounts,quiet:quiet.evidence}));
+ if(quiet.evidence.state?.state!=='stopped'||quiet.evidence.midi2.acceptedSoftwareUmpOperations!==stoppedCounts.ump||quiet.evidence.csound.outputEarRmsWindows!==stoppedCounts.ear||quiet.evidence.csound.outputContextState!=='closed')throw Error('Post-stop UMP or Csound output continued '+JSON.stringify({stoppedCounts,quiet:quiet.evidence}));
  if(consoleErrors.length)throw Error('Browser errors: '+consoleErrors.slice(0,8).join(' | '));
  console.log('PASS_STAGED_SATZFUNKPLAYER_SCENARIO',JSON.stringify({origin:context.origin,runID,sourceSHA256:running.evidence.source.sha256,sourceBytes:running.evidence.source.bytes||5813335,acceptedSoftwareUmpOperations:running.evidence.midi2.acceptedSoftwareUmpOperations,lastOperation:op,csoundOutputEarRmsWindows:running.evidence.csound.outputEarRmsWindows,csoundOutputEarRms:running.evidence.csound.latestOutputEarRms,stage:running.stage,stopped:stopped.stage,postStopCountersStable:true,hardwareInteroperability:false,midiCi:running.evidence.midi2.midiCi,preparationState:before.evidence.state?.state}));
 }finally{ws.close();await fetch(chrome+'/json/close/'+tab.id).catch(()=>{});}
