@@ -1,0 +1,395 @@
+{
+  "kind": "CsoundTeatroScenario",
+  "scenarioID": "teatro.first-readings.the-second-cup.01",
+  "grammarVersion": "0.1",
+  "schemaVersion": "0.1",
+  "status": "candidate-unadmitted",
+  "mode": "bounded-rehearsal",
+  "sourceAuthority": "Fountain-Coach/Reframe-Refactoring/docs/151-csound-teatro-speaking-sound-in-space.md",
+  "GIVEN": {
+    "source": {
+      "repository": "Fountain-Coach/fountain.coach",
+      "commit": "af2b33cd978a71c621c0ce042743dc2720ed3e01",
+      "path": "site/essays/teatro-an-unfinished-composition/index.html",
+      "work": "Teatro — An Unfinished Composition",
+      "collection": "First Readings",
+      "exactExcerpt": "Put an empty chair on a stage and wait long enough. It ceases to be furniture. Attention changes it.",
+      "sourceRole": "artistic premise only; the kitchen scene is an original derived composition, not a verbatim reading"
+    },
+    "scene": {
+      "title": "The Second Cup",
+      "setting": "ordinary kitchen at breakfast, 08:15",
+      "durationSeconds": 80,
+      "room": "canonical TeatroStageEngine three-sided paper stage",
+      "camera": "orthographic, source-owned orbit/zoom",
+      "audibleWorld": "original Foley only; the offline audition is not the native Csound engine"
+    },
+    "entities": [
+      {
+        "id": "Actor.Morning.01",
+        "kind": "BODY",
+        "role": "one present person; no identity assigned",
+        "stagePosition": {
+          "x": -3,
+          "z": 2
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Table.01",
+        "kind": "BODY",
+        "role": "breakfast table",
+        "stagePosition": {
+          "x": 0,
+          "z": 0
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Chair.Used.01",
+        "kind": "BODY",
+        "role": "one occupied chair",
+        "stagePosition": {
+          "x": -3,
+          "z": -2
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot",
+        "occupied": true
+      },
+      {
+        "id": "Chair.Empty.01",
+        "kind": "BODY",
+        "role": "unoccupied chair",
+        "stagePosition": {
+          "x": 3,
+          "z": -2
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot",
+        "occupied": false
+      },
+      {
+        "id": "Cup.First.01",
+        "kind": "BODY",
+        "role": "first cup",
+        "stagePosition": {
+          "x": -1,
+          "z": 0
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Cup.Second.01",
+        "kind": "BODY",
+        "role": "second cup; remains unfilled",
+        "stagePosition": {
+          "x": 1,
+          "z": 0
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Sink.01",
+        "kind": "BODY",
+        "role": "sink",
+        "stagePosition": {
+          "x": -9,
+          "z": 7
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Kitchen.Field.01",
+        "kind": "FIELD",
+        "role": "the original sounds of coffee, porcelain, bicycle, downstairs door, spoon and kettle",
+        "runtime": "Csound",
+        "capability": "proposed Foley oscillator/noise voices",
+        "binding": null,
+        "owner": "Fountain-Coach/teatro.fountain.coach"
+      },
+      {
+        "id": "Ear.Kitchen.01",
+        "kind": "EAR",
+        "role": "independent output observer",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "ear-analysis AudioWorklet",
+        "binding": null
+      }
+    ],
+    "ports": [
+      {
+        "id": "Kitchen.Field.01.audio",
+        "owner": "Kitchen.Field.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound audio output; unresolved"
+      },
+      {
+        "id": "Ear.Kitchen.01.audio",
+        "owner": "Ear.Kitchen.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "ear-analysis AudioWorklet input; unresolved"
+      },
+      {
+        "id": "Ear.Kitchen.01.rms",
+        "owner": "Ear.Kitchen.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized-linear-rms",
+        "domain": [
+          0,
+          0.2
+        ],
+        "capability": "Ear measured RMS; no measurement yet"
+      }
+    ],
+    "beats": [
+      {
+        "id": "habit",
+        "label": "I — Habit",
+        "startSeconds": 0,
+        "endSeconds": 20,
+        "intention": "Two cups placed at breakfast; the second cup is not assigned to anybody."
+      },
+      {
+        "id": "attention",
+        "label": "II — Attention",
+        "startSeconds": 20,
+        "endSeconds": 40,
+        "intention": "Only the first cup is filled; a reach toward the second cup stops without completing a pour."
+      },
+      {
+        "id": "outside",
+        "label": "III — Outside",
+        "startSeconds": 40,
+        "endSeconds": 60,
+        "intention": "The street continues: a bicycle, a downstairs door, a spoon. Nobody enters."
+      },
+      {
+        "id": "decision",
+        "label": "IV — Decision",
+        "startSeconds": 60,
+        "endSeconds": 80,
+        "intention": "The second cup travels partway toward the sink, returns to the table, and remains there. The kettle stops."
+      }
+    ]
+  },
+  "TRANSFORM": {
+    "relations": [
+      {
+        "id": "cup-near-empty-chair",
+        "predicate": "NEAR",
+        "subject": "Cup.Second.01",
+        "object": "Chair.Empty.01",
+        "spatialRole": "stage relation, not an explanation of ownership"
+      },
+      {
+        "id": "ear-hears-kitchen",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Kitchen.01",
+        "object": "Kitchen.Field.01",
+        "fromPort": "Kitchen.Field.01.audio",
+        "toPort": "Ear.Kitchen.01.audio"
+      }
+    ],
+    "mappings": [],
+    "events": [
+      {
+        "id": "coffee-begins",
+        "atSeconds": 1,
+        "kind": "audio",
+        "actor": "Kitchen.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "Quiet coffee brewing, no melody",
+        "audioCue": "coffee_air"
+      },
+      {
+        "id": "first-cup-placed",
+        "atSeconds": 6,
+        "kind": "action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.First.01",
+        "mode": "realized",
+        "description": "First cup placed on table",
+        "audioCue": "cup_contact_1"
+      },
+      {
+        "id": "second-cup-placed",
+        "atSeconds": 12,
+        "kind": "action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.Second.01",
+        "mode": "realized",
+        "description": "Second cup placed on table",
+        "audioCue": "cup_contact_2"
+      },
+      {
+        "id": "first-cup-filled",
+        "atSeconds": 24,
+        "kind": "action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.First.01",
+        "mode": "realized",
+        "description": "Coffee poured into first cup only",
+        "audioCue": "pour_first"
+      },
+      {
+        "id": "reach-begins",
+        "atSeconds": 30,
+        "kind": "action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.Second.01",
+        "mode": "realized",
+        "description": "Hand approaches second cup"
+      },
+      {
+        "id": "second-pour-withheld",
+        "atSeconds": 34,
+        "kind": "withheld-action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.Second.01",
+        "mode": "withheld",
+        "description": "The anticipated pour does NOT occur. This is an observed withholding, not a sound effect."
+      },
+      {
+        "id": "bicycle-passes",
+        "atSeconds": 43,
+        "kind": "audio",
+        "actor": "Kitchen.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "A bicycle passes outside the window",
+        "audioCue": "bicycle_pass"
+      },
+      {
+        "id": "downstairs-door",
+        "atSeconds": 51,
+        "kind": "audio",
+        "actor": "Kitchen.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "A downstairs door closes, spatially distant",
+        "audioCue": "door_downstairs"
+      },
+      {
+        "id": "spoon-contact",
+        "atSeconds": 56,
+        "kind": "action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.First.01",
+        "mode": "realized",
+        "description": "Spoon touches the first cup once",
+        "audioCue": "spoon"
+      },
+      {
+        "id": "second-cup-moved",
+        "atSeconds": 65,
+        "kind": "action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.Second.01",
+        "mode": "realized",
+        "description": "Second cup starts moving toward sink but does not arrive",
+        "audioCue": "cup_scrape"
+      },
+      {
+        "id": "second-cup-left",
+        "atSeconds": 70,
+        "kind": "action",
+        "actor": "Actor.Morning.01",
+        "target": "Cup.Second.01",
+        "mode": "realized",
+        "description": "Second cup returned to table; no disposal",
+        "audioCue": "cup_return"
+      },
+      {
+        "id": "kettle-off",
+        "atSeconds": 77,
+        "kind": "audio",
+        "actor": "Kitchen.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "Kettle switches off with a small click",
+        "audioCue": "kettle_click"
+      },
+      {
+        "id": "quiet-end",
+        "atSeconds": 80,
+        "kind": "stop",
+        "actor": "Kitchen.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "All original synthesis voices stop; Ear must verify terminal silence"
+      }
+    ]
+  },
+  "CONSTRAINTS": {
+    "mutationScope": [
+      "declared stage body poses",
+      "Kitchen.Field.01 synthesized audio"
+    ],
+    "requiresAdmissionBeforeEffects": true,
+    "autoplayForbidden": true,
+    "publicPublicationAuthorized": false,
+    "maxDurationSeconds": 80,
+    "boundedStop": true,
+    "noAbsentPersonIdentity": true,
+    "noSecondCharacter": true,
+    "noNarrator": true,
+    "noSentimentalMusic": true,
+    "noInventedBackstoryOrReason": true,
+    "noUnrequestedVoice": true,
+    "firstCupIsOnlyCupFilled": true,
+    "secondCupRemainsOnTableAtEnd": true,
+    "emptyChairRemainsEmpty": true,
+    "expectedActionNotSoundEffect": "The withheld pour and hesitation are temporal/spatial events, not fabricated acoustic events"
+  },
+  "EXPECT": {
+    "beatsInOrder": [
+      "habit",
+      "attention",
+      "outside",
+      "decision"
+    ],
+    "secondPourOccurs": false,
+    "secondCupFilled": false,
+    "emptyChairOccupied": false,
+    "terminalCup.Second.01": "on Table.01, unfilled",
+    "terminalSound": "quiet after bounded Stop",
+    "soundSources": [
+      "coffee_air",
+      "cup_contact_1",
+      "cup_contact_2",
+      "pour_first",
+      "bicycle_pass",
+      "door_downstairs",
+      "spoon",
+      "cup_scrape",
+      "cup_return",
+      "kettle_click"
+    ]
+  },
+  "VERIFY": {
+    "sourceOnlyAssertions": [
+      "event times are bounded and ordered",
+      "one figure only",
+      "two cups only",
+      "second pour withheld",
+      "second cup ends on table",
+      "no absent-person inference"
+    ],
+    "nativeAcceptanceRequired": [
+      "native grammar/port/role admission at this exact source revision",
+      "Csound stage audio and run ID",
+      "Ear audio observation and measured stop",
+      "TeatroStageEngine state/snapshot readback",
+      "FountainStore terminal receipt if host requires"
+    ],
+    "humanEditorialReview": "No unrequested score or voice; scene does not say why chair is empty.",
+    "noOfflineAuditionAsNativeProof": true,
+    "noSourceCheckAsAdmission": true,
+    "fcisLearningAdmission": "not admitted; requires independently accepted first scenario and transfer test"
+  }
+}
