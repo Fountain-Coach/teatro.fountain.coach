@@ -2,7 +2,7 @@
 
 **Owner:** Fountain Coach Teatro; authorial source: *Teatro — An Unfinished Composition* in First Readings.
 **Request:** Create an original 80-second Teatro Scenario from the empty-chair passage and a distinct empty-coat-hook transfer test.
-**Status:** **SOURCE-AUTHORED AND VERIFIED** on `codex/teatro-second-cup-20261030`. Both native runtime runs and FCIS automatic learning remain **NOT ESTABLISHED**.
+**Status:** **SOURCE-AUTHORED AND VERIFIED; draft [PR #3](https://github.com/Fountain-Coach/teatro.fountain.coach/pull/3)** on `codex/teatro-second-cup-20261030`. Both native runtime runs and FCIS automatic learning remain **NOT ESTABLISHED**.
 
 **Scope:** Author two versioned, source-addressed Csound Teatro 0.1 candidate scores, a human-readable cue score and source-only regression checks, preserving the original essay. Use the existing finite predicates, TeatroStageEngine stage model and Ear/Csound distinctions. No publication or runtime-effects claim.
 **Source pins:** `Fountain-Coach/fountain.coach@af2b33cd978a71c621c0ce042743dc2720ed3e01` (essay); `Fountain-Coach/teatro.fountain.coach@b4fbd41673c94f698a59291f630e9393d54faf00` (original candidate and fixture-only validator).
