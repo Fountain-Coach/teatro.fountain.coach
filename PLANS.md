@@ -2,12 +2,12 @@
 
 **Owner:** Fountain Coach Teatro; authorial source: *Teatro — An Unfinished Composition* in First Readings.
 **Request:** Create an original 80-second Teatro Scenario from the empty-chair passage and a distinct empty-coat-hook transfer test.
-**Status:** AUTHORING on `codex/teatro-second-cup-20261030`. Neither performance nor FCIS learning admitted.
+**Status:** **SOURCE-AUTHORED AND VERIFIED** on `codex/teatro-second-cup-20261030`. Both native runtime runs and FCIS automatic learning remain **NOT ESTABLISHED**.
 
 **Scope:** Author two versioned, source-addressed Csound Teatro 0.1 candidate scores, a human-readable cue score and source-only regression checks, preserving the original essay. Use the existing finite predicates, TeatroStageEngine stage model and Ear/Csound distinctions. No publication or runtime-effects claim.
 **Source pins:** `Fountain-Coach/fountain.coach@af2b33cd978a71c621c0ce042743dc2720ed3e01` (essay); `Fountain-Coach/teatro.fountain.coach@b4fbd41673c94f698a59291f630e9393d54faf00` (original candidate and fixture-only validator).
-**Remaining finite DoD:** valid source structure; no invented absent person; deterministic 80-second event sequence and independent transfer scenario; checkable source assertions; report native admission and actual Ear/Stage runtime as unestablished.
-**Next:** author the bounded candidate files; perform focused tests; independently read back the Git source revision; leave native admission for a separate real runtime witness.
+**Source acceptance:** Two distinct, source-pinned CsoundTeatroScenario 0.1 candidates (`80s` kitchen, `60s` hallway), bounded negative evidence and cue score committed. All **11/11** source regression checks passed on identical local bytes; independent GitHub readback matched local Git blob IDs for both candidates and both checker/test files. Neither score is an admitted live Csound performance.
+**Next:** Resolve actual native Csound + Ear + TeatroStageEngine capability/bindings against current runtime; admit and witness two separate governed live runs with correlated terminal proof; obtain authorial review of the restrained treatment before proposing FCIS learning. No external release is authorized.
 
 **Governance reading record**
 - **Chapters read:** 07 (goal fidelity, finite scope, plan before edit); 08 (separate authored, observed and independently accepted proof); 101 (TeatroStageEngine owns the physical stage, source carries its own provenance); 119 (pipeline composition never upgrades scenario coverage by assertion); 151 (one grammar, versioned identities, finite predicates, admission before effects).
