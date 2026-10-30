@@ -1,0 +1,312 @@
+{
+  "kind": "CsoundTeatroScenario",
+  "scenarioID": "teatro.first-readings.the-empty-hook.transfer.01",
+  "grammarVersion": "0.1",
+  "schemaVersion": "0.1",
+  "status": "candidate-unadmitted",
+  "mode": "transfer-rehearsal",
+  "sourceAuthority": "Fountain-Coach/Reframe-Refactoring/docs/151-csound-teatro-speaking-sound-in-space.md",
+  "GIVEN": {
+    "source": {
+      "repository": "Fountain-Coach/fountain.coach",
+      "commit": "af2b33cd978a71c621c0ce042743dc2720ed3e01",
+      "path": "site/essays/teatro-an-unfinished-composition/index.html",
+      "work": "Teatro — An Unfinished Composition",
+      "collection": "First Readings",
+      "exactExcerpt": "Put an empty chair on a stage and wait long enough. It ceases to be furniture. Attention changes it.",
+      "sourceRole": "artistic premise only; the kitchen scene is an original derived composition, not a verbatim reading",
+      "transferOrigin": "teatro.first-readings.the-second-cup.01",
+      "transferHypothesis": "withheld ordinary action beside an unoccupied place, without ascribing the absent person"
+    },
+    "scene": {
+      "title": "The Empty Hook",
+      "setting": "hallway in the evening",
+      "durationSeconds": 60,
+      "room": "canonical TeatroStageEngine three-sided paper stage",
+      "camera": "orthographic source-owned orbit/zoom"
+    },
+    "entities": [
+      {
+        "id": "Actor.Evening.01",
+        "kind": "BODY",
+        "role": "one person returning home",
+        "stagePosition": {
+          "x": -4,
+          "z": 3
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Hook.Used.01",
+        "kind": "BODY",
+        "role": "coat hook occupied by one coat",
+        "stagePosition": {
+          "x": 0,
+          "z": 6
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot",
+        "occupied": true
+      },
+      {
+        "id": "Hook.Empty.01",
+        "kind": "BODY",
+        "role": "second hook remains empty",
+        "stagePosition": {
+          "x": 3,
+          "z": 6
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot",
+        "occupied": false
+      },
+      {
+        "id": "Coat.First.01",
+        "kind": "BODY",
+        "role": "single coat",
+        "stagePosition": {
+          "x": 0,
+          "z": 6
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Hall.Door.01",
+        "kind": "BODY",
+        "role": "hall entrance",
+        "stagePosition": {
+          "x": -8,
+          "z": 8
+        },
+        "authority": "TeatroStageEngine proposed staging, not a live snapshot"
+      },
+      {
+        "id": "Hall.Field.01",
+        "kind": "FIELD",
+        "role": "keys, coat fabric, stairwell footsteps and a door latch",
+        "runtime": "Csound",
+        "capability": "proposed Foley oscillator/noise voices",
+        "binding": null,
+        "owner": "Fountain-Coach/teatro.fountain.coach"
+      },
+      {
+        "id": "Ear.Hall.01",
+        "kind": "EAR",
+        "role": "independent output observer",
+        "owner": "Fountain-Coach/teatro.fountain.coach",
+        "capability": "ear-analysis AudioWorklet",
+        "binding": null
+      }
+    ],
+    "ports": [
+      {
+        "id": "Hall.Field.01.audio",
+        "owner": "Hall.Field.01",
+        "direction": "out",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "Csound audio output; unresolved"
+      },
+      {
+        "id": "Ear.Hall.01.audio",
+        "owner": "Ear.Hall.01",
+        "direction": "in",
+        "valueType": "audio",
+        "unit": "PCM 48000 Hz",
+        "capability": "ear-analysis AudioWorklet input; unresolved"
+      },
+      {
+        "id": "Ear.Hall.01.rms",
+        "owner": "Ear.Hall.01",
+        "direction": "out",
+        "valueType": "number",
+        "unit": "normalized-linear-rms",
+        "domain": [
+          0,
+          0.2
+        ],
+        "capability": "Ear measured RMS; no measurement yet"
+      }
+    ],
+    "beats": [
+      {
+        "id": "arrive",
+        "label": "I — Arrival",
+        "startSeconds": 0,
+        "endSeconds": 15,
+        "intention": "One person enters and hangs a single coat."
+      },
+      {
+        "id": "almost",
+        "label": "II — Almost",
+        "startSeconds": 15,
+        "endSeconds": 30,
+        "intention": "The hand approaches the unused hook; nothing is hung there."
+      },
+      {
+        "id": "elsewhere",
+        "label": "III — Elsewhere",
+        "startSeconds": 30,
+        "endSeconds": 45,
+        "intention": "A footstep sounds in the stairwell and a key touches a bowl."
+      },
+      {
+        "id": "remain",
+        "label": "IV — Remain",
+        "startSeconds": 45,
+        "endSeconds": 60,
+        "intention": "The person leaves the empty hook untouched; the hallway returns to quiet."
+      }
+    ]
+  },
+  "TRANSFORM": {
+    "relations": [
+      {
+        "id": "coat-near-empty-hook",
+        "predicate": "NEAR",
+        "subject": "Coat.First.01",
+        "object": "Hook.Empty.01",
+        "spatialRole": "ordinary proximity only"
+      },
+      {
+        "id": "ear-hears-hall",
+        "predicate": "LISTENS_TO",
+        "subject": "Ear.Hall.01",
+        "object": "Hall.Field.01",
+        "fromPort": "Hall.Field.01.audio",
+        "toPort": "Ear.Hall.01.audio"
+      }
+    ],
+    "mappings": [],
+    "events": [
+      {
+        "id": "latch",
+        "atSeconds": 2,
+        "kind": "audio",
+        "actor": "Hall.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "Door latch and arrival",
+        "audioCue": "door_latch"
+      },
+      {
+        "id": "one-coat",
+        "atSeconds": 10,
+        "kind": "action",
+        "actor": "Actor.Evening.01",
+        "target": "Coat.First.01",
+        "mode": "realized",
+        "description": "One coat is hung on Hook.Used.01",
+        "audioCue": "coat_fabric"
+      },
+      {
+        "id": "hand-nears-empty-hook",
+        "atSeconds": 21,
+        "kind": "action",
+        "actor": "Actor.Evening.01",
+        "target": "Hook.Empty.01",
+        "mode": "realized",
+        "description": "Hand approaches unoccupied hook"
+      },
+      {
+        "id": "second-coat-withheld",
+        "atSeconds": 25,
+        "kind": "withheld-action",
+        "actor": "Actor.Evening.01",
+        "target": "Hook.Empty.01",
+        "mode": "withheld",
+        "description": "No second coat appears and none is hung"
+      },
+      {
+        "id": "stairwell-footstep",
+        "atSeconds": 35,
+        "kind": "audio",
+        "actor": "Hall.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "One distant footstep",
+        "audioCue": "stairwell_step"
+      },
+      {
+        "id": "keys",
+        "atSeconds": 41,
+        "kind": "audio",
+        "actor": "Hall.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "A key touches a ceramic bowl",
+        "audioCue": "key_contact"
+      },
+      {
+        "id": "hand-withdraws",
+        "atSeconds": 49,
+        "kind": "action",
+        "actor": "Actor.Evening.01",
+        "target": "Hook.Empty.01",
+        "mode": "realized",
+        "description": "Hand withdraws; hook stays unoccupied"
+      },
+      {
+        "id": "quiet-end",
+        "atSeconds": 60,
+        "kind": "stop",
+        "actor": "Hall.Field.01",
+        "target": null,
+        "mode": "realized",
+        "description": "No explanation or imaginary visitor; quiet room"
+      }
+    ]
+  },
+  "CONSTRAINTS": {
+    "mutationScope": [
+      "declared stage body poses",
+      "Hall.Field.01 synthesized audio"
+    ],
+    "requiresAdmissionBeforeEffects": true,
+    "autoplayForbidden": true,
+    "publicPublicationAuthorized": false,
+    "maxDurationSeconds": 60,
+    "boundedStop": true,
+    "noAbsentPersonIdentity": true,
+    "noSecondCharacter": true,
+    "noNarrator": true,
+    "noSentimentalMusic": true,
+    "noInventedBackstoryOrReason": true,
+    "noUnrequestedVoice": true,
+    "unusedHookRemainsEmpty": true,
+    "transferWithoutCopyingKitchenSounds": true
+  },
+  "EXPECT": {
+    "beatsInOrder": [
+      "arrive",
+      "almost",
+      "elsewhere",
+      "remain"
+    ],
+    "secondCoatHung": false,
+    "emptyHookOccupied": false,
+    "terminalHook.Empty.01": "empty",
+    "soundSources": [
+      "door_latch",
+      "coat_fabric",
+      "stairwell_step",
+      "key_contact"
+    ]
+  },
+  "VERIFY": {
+    "sourceOnlyAssertions": [
+      "a distinct stage and Foley vocabulary",
+      "one coat only",
+      "unused hook stays empty",
+      "gesture withheld",
+      "no inferred person or explanation"
+    ],
+    "nativeAcceptanceRequired": [
+      "distinct admitted native run and source pin",
+      "independent Ear output measurement",
+      "stage state/snapshot evidence",
+      "terminated runtime and Store proof where required"
+    ],
+    "crossDomainTransferQuestion": "Does the procedure for making absence perceptible through a withheld ordinary action apply without copying objects or Foley cues?",
+    "noSourceCheckAsAdmission": true,
+    "fcisLearningAdmission": "not admitted until both distinct real runs are independently accepted"
+  }
+}
