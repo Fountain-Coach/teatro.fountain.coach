@@ -1,6 +1,6 @@
 {
-  "id": "teatro-kino-after-dark-05",
-  "kind": "nonmetric-cinematic-geraeuschumgebung",
+  "id": "teatro-kino-after-dark-06",
+  "kind": "cinematic-geraeuschumgebung-with-original-jazz-memory-loop",
   "sourceOwner": "Fountain-Coach/teatro.fountain.coach",
   "design": "Cinematic sound environment: quiet original Csound textures, slow grains, no groove or intrusive slice player",
   "sources": {
@@ -21,7 +21,24 @@
     "no beat grid",
     "no chords",
     "no pads",
-    "no copyrighted movie-dialogue excerpts"
+    "no copyrighted movie-dialogue excerpts",
+    "no borrowed Lou Donaldson recording or melody"
   ],
-  "scope": "owner WLAN staging only; original Linotype reader unchanged; public original-media derivative not authorized"
+  "scope": "owner WLAN staging only; original Linotype reader unchanged; public original-media derivative not authorized",
+  "originalJazzMemory": {
+    "title": "Midnight Cylinder",
+    "material": "Original newly composed Csound phrase; broadly evokes late-night soul-jazz",
+    "recordingReferenced": "One Cylinder / Lou Donaldson, as aesthetic reference only",
+    "sourceAudioSampled": false,
+    "transcribedRecording": false,
+    "source": "assets/midnight/sources.json",
+    "audio": "assets/midnight/midnight-cylinder.m4a",
+    "performance": "quiet looping Csound phrase at 0.83 playback speed with slow pitch wander and low-pass filtering; not a repeating bass beat",
+    "defaultLevelPercent": 18,
+    "levelRangePercent": [
+      0,
+      45
+    ],
+    "routing": "original local PCM -> shared Ear analysis -> MIDI2 UMP CC74 -> bounded echo"
+  }
 }

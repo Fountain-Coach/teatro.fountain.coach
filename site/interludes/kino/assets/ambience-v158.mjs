@@ -8,7 +8,7 @@ const state={
  context:null,echo:null,master:null,filter:null,sourceGain:null,
  buffers:new Map(),voices:new Set(),timer:null,playing:false,starting:false,
  nextAt:0,lastWindow:-1,events:0,seed:1,
- distance:72,trace:0,earMessages:0
+ distance:72,trace:0,cylinder:18,cylinderSource:null,cylinderFilter:null,cylinderGain:null,cylinderLfo:null,cylinderWow:null,earMessages:0
 };
 let random=()=>Math.random();
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
@@ -62,13 +62,56 @@ async function prepare(){
  state.sourceGain.connect(state.filter);state.filter.connect(echo.input);
  applyDistance();
  echo.setMix(.14);echo.setTone(.73);
- const names=[["air","cinema-air"],["dust","film-dust"],["trace","../shaders-40479-extract"]];
+ const names=[["air","cinema-air"],["dust","film-dust"],["trace","../shaders-40479-extract"],["cylinder","midnight-cylinder"]];
  for(const [name,asset] of names){
-   const path=name==="trace"?"./assets/shaders-40479-extract.m4a":"./assets/atmosphere/"+asset+".m4a";
+   const path=name==="trace"?"./assets/shaders-40479-extract.m4a":name==="cylinder"?"./assets/midnight/midnight-cylinder.m4a":"./assets/atmosphere/"+asset+".m4a";
    const response=await fetch(path,{cache:"no-store"});
    if(!response.ok)throw Error("Audio source "+name+" HTTP "+response.status);
    state.buffers.set(name,await context.decodeAudioData(await response.arrayBuffer()));
  }
+}
+// One very quiet original Csound jazz-memory loop, not a borrowed or transcribed sample.
+// It lives behind the room filter and is heard by the same original Ear -> MIDI2 -> echo.
+function cylinderLevel(){
+ return Math.pow(state.cylinder/100,1.3)*.33;
+}
+function setCylinderLevel(){
+ if(state.cylinderGain&&state.context){
+   state.cylinderGain.gain.setTargetAtTime(cylinderLevel(),state.context.currentTime,.14);
+ }
+}
+function beginCylinder(){
+ if(!state.context||!state.playing||state.cylinderSource)return;
+ const ctx=state.context,buffer=state.buffers.get("cylinder");
+ if(!buffer)return;
+ const source=ctx.createBufferSource();
+ source.buffer=buffer;
+ source.loop=true;
+ source.loopStart=0;
+ source.loopEnd=buffer.duration;
+ source.playbackRate.value=.83;
+ const filter=ctx.createBiquadFilter();
+ filter.type="lowpass";filter.frequency.value=1750;filter.Q.value=.48;
+ const gain=ctx.createGain();gain.gain.setValueAtTime(0,ctx.currentTime);
+ const lfo=ctx.createOscillator(),wow=ctx.createGain();
+ lfo.type="sine";lfo.frequency.value=.095;wow.gain.value=.004;
+ lfo.connect(wow);wow.connect(source.playbackRate);
+ source.connect(filter);filter.connect(gain);gain.connect(state.sourceGain);
+ state.cylinderSource=source;state.cylinderFilter=filter;state.cylinderGain=gain;
+ state.cylinderLfo=lfo;state.cylinderWow=wow;
+ lfo.start();source.start(ctx.currentTime+.02,0);
+ gain.gain.setTargetAtTime(cylinderLevel(),ctx.currentTime+.02,1.9);
+}
+function stopCylinder(){
+ const ctx=state.context;
+ if(ctx&&state.cylinderGain)state.cylinderGain.gain.setValueAtTime(0,ctx.currentTime);
+ try{state.cylinderSource?.stop()}catch{}
+ try{state.cylinderLfo?.stop()}catch{}
+ for(const obj of [state.cylinderSource,state.cylinderFilter,state.cylinderGain,state.cylinderLfo,state.cylinderWow]){
+   try{obj?.disconnect()}catch{}
+ }
+ state.cylinderSource=null;state.cylinderFilter=null;state.cylinderGain=null;
+ state.cylinderLfo=null;state.cylinderWow=null;
 }
 function applyDistance(){
  if(!state.context||!state.filter)return;
@@ -136,6 +179,7 @@ async function start(){
    await state.context.resume();
    state.playing=true;state.events=0;
    state.echo.resume();
+   beginCylinder();
    state.nextAt=state.context.currentTime;
    tick();state.timer=setInterval(tick,120);
    $("toggle").textContent="Ⅱ";
@@ -151,6 +195,7 @@ async function stop(){
  if(state.timer){clearInterval(state.timer);state.timer=null}
  for(const voice of state.voices){try{voice.src.stop()}catch{}}
  state.voices.clear();
+ stopCylinder();
  if(state.echo)state.echo.reset();
  $("cinema-room").dataset.active="false";
  $("toggle").textContent="▶";
@@ -172,6 +217,11 @@ $("distance").addEventListener("input",()=>{
 $("traces").addEventListener("input",()=>{
  state.trace=Number($("traces").value);
  $("traces-value").textContent=state.trace===0?"None":state.trace+"%";
+});
+$("cylinder").addEventListener("input",()=>{
+ state.cylinder=Number($("cylinder").value);
+ $("cylinder-value").textContent=state.cylinder===0?"None":state.cylinder+"%";
+ setCylinderLevel();
 });
 $("another").addEventListener("click",()=>{
  newSeed();state.nextAt=(state.context?.currentTime||0)+1;

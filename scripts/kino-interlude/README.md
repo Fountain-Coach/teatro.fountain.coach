@@ -54,3 +54,11 @@ The writer rejected the bass and hat's fixed groove and the sample-slice player 
 - Nothing changes in original Linotype reader, First or Second Readings, or public Satzfunk.
 
 The goal is gentle cinematic memory rather than imitation of a copyrighted film's sound or a staged dialogue scene.
+
+## V159 — Midnight Cylinder, an original soul-jazz memory
+
+The user requested that the historic soul-jazz sample be *remodeled*, not that they provide a copyrighted recording. This original composition draws on broad soul-jazz instrumentation and atmosphere but does not sample or transcribe the actual 1967 Lou Donaldson / Freddie McCoy record, its melody, or its recorded performance.
+
+`scripts/kino-interlude/render_midnight_cylinder.py` renders a new 10.3s Csound object using newly written muted low notes, shimmering metallic tones, sparse brush-like noise and hollow air. Its CSD and source WAV are retained in the Teatro source tree; a SHA-locked AAC derivative and provenance document are the only new served media. The source is not a DAW arrangement, and there is no fixed kick/hat beat.
+
+The existing quiet Kino page receives a single small "Cylinder" level control. Default 18% adds a low-passed, slowed (~0.83x) continuous loop with subtle wow and slow fade, routed into the established dry Ear PCM and bounded MIDI 2.0 CC74 tape echo. The optional published Satzfunk fragment remains disabled by default; the reader and books remain unchanged. Stop stops the source, oscillator, room grains, Ear and echo. The source may be original; nonetheless v159 is only an owner-WLAN staging projection, not a public release or native Teatro Scenario admission.
