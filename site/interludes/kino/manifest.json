@@ -1,26 +1,54 @@
 {
-  "id": "teatro-kino-interlude-02",
-  "kind": "source-bound-UMP-sample-sequencer",
+  "id": "teatro-kino-interlude-03",
+  "kind": "source-bound-Ear-UMP-sampler-with-band-echo-emulation",
   "bpm": 112,
   "steps": 16,
   "midi2": {
     "codec": "@fountain-coach/midi2@0.12.8",
     "messages": [
       "noteOn",
-      "noteOff"
+      "noteOff",
+      "controlChange"
     ],
     "group": 0,
-    "channel": 9,
-    "peer": "local browser sample engine",
+    "sequencerChannel": 9,
+    "earLoopback": {
+      "channel": 0,
+      "controller": 74,
+      "valueBits": 32,
+      "sourceIdentity": "teatro.kino.sampler.pcm.01",
+      "source": "original EarAnalysisProcessor RMS of local sampler dry PCM",
+      "minimumIntervalMilliseconds": 75
+    },
+    "peer": "local Web Audio sample and band echo engine",
     "hardwareTransport": false,
     "nativeScenarioAdmitted": false
+  },
+  "ear": {
+    "processor": "ear-analysis",
+    "worklet": "assets/ear-original.js",
+    "sourceReference": "Fountain-Coach/teatro.fountain.coach EarAnalysisProcessor via verified Teatro Ear staged source",
+    "workletSHA256": "4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427",
+    "sourceAudio": "pre-echo sample PCM",
+    "echoAudioReturnsToEar": false
+  },
+  "bandEcho": {
+    "engine": "Web Audio",
+    "implementation": "assets/ear-band-echo.mjs",
+    "mode": "band-limited tape echo emulation",
+    "delaySeconds": 0.402,
+    "wowHertz": 0.37,
+    "maxFeedback": 0.44,
+    "maxWet": 0.43,
+    "control": "Ear RMS -> MIDI2 CC74 -> decode -> filter cutoff and feedback; explicit bounded software loopback",
+    "stop": "mute wet and feedback, stop all source grains"
   },
   "sourceSample": {
     "asset": "assets/shaders-40479-extract.m4a",
     "metadata": "assets/sample-provenance.json",
-    "duration": 9.0
+    "duration": 9
   },
-  "scope": "private owner-WLAN audition; no public derivative release",
+  "scope": "owner-WLAN staging only; public derivative not authorized",
   "originalReaderSourceUnchanged": true,
   "noChords": true,
   "noPads": true

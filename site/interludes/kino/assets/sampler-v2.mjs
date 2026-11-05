@@ -1,4 +1,5 @@
 import {encodeNoteOn,encodeNoteOff,decodeUmp} from "./midi2-ump.mjs";
+import {createEarBandEcho} from "./ear-band-echo.mjs";
 
 // Exact Fountain Coach MIDI 2.0 UMP encoding, routed to this page's local sample instrument.
 // This does not claim a hardware port, MIDI-CI negotiation or native Teatro Scenario admission.
@@ -6,7 +7,7 @@ const $=id=>document.getElementById(id);
 const BPM=112,STEP=60/BPM/2,COUNT=16;
 const original=[1,0,0,0,1,0,1,0,1,0,0,1,1,0,1,0];
 const state={
- ctx:null,buf:null,reverseBuf:null,master:null,playing:false,timer:null,
+ ctx:null,buf:null,reverseBuf:null,master:null,inputBus:null,echo:null,echoPromise:null,playing:false,timer:null,
  next:0,step:0,pattern:original.map((on,i)=>({on:!!on,slice:(i%8),velocity:i%4===0?0.98:0.78})),
  index:1,grains:new Set(),scratch:null,lastScrub:0,assign:false,sampleName:"SHADERS · TRACK 04",
  activePointers:new Set()
@@ -63,6 +64,16 @@ $("density").addEventListener("input",()=>{$("density-value").textContent=$("den
 $("slice").addEventListener("input",()=>{$("slice-value").textContent=number(currentSlice())+" / 08"});
 $("grain").addEventListener("input",()=>{$("grain-value").textContent=$("grain").value+" ms"});
 $("speed").addEventListener("input",()=>{$("speed-value").textContent=(Number($("speed").value)/100).toFixed(2)+"×"});
+$("echo-wet").addEventListener("input",()=>{
+ const value=Number($("echo-wet").value)/100;
+ $("echo-wet-val").textContent=$("echo-wet").value+"%";
+ state.echo?.setMix(value);
+});
+$("echo-tone").addEventListener("input",()=>{
+ const tone=Number($("echo-tone").value)/100;
+ $("echo-tone-val").textContent=$("echo-tone").value+"%";
+ state.echo?.setTone(tone);
+});
 $("level").addEventListener("input",()=>{
  $("level-value").textContent=$("level").value+"%";
  if(state.master&&state.ctx)state.master.gain.setTargetAtTime(Number($("level").value)/100,state.ctx.currentTime,.025);
@@ -92,8 +103,20 @@ async function ensureAudio(){
   const comp=state.ctx.createDynamicsCompressor();comp.threshold.value=-12;comp.ratio.value=3;
   const master=state.ctx.createGain();master.gain.value=.8;
   master.connect(comp);comp.connect(state.ctx.destination);state.master=master;
+  state.echoPromise=createEarBandEcho({
+   context:state.ctx,output:master,
+   onReport:m=>{
+     const root=document.querySelector(".ear-loop");
+     if(root)root.dataset.active=String(m.state==="following"||m.state==="armed");
+     const indicator=$("ear-meter");
+     if(indicator)indicator.textContent=m.state==="stopped"?"EAR STOPPED · CC74 loop closed"
+       :m.state==="armed"?"EAR ARMED · listening for source PCM"
+       :`EAR RMS ${m.rms.toFixed(4)} · CC74 #${m.sequence} · ${m.frequencyHz} Hz · feedback ${Math.round(m.feedback*100)}%`;
+   }
+  }).then(echo=>{state.echo=echo;state.inputBus=echo.input;return echo});
  }
  const ctx=state.ctx;await ctx.resume();
+ if(state.echoPromise)(await state.echoPromise).resume();
  if(!state.buf){
   if(!state.loading){
    state.loading=(async()=>{
@@ -135,7 +158,7 @@ function playGrain(offset,seconds,vel,when){
  gain.gain.linearRampToValueAtTime(amp,playedAt+.008);
  gain.gain.setValueAtTime(amp,playedAt+Math.max(.009,actual-.045));
  gain.gain.linearRampToValueAtTime(.0001,playedAt+actual);
- source.connect(gain);gain.connect(state.master);
+ source.connect(gain);gain.connect(state.inputBus);
  source.start(playedAt,sourceOffset,sampleDuration);
  const grain={source,gain};state.grains.add(grain);
  source.onended=()=>{state.grains.delete(grain);source.disconnect();gain.disconnect()};
@@ -179,7 +202,7 @@ function stop(fully){
  if(state.timer){clearInterval(state.timer);state.timer=null}
  state.playing=false;
  for(const grain of state.grains){try{grain.source.stop()}catch{}}
- state.grains.clear();state.step=0;renderWindows();
+ state.grains.clear();state.echo?.reset();state.step=0;renderWindows();
  $("toggle").textContent="▶";$("toggle").setAttribute("aria-label","Play MIDI 2.0 sequence");$("toggle").setAttribute("aria-pressed","false");
  status(fully?"Stopped":"Paused",fully?"The 16 windows are ready":"Touch Play to restart the sequence");
 }
@@ -191,7 +214,7 @@ $("toggle").addEventListener("click",async()=>{
   await ensureAudio();state.step=0;state.next=state.ctx.currentTime+.06;
   state.playing=true;clock();state.timer=setInterval(clock,25);
   button.textContent="Ⅱ";button.setAttribute("aria-label","Pause MIDI 2.0 sequence");button.setAttribute("aria-pressed","true");
-  status("Playing 112 BPM","Kino windows are emitting software MIDI 2.0 UMP");
+  status("Playing 112 BPM","Kino MIDI 2.0 / Ear feedback modulates band echo");
  }catch(e){status("Could not start audio",e.message)}
  finally{button.disabled=false}
 });
@@ -250,5 +273,5 @@ $("file").addEventListener("change",async event=>{
  }catch(e){status("Could not read audio",e.message)}
 });
 window.addEventListener("resize",drawWaveform);
-window.addEventListener("pagehide",()=>{stop(true);state.ctx?.close()});
+window.addEventListener("pagehide",()=>{stop(true);state.echo?.dispose();state.ctx?.close()});
 renderWindows();drawWaveform();

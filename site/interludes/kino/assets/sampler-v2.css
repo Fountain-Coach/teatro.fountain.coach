@@ -37,4 +37,18 @@ button.small.random{border-color:#d7b17a;color:#f5c68a}
 .sequence-meta{align-items:stretch}.sampler-heading{align-items:start}.sampler-heading h2{font-size:33px}.source-label{font-size:9px}
 .sample-tools{gap:14px}.sample-tools label{justify-content:space-between;min-width:43%}.sample-tools input[type=range]{width:74px;max-width:19vw}
 }
+
+/* An illuminated echo return is a measured relation, not a second patch board. */
+.ear-loop{display:flex;align-items:center;gap:14px 24px;flex-wrap:wrap;border-top:1px solid #456150;padding:16px 0 17px}
+.ear-identity{display:flex;gap:11px;align-items:center;margin-right:auto}
+.ear-identity strong{display:block;font-size:11px;letter-spacing:.16em;color:#c6ead2;font-weight:550}
+.ear-identity small{font-size:10px;color:#8fae9d;display:block;letter-spacing:.025em}
+.ear-dot{width:9px;height:9px;border-radius:50%;background:#315c42;box-shadow:0 0 0 2px #153020;flex:none}
+.ear-loop[data-active="true"] .ear-dot{background:#adf9bf;box-shadow:0 0 12px #83eda6}
+.ear-loop label{display:flex;gap:7px;align-items:center;font-size:10px;text-transform:uppercase;letter-spacing:.09em}
+.ear-loop input[type=range]{accent-color:#a8dfa9;width:83px;max-width:20vw}
+.ear-loop output{font-size:10px;font-variant-numeric:tabular-nums;color:#e6c99e}
+.ear-loop .ear-meter{width:100%;color:#9ac5b1;letter-spacing:.12em}
+@media(max-width:680px){.ear-loop{gap:12px}.ear-identity{width:100%}.ear-loop label{gap:7px}.ear-loop input[type=range]{width:82px;max-width:22vw}}
+
 @media (prefers-reduced-motion:reduce){.window-step{transition:none}}

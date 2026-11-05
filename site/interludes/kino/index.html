@@ -131,10 +131,16 @@ input[type=range].fader::-webkit-slider-runnable-track{background:linear-gradien
       <button type="button" class="small" id="reverse" aria-pressed="false">Reverse</button>
       <label class="file-label">Open local audio<input type="file" id="file" accept="audio/*"></label>
     </div>
+    <div class="ear-loop" aria-label="Ear MIDI 2.0 modulated tape-band echo">
+      <div class="ear-identity"><span class="ear-dot" aria-hidden="true"></span><div><strong>EAR / BAND ECHO</strong><small>Source PCM → Ear → MIDI 2.0 CC74 → echo</small></div></div>
+      <label>Echo <input type="range" id="echo-wet" min="0" max="43" value="31"><output id="echo-wet-val">31%</output></label>
+      <label>Color <input type="range" id="echo-tone" min="65" max="160" value="100"><output id="echo-tone-val">100%</output></label>
+      <output id="ear-meter" class="ear-meter" aria-live="off">EAR IDLE · CC74 0 / 0</output>
+    </div>
     <div class="source-credit"><span id="sample-name">SHADERS · TRACK 04</span><span>Published source: Benedikt Eickhoff · Satzfunk</span><a href="https://satzfunk.fountain.coach/" target="_blank" rel="noopener">Original edition</a></div>
   </section>
   <div class="protocol-line"><span>SOFTWARE MIDI 2.0 UMP → LOCAL SAMPLE INSTRUMENT</span><output id="ump" aria-live="off">NOTE ON / 2 × 32-bit words / ready</output></div>
-  <p class="note">The cinema windows are the score. The randomizer changes their rhythm and slice assignments, not a chord progression. Every playing step emits encoded and decoded MIDI 2.0 UMP Note On/Off using Fountain Coach’s own protocol library. This private preview uses a short, attributed excerpt of a published Satzfunk recording; no new public remix is authorized. Touch the waveform or load your own sample locally.</p>
+  <p class="note">The cinema windows are the score. The randomizer changes their rhythm and slice assignments, not a chord progression. Each step emits MIDI 2.0 UMP Note On/Off. Ear measures the live sampler PCM and loops CC74 back into a bounded, band-limited tape-echo emulation. Feedback is never measured as a new Ear source; Stop closes the loop. This private preview uses an attributed Satzfunk excerpt, not an authorized public remix. Touch the waveform or load your own sample locally.</p>
   <div class="closing"><span>Teatro · Kino After Dark · an interlude between readings</span><a href="/estate/#/read/first-readings">Return to the readings →</a></div>
 </main>
 <script type="module" src="./assets/sampler-v2.mjs"></script>
