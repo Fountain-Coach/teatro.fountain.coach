@@ -1,0 +1,40 @@
+/* Kino International: sixteen illuminated windows, one sampled sound. */
+.kino-window-grid{position:absolute;left:11.8%;right:11%;top:53.4%;height:20%;display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;z-index:3}
+.window-step{position:relative;min-width:0;padding:0;background:#1637298c;border:1px solid #406b56;color:#d8f5dc;cursor:pointer;touch-action:manipulation}
+.window-step:nth-child(4n+1){border-left-color:#e5ad73}
+.window-step[aria-pressed=true]{background:#edb777b9;box-shadow:inset 0 0 14px #ffdaa49c,0 0 9px #c9ab6d75;border-color:#f7d3a1}
+.window-step.current{outline:2px solid #8affc6;outline-offset:1px;z-index:2}
+.window-step:focus-visible{outline:2px solid white;outline-offset:2px}
+.window-step .step-number{position:absolute;right:3px;bottom:3px;font-size:9px;font-variant-numeric:tabular-nums}
+.window-step .slice-mark{position:absolute;left:2px;top:2px;font-size:9px;background:#e4c594;color:#0c2216;padding:1px 2px;opacity:0}
+.window-step[aria-pressed=true] .slice-mark{opacity:1}
+.sequence-meta{display:flex;gap:15px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:15px 0;border-bottom:1px solid #43554a;color:#a9bdad;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.sequence-meta .chapterline{color:#d8e2bf}
+.density-control{display:flex;gap:8px;align-items:center}.density-control input{accent-color:#9ee8bd;width:110px}
+.seed{color:#efb67c}.mobile-window-grid{display:none}
+.sampler{padding:clamp(16px,3vw,32px);margin:25px 0 0;border:1px solid #45634e;background:linear-gradient(180deg,#15251d,#0a1310);box-shadow:0 16px 40px #0007}
+.sampler-heading{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin:0 0 22px}
+.sampler-heading h2{font:normal clamp(30px,4vw,48px)/1.04 Georgia,serif;letter-spacing:-.035em;color:#f0e5d6;margin:0}
+.sampler-heading p{color:#aabcb0;font-size:12px;margin:8px 0 0}.sampler-heading .kicker{font-size:10px;letter-spacing:.22em;color:#98f1bf;margin-bottom:9px}
+.source-label{color:#eeb679;font-size:10px;letter-spacing:.2em}
+.wave-area{height:clamp(165px,23vw,240px);position:relative;overflow:hidden;border:1px solid #517157;background:radial-gradient(ellipse at center,#203c30,#0b1913);cursor:ew-resize;user-select:none;-webkit-user-select:none;touch-action:none}
+.wave-area canvas{width:100%;height:100%;display:block;touch-action:none}
+.wave-cursor{position:absolute;inset:0 auto 0 0;width:2px;background:#f9d69b;box-shadow:0 0 12px #ffd19d;pointer-events:none}
+.wave-guide{position:absolute;inset:auto 10px 6px;display:flex;justify-content:space-between;gap:10px;font-size:9px;letter-spacing:.2em;color:#f8dbad;pointer-events:none}
+.sample-tools{display:flex;gap:12px 19px;align-items:center;flex-wrap:wrap;padding:18px 0}
+.sample-tools label{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b7ccb9}
+.sample-tools label output{min-width:44px;text-align:right;color:#f4c894;font-variant-numeric:tabular-nums}
+.sample-tools input[type=range]{accent-color:#98ddad;width:90px;max-width:22vw}
+.sample-tools input[type=file]{display:none}
+.file-label{border:1px solid #506a58;padding:10px 13px;cursor:pointer}
+.source-credit{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;border-top:1px solid #425848;padding-top:16px;color:#a6bdac;font-size:10px;letter-spacing:.06em}
+.source-credit span:first-child{color:#f2c88f}.source-credit a{border-bottom:1px solid #8aa694}
+.protocol-line{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid #33483b;font-size:10px;letter-spacing:.12em;color:#91b9a4}.protocol-line output{font-variant-numeric:tabular-nums;color:#f5bd85}
+button.small.random{border-color:#d7b17a;color:#f5c68a}
+@media (max-width:680px){
+.kino-window-grid{display:none}.mobile-window-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin:18px 0}
+.mobile-window-grid .window-step{height:48px;font-size:10px}.mobile-window-grid .step-number{bottom:5px;right:5px}.mobile-window-grid .slice-mark{left:4px;top:4px}
+.sequence-meta{align-items:stretch}.sampler-heading{align-items:start}.sampler-heading h2{font-size:33px}.source-label{font-size:9px}
+.sample-tools{gap:14px}.sample-tools label{justify-content:space-between;min-width:43%}.sample-tools input[type=range]{width:74px;max-width:19vw}
+}
+@media (prefers-reduced-motion:reduce){.window-step{transition:none}}

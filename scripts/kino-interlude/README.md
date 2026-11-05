@@ -1,20 +1,25 @@
-# Kino After Dark — Teatro Interlude 01
+# Kino After Dark — Teatro Interlude 02
 
-Original 112 BPM dance interlude, Csound-rendered from five scores into five AAC stems. The standalone source-owned HTML/SVG/Web Audio route is site/interludes/kino/.
-The photograph of Kino International informs the visual palette and façade geometry; the stage SVG is newly authored, not a copy of the photo.
+The formerly staged five-stem chord/lead dance study was rejected by the writer. V2 removes all those stems; there is no pad/chord source and no substitute backbeat arrangement.
 
-## Scope
-- Csound renders the actual five sound stems. The browser mixes those stems with Play/Pause/Stop, channel faders, mute and three presets.
-- This is a studio-rendered Csound composition, NOT an admitted native CsoundTeatroScenario run or a MIDI2/Ear/live signal proof.
-- Browser audio starts only after a user gesture.
-- link_first_readings.py inserts a single interlude link after the existing First Readings work into the established Linotype template; it does NOT create a second reader, second literary work, or published edition.
-- Stage on the existing owner WLAN only. Production requires independent authorization.
+## A playable Kino International sequencer
 
-## Regeneration
-python3 scripts/kino-interlude/render.py (requires Csound, Python and macOS afconvert). 32 bars, 112 BPM, 4/4, ~68.571 s loop. Five score CSDs, five AACs and manifest.json stay source-bound.
+The cinema's sixteen illuminated ground-floor windows ARE the sequencer. Touch windows to toggle sample triggers and audition a slice. Playing steps yield real MIDI 2.0 UMP noteOn/noteOff packets (group 0 / channel 9), encoded by the owner-native @fountain-coach/midi2 protocol module (0.12.8) and decoded back to the locally scheduled sample engine. This verifies a typed browser software instrument; it is NOT native hardware discovery, an external MIDI transport, MIDI-CI negotiation, or a native Teatro Scenario admission. The viewport never claims those things.
 
-## Stage projection
-Read exactly the active estate/index.html as input, then run python3 scripts/kino-interlude/link_first_readings.py before.html after.html. Check all unaffected bytes and retain the previous immutable WLAN release; add only the Teatro route and First Readings link.
+"Randomize" creates a new crypto-seeded 16-step pattern including slice addresses and velocities. The sample instrument is tactile (pointer scan, 8 slice locations, grain duration, speed, reverse, level and owner-device local-audio import). Automatic audio playback never occurs. The same original Linotype reader/First Readings handoff remains unchanged from v153.
 
-## Audio verification
-The five rendered original Csound stems each reported zero performance errors and nonzero overall amplitudes on 2026-11-05. Browser playback and staged readback require their own evidence.
+## Sample custody
+
+The original source is **Shaders, Track 4, Benedikt Eickhoff**, from the 43 already published source media at https://satzfunk.fountain.coach/media/bandcamp-20261024/shaders/40479.mp4. The original as-published MP4 digest is 24abb318154118c6e0bd182fdb1e9ea0260d4c207e51e878efa2143181b670f9. The **9-second excerpt** begins at 50 seconds, staged as an AAC derivative only on the owner-controlled WLAN. See assets/sample-provenance.json for digest/processing facts and status. The public original-media admission is NOT derivative-remix authorization; keep this derivative private. It is credited in the live interface.
+
+## Development and checks
+
+- Base route: site/interludes/kino/index.html
+- Original scenario/score history preserved under scripts/kino-interlude/*.csd; the rejected .m4a stems removed from the v2 published route
+- Layout: site/interludes/kino/assets/sampler-v2.css
+- Local sample instrument: site/interludes/kino/assets/sampler-v2.mjs
+- Owner-native UMP codec: site/interludes/kino/assets/midi2-ump.mjs, bundled from Fountain-Coach/midi2 midi2.js src/ump.ts without modifying that source
+- Build transform: python3 scripts/kino-interlude/build_sampler_v2.py (run once against v1; the resulting html is source-checked in)
+- Browser acceptance: Chromium on Mac, 820px iPad portrait and 390px phone, 16 windows, no legacy channel mixer, no horizontal overflow, sample audio played, random seed / slice assignment, touch waveform, reverse and Stop exercised
+
+Scope remains staging only. Changes to any production estate, public Satzfunk media, original Reader runtime, authored essay text or any historical source are out of scope.

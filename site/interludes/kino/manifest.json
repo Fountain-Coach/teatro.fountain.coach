@@ -1,35 +1,27 @@
 {
-  "id": "teatro-kino-interlude-01",
-  "kind": "Csound-source-rendered-stems",
-  "tempoBPM": 112,
-  "bars": 32,
-  "durationSeconds": 68.571,
-  "tracks": [
-    {
-      "id": "kick",
-      "file": "assets/kick.m4a",
-      "bytes": 555278
-    },
-    {
-      "id": "hat",
-      "file": "assets/hat.m4a",
-      "bytes": 546463
-    },
-    {
-      "id": "bass",
-      "file": "assets/bass.m4a",
-      "bytes": 657188
-    },
-    {
-      "id": "pad",
-      "file": "assets/pad.m4a",
-      "bytes": 856876
-    },
-    {
-      "id": "spark",
-      "file": "assets/spark.m4a",
-      "bytes": 416466
-    }
-  ],
-  "provenance": "Original Csound instruments and score; browser mix is a projection, not native Scenario admission."
+  "id": "teatro-kino-interlude-02",
+  "kind": "source-bound-UMP-sample-sequencer",
+  "bpm": 112,
+  "steps": 16,
+  "midi2": {
+    "codec": "@fountain-coach/midi2@0.12.8",
+    "messages": [
+      "noteOn",
+      "noteOff"
+    ],
+    "group": 0,
+    "channel": 9,
+    "peer": "local browser sample engine",
+    "hardwareTransport": false,
+    "nativeScenarioAdmitted": false
+  },
+  "sourceSample": {
+    "asset": "assets/shaders-40479-extract.m4a",
+    "metadata": "assets/sample-provenance.json",
+    "duration": 9.0
+  },
+  "scope": "private owner-WLAN audition; no public derivative release",
+  "originalReaderSourceUnchanged": true,
+  "noChords": true,
+  "noPads": true
 }

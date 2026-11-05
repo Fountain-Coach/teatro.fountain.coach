@@ -58,13 +58,14 @@ input[type=range].fader::-webkit-slider-runnable-track{background:linear-gradien
 @media(max-width:680px){.topline{font-size:9px}.headline{gap:10px}.tempo{text-align:left}.rail{grid-template-columns:1fr}.status{text-align:left}.console{gap:6px}.channel{padding:10px 5px;min-height:236px}.channel h2{font-size:11px;overflow-wrap:anywhere}.track-type{font-size:8px}.fader-area{min-height:102px}.fader-area input{width:113px}.number{font-size:9px}.mute{font-size:9px;padding:4px}.sub{max-width:240px}.stage{margin:0 -8px}.channel-head{flex-direction:column;align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
 </style>
+<link rel="stylesheet" href="./assets/sampler-v2.css">
 </head>
 <body>
 <main>
   <div class="topline"><span>Fountain Coach / Teatro / Interlude 01</span><a href="/estate/#/read/first-readings">← First Readings</a></div>
   <div class="headline">
-    <div><p class="kicker">Night score · dance study</p><h1>Kino <em>After Dark</em></h1><p class="sub">A smooth Csound dance interlude · between readings</p></div>
-    <div class="tempo"><strong>112</strong>BPM / 4 × 4 / D MINOR</div>
+    <div><p class="kicker">Night score · dance study</p><h1>Kino <em>After Dark</em></h1><p class="sub">MIDI 2.0 window sequencer · touch sampler · no chords</p></div>
+    <div class="tempo"><strong>112</strong>BPM / 16 WINDOWS / UMP</div>
   </div>
   <div class="stage">
    <svg viewBox="0 0 1200 465" role="img" aria-labelledby="stageTitle stageDesc">
@@ -94,59 +95,48 @@ input[type=range].fader::-webkit-slider-runnable-track{background:linear-gradien
     <text x="600" y="383" class="scribble" text-anchor="middle">F I R S T  R E A D I N G　·　I N T E R L U D E　·　S E C O N D  R E A D I N G</text>
     <g fill="#b3d7c6" font-family="system-ui" font-size="10" letter-spacing="3"><text x="147" y="439">TEATRO / SCORE 01</text><text x="1058" y="439" text-anchor="end">BERLIN / NIGHT</text></g>
    </svg>
+   <div id="kino-windows" class="kino-window-grid" role="group" aria-label="Sixteen touch-sensitive Kino International sequencer windows"></div>
   </div>
   <div class="rail">
-    <div class="transport"><button id="toggle" class="round" aria-label="Play the dance composition" aria-pressed="false">▶</button><button class="small" id="stop">Stop</button><button class="small" id="reset">Reset mix</button></div>
-    <div class="status" id="status" role="status" aria-live="polite"><strong>Ready to load five Csound stems</strong>Touch Play to start the music</div>
+    <div class="transport">
+      <button id="toggle" class="round" type="button" aria-label="Play MIDI 2.0 sequence" aria-pressed="false">▶</button>
+      <button id="stop" class="small" type="button">Stop</button>
+      <button id="randomize" class="small random" type="button">↝ Randomize</button>
+      <button id="reset" class="small" type="button">Reset</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"><strong>Touch the cinema windows</strong>Sixteen steps · one source sample · no chords</div>
   </div>
-  <section aria-label="Five-channel dance mixing console" class="console" id="channels"></section>
-  <div class="presets" aria-label="Mix variations"><span>Mix studies</span><button class="small" data-preset="night">Midnight</button><button class="small" data-preset="warm">Warm doors</button><button class="small" data-preset="club">Cinema floor</button></div>
-  <p class="note">Original Csound instruments and score, rendered as five time-locked audio stems. The faders mix real sound in your browser. Play starts only when you touch it. This is a staged compositional study, not a claimed native MIDI 2.0 admission.</p>
-  <div class="closing"><span>Teatro · an interval in sound and light</span><a href="/estate/#/read/first-readings">Return to the readings →</a></div>
+  <section class="sequence-meta" aria-label="Sequencer controls">
+    <span class="chapterline">KINO INTERNATIONAL / 16-STEP MIDI 2.0</span>
+    <label class="density-control">Density <input id="density" type="range" min="15" max="90" value="48"><output id="density-value">48%</output></label>
+    <output id="pattern-id" class="seed" aria-label="Pattern identity">PATTERN 001</output>
+  </section>
+  <div id="mobile-windows" class="mobile-window-grid" role="group" aria-label="Sixteen large touch-friendly sequencer steps"></div>
+  <section class="sampler" aria-label="Playable source sample">
+    <div class="sampler-heading">
+      <div><p class="kicker">02 / Source instrument</p><h2>Touch the sound.</h2><p>Drag across the waveform to play, scan and scratch the source directly.</p></div>
+      <span class="source-label">SAMPLER / 09.00 S</span>
+    </div>
+    <div id="wave-area" class="wave-area" role="group" aria-label="Touch and drag on the waveform to play and scan the sample">
+       <canvas id="waveform" role="img" aria-label="Waveform of the imported source sample"></canvas>
+       <div id="wave-cursor" class="wave-cursor" aria-hidden="true"></div>
+       <div class="wave-guide" aria-hidden="true"><span>00:00</span><span>DRAG TO PLAY</span><span id="wave-duration">00:09</span></div>
+    </div>
+    <div class="sample-tools">
+      <label>Slice <input id="slice" type="range" min="1" max="8" step="1" value="1"><output id="slice-value">01 / 08</output></label>
+      <button type="button" id="assign" class="small" aria-pressed="false">Assign slice to window</button>
+      <label>Grain <input id="grain" type="range" min="100" max="1100" step="20" value="360"><output id="grain-value">360 ms</output></label>
+      <label>Speed <input id="speed" type="range" min="45" max="180" step="5" value="100"><output id="speed-value">1.00×</output></label>
+      <label>Level <input id="level" type="range" min="0" max="100" step="1" value="80"><output id="level-value">80%</output></label>
+      <button type="button" class="small" id="reverse" aria-pressed="false">Reverse</button>
+      <label class="file-label">Open local audio<input type="file" id="file" accept="audio/*"></label>
+    </div>
+    <div class="source-credit"><span id="sample-name">SHADERS · TRACK 04</span><span>Published source: Benedikt Eickhoff · Satzfunk</span><a href="https://satzfunk.fountain.coach/" target="_blank" rel="noopener">Original edition</a></div>
+  </section>
+  <div class="protocol-line"><span>SOFTWARE MIDI 2.0 UMP → LOCAL SAMPLE INSTRUMENT</span><output id="ump" aria-live="off">NOTE ON / 2 × 32-bit words / ready</output></div>
+  <p class="note">The cinema windows are the score. The randomizer changes their rhythm and slice assignments, not a chord progression. Every playing step emits encoded and decoded MIDI 2.0 UMP Note On/Off using Fountain Coach’s own protocol library. This private preview uses a short, attributed excerpt of a published Satzfunk recording; no new public remix is authorized. Touch the waveform or load your own sample locally.</p>
+  <div class="closing"><span>Teatro · Kino After Dark · an interlude between readings</span><a href="/estate/#/read/first-readings">Return to the readings →</a></div>
 </main>
-<script type="module">
-const specs=[["kick","KICK","low pulse",.91],["hat","HI-HAT","afterglow",.52],["bass","BASS","warm current",.78],["pad","PAD","long exposure",.71],["spark","LIGHT","neon fragments",.45]];
-const $=id=>document.getElementById(id),ctxState={ctx:null,buffers:null,nodes:[],playing:false,startedAt:0,offset:0,master:null};
-const labels=new Map();const levels={};
-for(const [id,name,type,v] of specs){
- const panel=document.createElement("div");panel.className="channel";panel.innerHTML='<div class="channel-head"><span class="number">'+String(specs.findIndex(e=>e[0]===id)+1).padStart(2,"0")+'</span><button type="button" class="mute" aria-pressed="false" aria-label="Mute '+name+'">MUTE</button></div><h2>'+name+'</h2><div class="track-type">'+type+'</div><div class="meter" aria-hidden="true">'+Array.from({length:8},()=>'<span></span>').join("")+'</div><div class="fader-area"><input class="fader" aria-label="'+name+' volume" type="range" min="0" max="100" value="'+Math.round(v*100)+'"></div><div class="readout">'+Math.round(v*100)+'%</div>';
- $("channels").append(panel);const slider=panel.querySelector("input"),mute=panel.querySelector(".mute"),readout=panel.querySelector(".readout");
- levels[id]={value:v,muted:false,slider,mute,meter:[...panel.querySelectorAll(".meter span")],gain:null,analyser:null};
- slider.addEventListener("input",()=>{levels[id].value=+slider.value/100;readout.textContent=slider.value+"%";updateGain(id)});
- mute.addEventListener("click",()=>{levels[id].muted=!levels[id].muted;mute.setAttribute("aria-pressed",String(levels[id].muted));updateGain(id)});
-}
-function updateGain(id){const l=levels[id];if(l.gain&&ctxState.ctx)l.gain.gain.setTargetAtTime(l.muted?0:l.value,ctxState.ctx.currentTime,.015)}
-function setMix(mix){specs.forEach(([id],i)=>{const l=levels[id];l.value=mix[i];l.slider.value=String(Math.round(100*mix[i]));l.slider.parentElement.nextElementSibling.textContent=l.slider.value+"%";l.muted=false;l.mute.setAttribute("aria-pressed","false");updateGain(id)})}
-const presets={night:[.82,.27,.70,.79,.24],warm:[.68,.20,.57,.99,.52],club:[.98,.68,.86,.50,.72]};
-document.querySelectorAll("[data-preset]").forEach(b=>b.addEventListener("click",()=>setMix(presets[b.dataset.preset])));
-$("reset").addEventListener("click",()=>setMix(specs.map(s=>s[3])));
-function status(title,detail){$("status").innerHTML="<strong>"+title+"</strong>"+detail}
-async function prepare(){
- if(ctxState.buffers)return;
- status("Loading Csound composition","Five synchronized stems…");
- const manifest=await fetch("./manifest.json").then(r=>{if(!r.ok)throw Error("Score manifest unavailable");return r.json()});
- ctxState.ctx=new (window.AudioContext||window.webkitAudioContext)();
- const ctx=ctxState.ctx;
- const data=await Promise.all(manifest.tracks.map(async stem=>{const res=await fetch(stem.file);if(!res.ok)throw Error(stem.id+" audio unavailable");return ctx.decodeAudioData(await res.arrayBuffer())}));
- ctxState.buffers=data;
- const filter=ctx.createBiquadFilter();filter.type="lowpass";filter.frequency.value=17000;
- const compressor=ctx.createDynamicsCompressor();compressor.threshold.value=-15;compressor.ratio.value=2.2;
- const master=ctx.createGain();master.gain.value=.62;filter.connect(compressor);compressor.connect(master);master.connect(ctx.destination);ctxState.master=filter;
-}
-function endSources(){ctxState.nodes.forEach(({src})=>{try{src.stop()}catch{}src.disconnect()});ctxState.nodes=[];}
-function stop(fully=true){if(ctxState.playing&&ctxState.ctx){ctxState.offset=(ctxState.offset+(ctxState.ctx.currentTime-ctxState.startedAt))%(32*4*60/112)}endSources();ctxState.playing=false;if(fully)ctxState.offset=0;$("toggle").textContent="▶";$("toggle").setAttribute("aria-label","Play the dance composition");$("toggle").setAttribute("aria-pressed","false");status(fully?"Stopped":"Paused",fully?"Ready for another take":"Play to resume");}
-function animate(){for(const [id] of specs){const l=levels[id];if(!l.analyser||!ctxState.playing){l.meter.forEach(x=>x.classList.remove("on"));continue}
- const samples=new Uint8Array(l.analyser.fftSize);l.analyser.getByteTimeDomainData(samples);let sum=0;for(let i=0;i<samples.length;i++){const a=(samples[i]-128)/128;sum+=a*a};const rms=Math.sqrt(sum/samples.length);
- const lit=Math.min(8,Math.max(0,Math.round(Math.sqrt(rms)*20)));l.meter.forEach((x,i)=>x.classList.toggle("on",i<lit))}
- requestAnimationFrame(animate)}
-requestAnimationFrame(animate);
-$("stop").addEventListener("click",()=>stop(true));
-$("toggle").addEventListener("click",async()=>{if(ctxState.playing){stop(false);return}const b=$("toggle");b.disabled=true;try{
- await prepare();const ctx=ctxState.ctx;await ctx.resume();ctxState.startedAt=ctx.currentTime+.08;
- ctxState.nodes=specs.map(([id],i)=>{const src=ctx.createBufferSource();src.buffer=ctxState.buffers[i];src.loop=true;src.loopStart=0;src.loopEnd=32*4*60/112;const gain=ctx.createGain();gain.gain.value=levels[id].muted?0:levels[id].value;const ana=ctx.createAnalyser();ana.fftSize=256;src.connect(gain);gain.connect(ana);ana.connect(ctxState.master);levels[id].gain=gain;levels[id].analyser=ana;src.start(ctxState.startedAt,ctxState.offset);return{src,gain}});
- ctxState.playing=true;b.textContent="Ⅱ";b.setAttribute("aria-label","Pause the composition");b.setAttribute("aria-pressed","true");status("Now playing / 112 BPM","Five Csound stems · live mix");
- }catch(e){status("Audio unavailable",String(e.message||e))}finally{b.disabled=false}});
-window.addEventListener("pagehide",()=>{stop(true);ctxState.ctx?.close()});
-</script>
+<script type="module" src="./assets/sampler-v2.mjs"></script>
 </body>
 </html>

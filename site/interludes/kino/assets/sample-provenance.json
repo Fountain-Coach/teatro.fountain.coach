@@ -1,0 +1,21 @@
+{
+  "schema": "fountain.teatro.source-sample.v1",
+  "sourceHost": "https://satzfunk.fountain.coach",
+  "publishedSourceURL": "https://satzfunk.fountain.coach/media/bandcamp-20261024/shaders/40479.mp4",
+  "publishedEdition": "Shaders",
+  "track": "Track 4",
+  "publishedArtist": "Benedikt Eickhoff",
+  "sourceVideoID": "40479",
+  "sourceMP4SHA256": "24abb318154118c6e0bd182fdb1e9ea0260d4c207e51e878efa2143181b670f9",
+  "sampling": {
+    "startSeconds": 50,
+    "durationSeconds": 9,
+    "format": "AAC-LC m4a 44.1kHz stereo",
+    "transformation": "source excerpt, highpass 60 Hz, lowpass 12kHz, limiter 0.87",
+    "sampleSHA256": "eac66e8617f16cbae1c0a59cdb5cb3ec96ffd12d065babf307924383cb58bced"
+  },
+  "rights": "Original-as-published public media; independent adaptation permissions not established. User-directed private WLAN audition only; no public derivative release.",
+  "stageOnly": true,
+  "publicDerivativeAuthorized": false,
+  "codecOwner": "Fountain-Coach/midi2 midi2.js 0.12.8 from canonical src/ump.ts; esbuild no source changes"
+}
