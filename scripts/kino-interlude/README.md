@@ -40,3 +40,17 @@ The writer requested a dance feel without pads or chords. Three original Csound 
 ### Preview-compatible audio format
 
 The owner-WLAN preview refuses any WAV inside a served release. Original Csound-rendered WAV one-shots are therefore retained **only as Git sources** in `scripts/kino-interlude/source-renders/`; the three deployed one-shots are encoded as AAC/m4a, with source and derivative SHA-256 in `site/interludes/kino/assets/groove/sources.json`. The browser decoder and Web Audio scheduler are otherwise unchanged. Never relax the server's audio admissibility policy to accommodate a source WAV.
+
+## V158 — Kino After Dark as Geräuschumgebung
+
+The writer rejected the bass and hat's fixed groove and the sample-slice player as an intrusion. The replacement keeps the **existing cinema SVG and First Readings link**, but abandons metric time entirely.
+
+- Two **original Csound** textures: filtered cinema air and film dust. The checked-in CSDs and WAV source renders stay in the source tree, while only their AAC derivatives are suitable for WLAN staging.
+- A bounded browser granular environment with randomized, **non-periodic** events; long overlapping fades, gentle spatial motion, no kick/bass/hi-hat pattern, rhythmic grid, chord or pad.
+- Existing Satzfunk Shaders excerpt remains source-attributed, **off by default**. The "Traces" slider opts into extremely quiet, filtered occasional grains; source/publishing rights are not expanded.
+- The original Ear AudioWorklet observes the pre-echo mixture and continues typed MIDI 2.0 UMP CC74 loopback into the existing limited band echo; echo PCM is never re-observed.
+- Minimal accessible Play/Stop, Distance, Traces, and "Another memory". Sixteen cinema windows become noninteractive architectural light instead of step buttons.
+- Browser Play/Pause is not native Csound Scenario admission. This is a source-authored Csound-rendered ambient instrument in the existing Teatro private WLAN projector.
+- Nothing changes in original Linotype reader, First or Second Readings, or public Satzfunk.
+
+The goal is gentle cinematic memory rather than imitation of a copyrighted film's sound or a staged dialogue scene.

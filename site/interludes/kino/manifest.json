@@ -1,143 +1,27 @@
 {
-  "id": "teatro-kino-interlude-04",
-  "kind": "source-bound-Ear-UMP-sampler-with-swung-Csound-bass-hats-and-band-echo",
-  "bpm": 112,
-  "steps": 16,
-  "midi2": {
-    "codec": "@fountain-coach/midi2@0.12.8",
-    "messages": [
-      "noteOn",
-      "noteOff",
-      "controlChange"
-    ],
-    "group": 0,
-    "sequencerChannel": 9,
-    "earLoopback": {
-      "channel": 0,
-      "controller": 74,
-      "valueBits": 32,
-      "sourceIdentity": "teatro.kino.mix.pcm.01",
-      "source": "original EarAnalysisProcessor RMS of combined pre-echo sampler/bass/hat PCM",
-      "minimumIntervalMilliseconds": 75
-    },
-    "peer": "local Web Audio sample and band echo engine",
-    "hardwareTransport": false,
-    "nativeScenarioAdmitted": false,
-    "additionalVoices": [
-      {
-        "name": "bass",
-        "channel": 1,
-        "UMP": "noteOn/noteOff"
-      },
-      {
-        "name": "hat",
-        "channel": 9,
-        "UMP": "noteOn/noteOff"
-      }
-    ]
+  "id": "teatro-kino-after-dark-05",
+  "kind": "nonmetric-cinematic-geraeuschumgebung",
+  "sourceOwner": "Fountain-Coach/teatro.fountain.coach",
+  "design": "Cinematic sound environment: quiet original Csound textures, slow grains, no groove or intrusive slice player",
+  "sources": {
+    "Csound": "assets/atmosphere/sources.json",
+    "optionalArchivedSatzfunk": "assets/shaders-40479-extract.m4a",
+    "archiveIsOptIn": true
   },
+  "runtime": "assets/ambience-v158.mjs",
   "ear": {
-    "processor": "ear-analysis",
     "worklet": "assets/ear-original.js",
-    "sourceReference": "Fountain-Coach/teatro.fountain.coach EarAnalysisProcessor via verified Teatro Ear staged source",
-    "workletSHA256": "4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427",
-    "sourceAudio": "pre-echo sampler + bass + hi-hat dry PCM",
-    "echoAudioReturnsToEar": false
+    "effect": "assets/ear-band-echo.mjs",
+    "control": "MIDI2 CC74 group0 channel0 from original Ear PCM RMS",
+    "echoFeedbackBound": 0.44
   },
-  "bandEcho": {
-    "engine": "Web Audio",
-    "implementation": "assets/ear-band-echo.mjs",
-    "mode": "band-limited tape echo emulation",
-    "delaySeconds": 0.402,
-    "wowHertz": 0.37,
-    "maxFeedback": 0.44,
-    "maxWet": 0.43,
-    "control": "Ear RMS -> MIDI2 CC74 -> decode -> filter cutoff and feedback; explicit bounded software loopback",
-    "stop": "mute wet and feedback, stop all sample and rhythm voices"
-  },
-  "sourceSample": {
-    "asset": "assets/shaders-40479-extract.m4a",
-    "metadata": "assets/sample-provenance.json",
-    "duration": 9
-  },
-  "scope": "owner-WLAN staging only; public derivative not authorized",
-  "originalReaderSourceUnchanged": true,
-  "noChords": true,
-  "noPads": true,
-  "groove": {
-    "implementation": "assets/groove-v156.mjs",
-    "soundEngine": "original Csound WAV masters retained in source; AAC-LC one-shots played in browser Web Audio groove",
-    "renderScript": "scripts/kino-interlude/render_groove.py",
-    "sourceManifest": "assets/groove/sources.json",
-    "swing": {
-      "defaultRatio": 0.6,
-      "controlRangePercent": [
-        50,
-        66.25
-      ],
-      "timing": "odd eighth pulses delayed; same clock for sampled fragments, bass and hi-hats"
-    },
-    "bass": {
-      "channel": 1,
-      "monophonic": true,
-      "notes": [
-        38,
-        null,
-        38,
-        41,
-        null,
-        null,
-        38,
-        null,
-        38,
-        null,
-        38,
-        41,
-        null,
-        null,
-        36,
-        36
-      ],
-      "gainDefault": 0.75
-    },
-    "hats": {
-      "channel": 9,
-      "closedHit": "assets/groove/hat-closed.m4a",
-      "openHit": "assets/groove/hat-open.m4a",
-      "offbeatAccents": true,
-      "gainDefault": 0.52
-    },
-    "routing": "all original pre-echo PCM to existing Ear worklet and bounded echo; no wet-return into Ear",
-    "chords": false,
-    "pads": false,
-    "browserCodec": "AAC-LC m4a",
-    "sourcePCMStorage": "scripts/kino-interlude/source-renders/*.wav (source Git, never staged)",
-    "wlanPreviewPolicy": "WAV prohibited on preview; only AAC derivatives routed",
-    "audioSources": [
-      {
-        "name": "bass-d2",
-        "file": "assets/groove/bass-d2.m4a",
-        "durationSeconds": 0.43,
-        "sha256": "436b137c89c613cbf6631c9d939fabe9fac70ac71c40d7ce7d9c00031cb10862",
-        "sourceWavSHA256": "80ed94cf4f6481fb2d2e4a0c4b209a8cf491f597ea333b93461e679cdab65593",
-        "bytes": 5986
-      },
-      {
-        "name": "hat-closed",
-        "file": "assets/groove/hat-closed.m4a",
-        "durationSeconds": 0.092,
-        "sha256": "bb33a12c24a58babf81e62b1cf67ee91e2398157d58a595effa942f004aa0882",
-        "sourceWavSHA256": "1b4a8360597ba377c1ab25d82dd8806eab3b5cb7e0d2b2b752e37c2f69e5b90b",
-        "bytes": 5174
-      },
-      {
-        "name": "hat-open",
-        "file": "assets/groove/hat-open.m4a",
-        "durationSeconds": 0.245,
-        "sha256": "c23dc02b1b48437d79a6f47e494aeb6fc6ee6a1498c29e2c347059c9a34e67d7",
-        "sourceWavSHA256": "b7968a57e48090a349d7fd42823226b1dcd19eea43f431f5f11a25bb02efe7cc",
-        "bytes": 6601
-      }
-    ]
-  }
+  "notes": [
+    "no bass",
+    "no hi-hat",
+    "no beat grid",
+    "no chords",
+    "no pads",
+    "no copyrighted movie-dialogue excerpts"
+  ],
+  "scope": "owner WLAN staging only; original Linotype reader unchanged; public original-media derivative not authorized"
 }
