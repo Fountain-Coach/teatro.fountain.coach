@@ -66,32 +66,9 @@
   "noPads": true,
   "groove": {
     "implementation": "assets/groove-v156.mjs",
-    "soundEngine": "original Csound-rendered WAV one-shots, Web Audio transport/scheduling",
+    "soundEngine": "original Csound WAV masters retained in source; AAC-LC one-shots played in browser Web Audio groove",
     "renderScript": "scripts/kino-interlude/render_groove.py",
     "sourceManifest": "assets/groove/sources.json",
-    "wavSources": [
-      {
-        "name": "bass-d2",
-        "file": "assets/groove/bass-d2.wav",
-        "durationSeconds": 0.43,
-        "sha256": "80ed94cf4f6481fb2d2e4a0c4b209a8cf491f597ea333b93461e679cdab65593",
-        "bytes": 88364
-      },
-      {
-        "name": "hat-closed",
-        "file": "assets/groove/hat-closed.wav",
-        "durationSeconds": 0.092,
-        "sha256": "1b4a8360597ba377c1ab25d82dd8806eab3b5cb7e0d2b2b752e37c2f69e5b90b",
-        "bytes": 28716
-      },
-      {
-        "name": "hat-open",
-        "file": "assets/groove/hat-open.wav",
-        "durationSeconds": 0.245,
-        "sha256": "b7968a57e48090a349d7fd42823226b1dcd19eea43f431f5f11a25bb02efe7cc",
-        "bytes": 55596
-      }
-    ],
     "swing": {
       "defaultRatio": 0.6,
       "controlRangePercent": [
@@ -125,8 +102,8 @@
     },
     "hats": {
       "channel": 9,
-      "closedHit": "assets/groove/hat-closed.wav",
-      "openHit": "assets/groove/hat-open.wav",
+      "closedHit": "assets/groove/hat-closed.m4a",
+      "openHit": "assets/groove/hat-open.m4a",
       "offbeatAccents": true,
       "gainDefault": 0.52
     },
@@ -135,6 +112,32 @@
     "pads": false,
     "browserCodec": "AAC-LC m4a",
     "sourcePCMStorage": "scripts/kino-interlude/source-renders/*.wav (source Git, never staged)",
-    "wlanPreviewPolicy": "WAV prohibited on preview; only AAC derivatives routed"
+    "wlanPreviewPolicy": "WAV prohibited on preview; only AAC derivatives routed",
+    "audioSources": [
+      {
+        "name": "bass-d2",
+        "file": "assets/groove/bass-d2.m4a",
+        "durationSeconds": 0.43,
+        "sha256": "436b137c89c613cbf6631c9d939fabe9fac70ac71c40d7ce7d9c00031cb10862",
+        "sourceWavSHA256": "80ed94cf4f6481fb2d2e4a0c4b209a8cf491f597ea333b93461e679cdab65593",
+        "bytes": 5986
+      },
+      {
+        "name": "hat-closed",
+        "file": "assets/groove/hat-closed.m4a",
+        "durationSeconds": 0.092,
+        "sha256": "bb33a12c24a58babf81e62b1cf67ee91e2398157d58a595effa942f004aa0882",
+        "sourceWavSHA256": "1b4a8360597ba377c1ab25d82dd8806eab3b5cb7e0d2b2b752e37c2f69e5b90b",
+        "bytes": 5174
+      },
+      {
+        "name": "hat-open",
+        "file": "assets/groove/hat-open.m4a",
+        "durationSeconds": 0.245,
+        "sha256": "c23dc02b1b48437d79a6f47e494aeb6fc6ee6a1498c29e2c347059c9a34e67d7",
+        "sourceWavSHA256": "b7968a57e48090a349d7fd42823226b1dcd19eea43f431f5f11a25bb02efe7cc",
+        "bytes": 6601
+      }
+    ]
   }
 }
