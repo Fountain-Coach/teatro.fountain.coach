@@ -24,7 +24,7 @@ export function createKinoGroove({context,output,sendUMP,onState=()=>{}}){
     if(loaded)return;
     if(!loading){
       loading=Promise.all(["bass-d2","hat-closed","hat-open"].map(async name=>{
-        const r=await fetch(BASE+name+".wav");
+        const r=await fetch(BASE+name+".m4a");
         if(!r.ok)throw Error("Csound "+name+" HTTP "+r.status);
         const buffer=await context.decodeAudioData(await r.arrayBuffer());
         if(buffer.duration<.05)throw Error("Bad Csound hit: "+name);

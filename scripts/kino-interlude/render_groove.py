@@ -5,6 +5,8 @@ import subprocess,json,hashlib
 root=Path(__file__).resolve().parents[2]
 out=root/"site/interludes/kino/assets/groove"
 out.mkdir(parents=True,exist_ok=True)
+source=root/"scripts/kino-interlude/source-renders"
+source.mkdir(parents=True,exist_ok=True)
 orchestra=r"""
 sr=44100
 ksmps=64
@@ -50,12 +52,14 @@ for name,inst,dur,pitch in sounds:
  csd=f"<CsoundSynthesizer>\n<CsOptions>\n-d -W\n</CsOptions>\n<CsInstruments>\n{orchestra}\n</CsInstruments>\n<CsScore>\n{score}\n</CsScore>\n</CsoundSynthesizer>\n"
  src=root/"scripts/kino-interlude"/(name+".csd")
  src.write_text(csd)
- wav=out/(name+".wav")
+ wav=source/(name+".wav")
  result=subprocess.run(["csound","-d","-W","-o",str(wav),str(src)],capture_output=True,text=True)
  log=(result.stdout or "")+(result.stderr or "")
  if result.returncode or "0 errors in performance" not in log:
    print(log[-2500:]);raise RuntimeError("Csound failed: "+name)
- digest=hashlib.sha256(wav.read_bytes()).hexdigest()
- manifest["sounds"].append({"name":name,"file":"assets/groove/"+name+".wav","durationSeconds":dur,"sha256":digest,"bytes":wav.stat().st_size})
- print("CSOUND_OK",name,wav.stat().st_size,digest[:16])
+ m4a=out/(name+".m4a")
+ subprocess.run(["afconvert","-f","m4af","-d","aac","-b","128000",str(wav),str(m4a)],check=True)
+ digest=hashlib.sha256(m4a.read_bytes()).hexdigest()
+ manifest["sounds"].append({"name":name,"file":"assets/groove/"+name+".m4a","durationSeconds":dur,"sha256":digest,"sourceWavSHA256":hashlib.sha256(wav.read_bytes()).hexdigest(),"bytes":m4a.stat().st_size})
+ print("CSOUND_AAC_OK",name,m4a.stat().st_size,digest[:16])
 (out/"sources.json").write_text(json.dumps(manifest,indent=2)+"\n")

@@ -132,6 +132,9 @@
     },
     "routing": "all original pre-echo PCM to existing Ear worklet and bounded echo; no wet-return into Ear",
     "chords": false,
-    "pads": false
+    "pads": false,
+    "browserCodec": "AAC-LC m4a",
+    "sourcePCMStorage": "scripts/kino-interlude/source-renders/*.wav (source Git, never staged)",
+    "wlanPreviewPolicy": "WAV prohibited on preview; only AAC derivatives routed"
   }
 }
