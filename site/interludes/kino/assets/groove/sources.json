@@ -1,0 +1,28 @@
+{
+  "kind": "Csound-original-mono-bass-and-hat-one-shots",
+  "tempo": "externally scheduled at 112 BPM",
+  "notes": "no chords or pads; audio scheduled with swing and fed into existing Ear/UMP band echo",
+  "sounds": [
+    {
+      "name": "bass-d2",
+      "file": "assets/groove/bass-d2.wav",
+      "durationSeconds": 0.43,
+      "sha256": "80ed94cf4f6481fb2d2e4a0c4b209a8cf491f597ea333b93461e679cdab65593",
+      "bytes": 88364
+    },
+    {
+      "name": "hat-closed",
+      "file": "assets/groove/hat-closed.wav",
+      "durationSeconds": 0.092,
+      "sha256": "1b4a8360597ba377c1ab25d82dd8806eab3b5cb7e0d2b2b752e37c2f69e5b90b",
+      "bytes": 28716
+    },
+    {
+      "name": "hat-open",
+      "file": "assets/groove/hat-open.wav",
+      "durationSeconds": 0.245,
+      "sha256": "b7968a57e48090a349d7fd42823226b1dcd19eea43f431f5f11a25bb02efe7cc",
+      "bytes": 55596
+    }
+  ]
+}

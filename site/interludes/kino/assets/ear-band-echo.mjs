@@ -5,7 +5,7 @@ import {encodeControlChange,decodeUmp} from "./midi2-ump.mjs";
  * bounded local browser band/tape echo. Control loop only; wet PCM does not feed Ear.
  * This is not a native Csound patch, a hardware port or native Scenario admission.
  */
-const SOURCE="teatro.kino.sampler.pcm.01";
+const SOURCE="teatro.kino.mix.pcm.01";
 const GROUP=0,CHANNEL=0,CONTROLLER=74;
 const clamp=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
 
@@ -17,7 +17,7 @@ export async function createEarBandEcho({context,output,onReport=()=>{}}){
  const delay=context.createDelay(1.5),feedback=context.createGain(),wet=context.createGain();
  const ear=new AudioWorkletNode(context,"ear-analysis",{
   numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1],
-  processorOptions:{sourceId:SOURCE,sourceKind:"KinoSamplePCM",
+  processorOptions:{sourceId:SOURCE,sourceKind:"KinoGrooveAndSamplePCM",
     sampleRate:context.sampleRate,windowSamples:1024,hopSamples:512}
  });
  const earSink=context.createGain();earSink.gain.value=0;

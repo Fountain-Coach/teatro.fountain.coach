@@ -1,6 +1,6 @@
 {
-  "id": "teatro-kino-interlude-03",
-  "kind": "source-bound-Ear-UMP-sampler-with-band-echo-emulation",
+  "id": "teatro-kino-interlude-04",
+  "kind": "source-bound-Csound-bass-hat-swing-Ear-UMP-band-echo",
   "bpm": 112,
   "steps": 16,
   "midi2": {
@@ -16,8 +16,8 @@
       "channel": 0,
       "controller": 74,
       "valueBits": 32,
-      "sourceIdentity": "teatro.kino.sampler.pcm.01",
-      "source": "original EarAnalysisProcessor RMS of local sampler dry PCM",
+      "sourceIdentity": "teatro.kino.mix.pcm.01",
+      "source": "original EarAnalysisProcessor RMS of mixed groove and sample dry PCM",
       "minimumIntervalMilliseconds": 75
     },
     "peer": "local Web Audio sample and band echo engine",
@@ -29,7 +29,7 @@
     "worklet": "assets/ear-original.js",
     "sourceReference": "Fountain-Coach/teatro.fountain.coach EarAnalysisProcessor via verified Teatro Ear staged source",
     "workletSHA256": "4f1d800fd5518975c0bc98a5fb0ace93eaa726d8731bf330a8eff59a9d115427",
-    "sourceAudio": "pre-echo sample PCM",
+    "sourceAudio": "pre-echo mixed PCM: sample, bass and hi-hat; echo wet excluded",
     "echoAudioReturnsToEar": false
   },
   "bandEcho": {
@@ -41,7 +41,7 @@
     "maxFeedback": 0.44,
     "maxWet": 0.43,
     "control": "Ear RMS -> MIDI2 CC74 -> decode -> filter cutoff and feedback; explicit bounded software loopback",
-    "stop": "mute wet and feedback, stop all source grains"
+    "stop": "Stop all sample grains and Csound groove voices, mute wet and feedback, stop Ear UMP updates"
   },
   "sourceSample": {
     "asset": "assets/shaders-40479-extract.m4a",
@@ -51,5 +51,20 @@
   "scope": "owner-WLAN staging only; public derivative not authorized",
   "originalReaderSourceUnchanged": true,
   "noChords": true,
-  "noPads": true
+  "noPads": true,
+  "groove": {
+    "source": "Csound-rendered-original-single-note-bass-and-noise-hat-one-shots",
+    "sounds": "assets/groove/sources.json",
+    "runtime": "assets/groove-v156.mjs",
+    "swingRange": "50-66.25 percent late eighth",
+    "defaultSwingPercent": 60,
+    "midi2": {
+      "bassChannel": 1,
+      "hatChannel": 9
+    },
+    "clock": "shared 112 BPM source AudioContext",
+    "mixedAudio": "bass + hi-hat + sampler -> pre-echo PCM input -> original Ear -> MIDI 2.0 UMP CC74 -> bounded band echo",
+    "noChords": true,
+    "noPads": true
+  }
 }

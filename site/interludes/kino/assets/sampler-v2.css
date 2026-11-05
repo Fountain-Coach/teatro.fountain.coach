@@ -51,4 +51,24 @@ button.small.random{border-color:#d7b17a;color:#f5c68a}
 .ear-loop .ear-meter{width:100%;color:#9ac5b1;letter-spacing:.12em}
 @media(max-width:680px){.ear-loop{gap:12px}.ear-identity{width:100%}.ear-loop label{gap:7px}.ear-loop input[type=range]{width:82px;max-width:22vw}}
 
+
+/* Csound groove: separate sound sources, one listening Echo, no chord grid. */
+.groove-strip{display:grid;grid-template-columns:minmax(160px,.75fr) minmax(0,2.3fr);gap:10px 26px;margin:20px 0 0;padding:23px 26px;background:linear-gradient(115deg,#111d18,#17281f 65%,#0e1713);border:1px solid #58735c;box-shadow:inset 0 1px #82977a20}
+.groove-intro{display:flex;flex-direction:column;gap:5px}.groove-intro .kicker{margin:0 0 6px;font-size:9px;color:#e2bb7d}
+.groove-intro strong{font:normal clamp(24px,2.7vw,39px)/1 Georgia,serif;letter-spacing:-.03em;color:#ead8b8}
+.groove-intro small{max-width:235px;color:#9cae9d;font-size:10px;line-height:1.55}
+.groove-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;align-items:center}
+.groove-fader{display:flex;gap:10px;align-items:center;justify-content:space-between;white-space:nowrap;color:#c6d8c6;font-size:10px;letter-spacing:.12em}
+.groove-fader input{accent-color:#e1bd85;width:min(130px,48%);min-width:50px}.groove-fader output{color:#f0ce9f;min-width:36px;text-align:right;font-size:10px;font-variant-numeric:tabular-nums;letter-spacing:0}
+.groove-mute{font-size:9px!important;padding:9px 10px!important;justify-self:stretch}.groove-mute[aria-pressed=true]{background:#6f3c35;color:#e9d6c6;border-color:#b48366}
+.groove-fader:has(#swing){grid-column:1 / 3}.groove-fader:has(#swing) input{flex:1;max-width:300px}.groove-fader:has(#swing) output{min-width:117px}
+.groove-feedback{grid-column:1 / -1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding-top:12px;border-top:1px solid #496350;color:#b6cdb7;font-size:9px;letter-spacing:.15em}.groove-feedback span:first-child{color:#ebc086}
+@media(max-width:680px){
+.groove-strip{grid-template-columns:1fr;padding:16px 14px;gap:17px}
+.groove-intro strong{font-size:30px}.groove-intro small{max-width:none}
+.groove-controls{gap:10px 9px}.groove-fader{gap:6px;font-size:9px}
+.groove-fader input{width:65px;min-width:38px}.groove-fader:has(#swing) output{min-width:107px;font-size:9px}
+.groove-feedback{font-size:8px;letter-spacing:.08em}
+}
+
 @media (prefers-reduced-motion:reduce){.window-step{transition:none}}
