@@ -1,0 +1,35 @@
+{
+  "id": "teatro-kino-interlude-01",
+  "kind": "Csound-source-rendered-stems",
+  "tempoBPM": 112,
+  "bars": 32,
+  "durationSeconds": 68.571,
+  "tracks": [
+    {
+      "id": "kick",
+      "file": "assets/kick.m4a",
+      "bytes": 555278
+    },
+    {
+      "id": "hat",
+      "file": "assets/hat.m4a",
+      "bytes": 546463
+    },
+    {
+      "id": "bass",
+      "file": "assets/bass.m4a",
+      "bytes": 657188
+    },
+    {
+      "id": "pad",
+      "file": "assets/pad.m4a",
+      "bytes": 856876
+    },
+    {
+      "id": "spark",
+      "file": "assets/spark.m4a",
+      "bytes": 416466
+    }
+  ],
+  "provenance": "Original Csound instruments and score; browser mix is a projection, not native Scenario admission."
+}
