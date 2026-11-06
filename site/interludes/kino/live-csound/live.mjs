@@ -7,7 +7,18 @@ const status=document.querySelector('#status'),stopButton=document.querySelector
 const buttons=[...document.querySelectorAll('[data-play]')],cache=new Map();
 let current=null,serial=0,closing=Promise.resolve();
 function note(t){status.textContent=t}
-function reset(){for(const b of buttons){b.setAttribute('aria-pressed','false');b.textContent='Play live synthesis';b.disabled=false}stopButton.disabled=true;for(const e of document.querySelectorAll('.meter span'))e.style.width='0'}
+const cinema=document.querySelector('#cinema-room');
+const windows=[...document.querySelectorAll('.memory-window')];
+let visualTick=0;
+function projectSound(level){
+ const gain=Math.min(.83,Math.max(0,Number(level)||0)*2.4);
+ for(let i=0;i<windows.length;i++){
+  const envelope=.67+.33*Math.sin(i*1.21+visualTick*.28);
+  windows[i].style.setProperty('--window-level',String(.04+gain*envelope));
+ }
+ visualTick++;
+}
+function reset(){for(const b of buttons){b.setAttribute('aria-pressed','false');b.querySelector('.go').textContent='▶';b.disabled=false}stopButton.disabled=true;cinema.dataset.active='false';for(const e of document.querySelectorAll('.meter span'))e.style.width='0';projectSound(0)}
 async function stop(){
   ++serial;
   const prior=current;current=null;reset();
@@ -29,7 +40,7 @@ async function play(key){
   if(!keys.has(key)||current||pair==='history'&&!key.startsWith('history-')||pair==='controlled'&&key.startsWith('history-'))return;
   await stop();
   const generation=++serial,button=buttons.find(b=>b.dataset.play===key);
-  button.textContent='Starting Csound…';stopButton.disabled=false;
+  button.querySelector('.go').textContent='…';stopButton.disabled=false;
   note('Starting source-owned Csound AudioWorklet…');
   let host;
   try{
@@ -47,14 +58,14 @@ async function play(key){
     if(accepted!==undefined&&accepted!==0)throw Error('Csound score rejected: '+accepted);
     if(serial!==generation){await host.stop();return}
     current={key,host};
-    button.textContent='Live synthesizing';button.setAttribute('aria-pressed','true');
+    button.querySelector('.go').textContent='●';button.setAttribute('aria-pressed','true');cinema.dataset.active='true';
     for(const other of buttons)other.disabled=true;
     note(config.label+' · Csound running · Stop available.');
     current.poll=setInterval(async()=>{
       if(current?.host!==host)return;
       try{const m=await host.level();const v=Number(m?.rms??m?.value??0);
        const e=document.querySelector('section[data-synth="'+key+'"] .meter span');
-       if(e&&Number.isFinite(v))e.style.width=Math.min(100,Math.max(0,v*450))+'%';
+       if(Number.isFinite(v)){if(e)e.style.width=Math.min(100,Math.max(0,v*450))+'%';projectSound(v);}
       }catch{}
     },500);
     current.timer=setTimeout(()=>{if(current?.host===host)void stop()},17500);

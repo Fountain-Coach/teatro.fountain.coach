@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kino International · Teatro Live Csound Score</title>
+<style>
+:root{font-family:Georgia,serif;background:#faf8f1;color:#242821}*{box-sizing:border-box}
+body{margin:0;padding:.25rem .4rem;overflow:hidden;line-height:1.25}
+main{max-width:980px;margin:auto}
+.score-head{display:flex;justify-content:space-between;align-items:center;gap:1em;padding:0 0 .25rem}
+.score-title{margin:0;color:#4e6258;font:500 .62rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.stop{font:500 .7rem system-ui,sans-serif;min-height:28px;border:0;border-bottom:1px solid #536458;background:transparent;color:#45584b;cursor:pointer}
+.stop:disabled{opacity:.45}
+.stage{position:relative;overflow:hidden;background:#060a0a;border:1px solid #31463d}
+.stage svg{display:block;width:100%;height:auto;aspect-ratio:1200/465}
+.stage .neon{filter:url(#lit)}.stage .window{fill:#14241e;stroke:#2a4a3e;stroke-width:2}
+.stage .panel{fill:#091210;stroke:#54715d;stroke-width:1.6}
+.stage .titleletter{font:600 27px system-ui,sans-serif;letter-spacing:8px;fill:#c9f2d3}
+.stage .scribble{font:400 12px system-ui,sans-serif;letter-spacing:3.7px;fill:#f2c891}
+.stage .lamp{fill:#fff3cc;filter:url(#glow)}.stage .signal{fill:#39c6a2;filter:url(#glow)}
+.stage .bline{stroke:#596b57;stroke-width:3}.stage .reflection{stroke:#1c4436;stroke-width:1}
+.kino-window-grid{pointer-events:none;position:absolute;left:11.8%;right:11%;top:53.4%;height:20%;display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;z-index:3}
+.memory-window{height:100%;display:block;background:rgba(227,173,105,var(--window-level,.04));border:1px solid #86745126}
+.stage[data-active=true] .memory-window{border-color:#8c78582e}
+.instrument-rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-bottom:1px solid #9ca69a}
+.instrument{min-width:0;margin:0;border-right:1px solid #c0c6bb}.instrument:last-child{border-right:0}
+.play{width:100%;min-height:43px;padding:.3rem .35rem;display:flex;align-items:center;gap:.45em;border:0;background:transparent;color:#2e4035;text-align:left;cursor:pointer}
+.play[aria-pressed=true]{background:#dce8db;color:#123325}.play:disabled{opacity:.65}
+.index{font:500 .65rem system-ui,sans-serif;letter-spacing:.05em;color:#748778}
+.name{flex:1;font:normal clamp(.75rem,2vw,.9rem) Georgia,serif;line-height:1.12}
+.go{font:500 .75rem system-ui,sans-serif;color:#4d6a59}
+.meter{height:2px;background:#e3e5dd;margin:0 .35rem}.meter span{display:block;height:100%;width:0;background:#628a73}
+#status{font:normal .69rem/1.35 Georgia,serif;color:#687668;margin:.3rem .05rem 0;min-height:1.1em}
+button:focus-visible{outline:2px solid #275e75;outline-offset:-2px}
+body[data-pair=history] .instrument[data-pair=controlled],body[data-pair=controlled] .instrument[data-pair=history]{display:none}
+@media(max-width:440px){body{padding:.1rem}.score-title{font-size:.56rem}.instrument .name{font-size:.76rem}.play{min-height:43px;padding:.2rem}.index{font-size:.58rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><main>
+<div class="score-head"><p class="score-title">Kino International · Teatro score / live synthesis</p><button id="stop" class="stop" type="button" disabled>Stop</button></div>
+<div class="stage" id="cinema-room" data-active="false">
+<!-- Original Teatro Kino After Dark architectural SVG SHA-256 __SOURCE_SHA__ -->
+__SOURCE_SVG__
+<div class="kino-window-grid" aria-hidden="true">__WINDOWS__</div>
+</div>
+<div class="instrument-rail" aria-label="Choose a live Kino International instrument">
+<section class="instrument" data-pair="history" data-synth="history-groove"><button class="play" type="button" data-play="history-groove" aria-pressed="false"><span class="index">I</span><span class="name">Bass / groove</span><span class="go" aria-hidden="true">▶</span></button><div class="meter"><span></span></div></section>
+<section class="instrument" data-pair="history" data-synth="history-memory"><button class="play" type="button" data-play="history-memory" aria-pressed="false"><span class="index">II</span><span class="name">The memory room</span><span class="go" aria-hidden="true">▶</span></button><div class="meter"><span></span></div></section>
+<section class="instrument" data-pair="controlled" data-synth="literal"><button class="play" type="button" data-play="literal" aria-pressed="false"><span class="index">A</span><span class="name">Literal Csound</span><span class="go" aria-hidden="true">▶</span></button><div class="meter"><span></span></div></section>
+<section class="instrument" data-pair="controlled" data-synth="directed"><button class="play" type="button" data-play="directed" aria-pressed="false"><span class="index">B</span><span class="name">Directed Csound</span><span class="go" aria-hidden="true">▶</span></button><div class="meter"><span></span></div></section>
+</div><p id="status" role="status" aria-live="polite">Choose one live instrument. The cinema windows follow its sound.</p>
+</main><script type="module" src="./live.mjs"></script></body></html>
