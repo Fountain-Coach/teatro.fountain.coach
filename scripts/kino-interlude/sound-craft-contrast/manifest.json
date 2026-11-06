@@ -1,0 +1,50 @@
+{
+  "schema": "fountain.teatro.sound-craft-comparison.v1",
+  "state": "private-editorial-audition-not-artistically-approved",
+  "sourceOwner": "Fountain-Coach/teatro.fountain.coach",
+  "mediaPlayerOwner": "Fountain-Coach/SatzfunkPlayer",
+  "sourceLineage": [
+    "scripts/kino-interlude/cinema-air.csd",
+    "scripts/kino-interlude/midnight-cylinder.csd"
+  ],
+  "composition": "Kino After Dark — original air, low resonances, metallic phrase, no historic recording",
+  "sourceScoreSHA256": "21ae0eda6621d1b2ff90a1baaa792def576d7399da62cc90609022d854abda49",
+  "comparison": "same original score, 16 seconds, Csound 48k 2ch, A unworked vs B crafted material/room",
+  "noOutsideRecordings": true,
+  "noNativeScenarioAdmissionClaim": true,
+  "rights": "new original Csound synthesis; staged candidate only",
+  "files": [
+    {
+      "id": "a-literal",
+      "title": "A — literal, dry first pass",
+      "csoundPatch": "scripts/kino-interlude/sound-craft-contrast/a-literal.csd",
+      "csoundSHA256": "1f21a92ded2ceeaa699111254987c1d411bb740ebebfc140ef1b919ca9738ab7",
+      "renderPCM": "scripts/kino-interlude/sound-craft-contrast/source-renders/a-literal.wav",
+      "renderPCMSHA256": "929504ca8d3119c7b44c9a343a1bb638c495dc4a67ac1b7b4ceb33e8d446a929",
+      "previewMedia": "scripts/kino-interlude/sound-craft-contrast/media/a-literal.m4a",
+      "previewMediaSHA256": "f8db7d1cee00b6e346fb400567c2868e99a97cf4c51007b3fe47fe542dbde427",
+      "renderFacts": {
+        "durationSeconds": 16.0,
+        "peakLinear": 0.25839,
+        "rmsLinear": 0.08193,
+        "stereoDifferenceSum": 0
+      }
+    },
+    {
+      "id": "b-directed",
+      "title": "B — materially articulated room study",
+      "csoundPatch": "scripts/kino-interlude/sound-craft-contrast/b-directed.csd",
+      "csoundSHA256": "928656e3a6e8a6a2edf7ea9fad55b844afca1b27bd4af94140a63b3b5850a202",
+      "renderPCM": "scripts/kino-interlude/sound-craft-contrast/source-renders/b-directed.wav",
+      "renderPCMSHA256": "cac5c684f1ede1820431995fce1eff8b81e0681c9c0c0474347b8701f30e7aa7",
+      "previewMedia": "scripts/kino-interlude/sound-craft-contrast/media/b-directed.m4a",
+      "previewMediaSHA256": "5413a93ba9a1c471e2178f93f099e412b464f2e25447b8a7f4ebb960b298d94b",
+      "renderFacts": {
+        "durationSeconds": 16.0,
+        "peakLinear": 0.45306,
+        "rmsLinear": 0.08212,
+        "stereoDifferenceSum": 28575507
+      }
+    }
+  ]
+}
