@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kino International — Live Csound Instruments</title>
+<style>
+:root{font-family:Georgia,serif;background:#faf8f2;color:#252721}*{box-sizing:border-box}
+body{margin:0;padding:.5rem .75rem;line-height:1.4}main{max-width:850px;margin:auto}
+header{display:flex;justify-content:space-between;gap:1rem;align-items:center;border-top:1px solid #85867b;padding-top:.5rem}
+h1{font:400 .75rem system-ui,sans-serif;letter-spacing:.05em;text-transform:uppercase;margin:0}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin-top:.5rem}
+section{border:1px solid #aaa99e;padding:.55rem;min-width:0}
+h2{font-size:.95rem;font-weight:400;margin:0 0 .5rem}
+p{margin:.4rem 0;color:#555;font-size:.76rem}
+.play{font:.78rem system-ui,sans-serif;border:1px solid #5a6159;border-radius:3px;background:#eeeae0;color:#252721;width:100%;min-height:42px;cursor:pointer}
+.play[aria-pressed=true]{background:#343a34;color:white}
+button:focus-visible{outline:2px solid #24677a;outline-offset:2px}
+#stop{font:inherit;text-decoration:underline;border:0;background:none;cursor:pointer;min-height:36px}
+#status{font-size:.75rem;min-height:1.5rem}
+.meter{background:#dad8d0;height:3px}.meter span{display:block;height:100%;width:0;background:#4e765d}
+body[data-pair=history] section[data-pair=controlled],body[data-pair=controlled] section[data-pair=history]{display:none}
+@media(max-width:420px){body{padding:.25rem}section{padding:.4rem}h2{font-size:.83rem}}
+</style></head>
+<body><main><header><h1>Teatro · Live Csound · Kino International</h1><button type="button" id="stop" disabled>Stop</button></header>
+<div class="pair">
+<section data-pair="history" data-synth="history-groove"><h2>First synthesizer · Groove</h2><button class="play" type="button" data-play="history-groove">Play live synthesis</button><div class="meter"><span></span></div><p>Original bass and hat voices</p></section>
+<section data-pair="history" data-synth="history-memory"><h2>Second synthesizer · Memory</h2><button class="play" type="button" data-play="history-memory">Play live synthesis</button><div class="meter"><span></span></div><p>Original air, film dust and Midnight Cylinder voices</p></section>
+<section data-pair="controlled" data-synth="literal"><h2>A · Literal Csound</h2><button class="play" type="button" data-play="literal">Play live synthesis</button><div class="meter"><span></span></div><p>Sixteen-second original source score</p></section>
+<section data-pair="controlled" data-synth="directed"><h2>B · Directed Csound</h2><button class="play" type="button" data-play="directed">Play live synthesis</button><div class="meter"><span></span></div><p>Same score, directed acoustic treatment</p></section>
+</div><p id="status" role="status" aria-live="polite">Choose an instrument. Audio starts only on Play.</p><p>Actual Csound AudioWorklet execution, not recording playback. One live patch at a time; Stop closes the engine.</p>
+</main><script type="module" src="./live.mjs"></script></body></html>

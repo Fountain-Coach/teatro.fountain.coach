@@ -1,0 +1,26 @@
+{
+  "orchestra": "giSine ftgen 9001,0,16384,10,1\n\ninstr 901\n  iHz cpsmidinn p4\n  aTone oscili .32*p5,iHz,9001\n  aEnv linen 1,.004,p3,.04\n  aOut=aTone*aEnv\n  outs aOut*.70,aOut*.70\nendin\ninstr 902\n  iHz cpsmidinn p4\n  aTone oscili .21*p5,iHz*2,9001\n  aEnv linen 1,.004,p3,.05\n  outs aTone*aEnv*.70,aTone*aEnv*.70\nendin\ninstr 903\n  aNoise rand .055\n  aNoise butterhp aNoise,2200\n  aNoise butterlp aNoise,5700\n  outs aNoise*.42*.70,aNoise*.42*.70\nendin\ninstr 999\n  ; no room model\nendin\n",
+  "score": [
+    "i 999 0.00000 16",
+    "i 903 0.00000 16",
+    "i 901 1.00000 2.80 41 .74",
+    "i 902 3.28000 2.25 67 .57",
+    "i 901 6.18000 3.15 39 .61",
+    "i 902 8.42000 2.90 63 .51",
+    "i 901 10.82000 3.10 44 .56"
+  ],
+  "label": "Literal patch — live Csound, same score",
+  "identity": "teatro.kino.soundcraft.a",
+  "fidelity": "Native Csound source with unique host instrument identity; score timing preserved",
+  "owner": "Fountain-Coach/teatro.fountain.coach",
+  "sources": [
+    {
+      "path": "scripts/kino-interlude/sound-craft-contrast/a-literal.csd",
+      "sha256": "1f21a92ded2ceeaa699111254987c1d411bb740ebebfc140ef1b919ca9738ab7",
+      "role": "Original native Csound score and orchestra"
+    }
+  ],
+  "durationSeconds": 16,
+  "engine": "@csound/browser AudioWorklet via Teatro-owned BookCsoundHost",
+  "originalBrowserCapture": false
+}

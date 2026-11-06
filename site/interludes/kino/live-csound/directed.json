@@ -1,0 +1,26 @@
+{
+  "orchestra": "giSine ftgen 9101,0,16384,10,1\n\ngaBusL init 0\ngaBusR init 0\ninstr 911\n  iHz cpsmidinn p4\n  iVel=p5\n  aEnv linseg 0,.028,1,.20,.74,p3-.88,.58,.652,0\n  aCore oscili .19,iHz,9101\n  aUpper oscili .09,iHz*2.007,9101\n  aWood oscili .043,iHz*3.021,9101\n  aSub oscili .07,iHz*.5,9101\n  aBreath rand .008\n  aAttack expseg .0001,.008,1,.065,.0001,p3-.073,.0001\n  aTransient butterlp aBreath*aAttack,1100\n  aBody butterlp (aCore+aUpper+aWood+aSub)*aEnv+aTransient,1700\n  kDrift lfo .035,.12,0\n  aOut=aBody*iVel\n  gaBusL=gaBusL+aOut*(.86+kDrift)\n  gaBusR=gaBusR+aOut*(.81-kDrift)\nendin\ninstr 912\n  iHz cpsmidinn p4\n  iVel=p5\n  aEnv expseg .0001,.019,1,p3-.019,.0001\n  aA oscili .14,iHz,9101\n  aB oscili .095,iHz*2.017,9101\n  aC oscili .054,iHz*3.92,9101\n  aD oscili .021,iHz*5.11,9101\n  aNoise rand .011\n  aClick butterhp aNoise,2600\n  aClick linen aClick,.002,p3,.18\n  aTone butterlp (aA+aB+aC+aD)*aEnv+aClick,5500\n  kMove lfo .18,.071,0\n  gaBusL=gaBusL+aTone*iVel*(.75+kMove)\n  gaBusR=gaBusR+aTone*iVel*(.82-kMove)\nendin\ninstr 913\n  aAir rand .18\n  aAir butterlp aAir,1800\n  aAir butterhp aAir,95\n  aHiss rand .03\n  aHiss butterhp aHiss,3500\n  kEnv linseg 0,1.6,1,p3-3.8,.9,2.2,0\n  kMove lfo .23,.061,0\n  aMix=(aAir*.34+aHiss*.055)*kEnv\n  gaBusL=gaBusL+aMix*(.72+kMove)\n  gaBusR=gaBusR+aMix*(.70-kMove)\nendin\ninstr 919\n  aSpaceL,aSpaceR reverbsc gaBusL,gaBusR,.79,5900\n  aOutL=(gaBusL*.64+aSpaceL*.35)*.83*3.60\n  aOutR=(gaBusR*.64+aSpaceR*.35)*.83*3.60\n  aOutL butterlp aOutL,11000\n  aOutR butterlp aOutR,11000\n  outs aOutL,aOutR\n  clear gaBusL,gaBusR\nendin\n",
+  "score": [
+    "i 919 0.00000 16",
+    "i 913 0.00000 16",
+    "i 911 1.00000 2.80 41 .74",
+    "i 912 3.28000 2.25 67 .57",
+    "i 911 6.18000 3.15 39 .61",
+    "i 912 8.42000 2.90 63 .51",
+    "i 911 10.82000 3.10 44 .56"
+  ],
+  "label": "Directed patch — live Csound, same score",
+  "identity": "teatro.kino.soundcraft.b",
+  "fidelity": "Native Csound source with unique host instrument identity; score timing preserved",
+  "owner": "Fountain-Coach/teatro.fountain.coach",
+  "sources": [
+    {
+      "path": "scripts/kino-interlude/sound-craft-contrast/b-directed.csd",
+      "sha256": "928656e3a6e8a6a2edf7ea9fad55b844afca1b27bd4af94140a63b3b5850a202",
+      "role": "Original native Csound score and orchestra"
+    }
+  ],
+  "durationSeconds": 16,
+  "engine": "@csound/browser AudioWorklet via Teatro-owned BookCsoundHost",
+  "originalBrowserCapture": false
+}

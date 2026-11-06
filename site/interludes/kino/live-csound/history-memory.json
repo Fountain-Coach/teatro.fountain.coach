@@ -1,0 +1,38 @@
+{
+  "orchestra": "instr 811\n  ; Cinema air: ventilation, room distance, a tiny, unpitched electrical memory.\n  aNoise rand .27\n  aBand butterlp aNoise,1000\n  aBand butterhp aBand,63\n  aHiss rand .12\n  aHiss butterhp aHiss,3100\n  aHiss butterlp aHiss,7800\n  kBreath lfo .19,.083,0\n  kFade linseg 0,1,1,14,1,1,0\n  aLeft = (aBand*(.43+kBreath)+aHiss*.06)*kFade*.58\n  aRight = (aBand*(.38-kBreath*.5)+aHiss*.052)*kFade*.58\n  outs aLeft,aRight\nendin\ninstr 812\n  ; Soft film dust: irregular colored broadband texture, no cadence or tones.\n  aCrackle rand .24\n  aCrackle butterhp aCrackle,550\n  aCrackle butterlp aCrackle,5200\n  kSway lfo .15,.071,0\n  kFade linseg 0,1.5,1,13,1,1.5,0\n  outs aCrackle*(.31+kSway)*kFade*.45,aCrackle*(.29-kSway)*kFade*.44\nendin\n\ngiwave ftgen 8201,0,16384,10,1,.18,.06,.017\ngisine ftgen 8202,0,16384,10,1\n\ninstr 821\n  ; A soft struck bar with jazz-like shimmer and nonharmonic partials.\n  iHz cpsmidinn p4\n  iAmp=p5\n  aEnv expseg .001,.009,1,p3-.009,.0005\n  a1 oscili .24,iHz,8201\n  a2 oscili .075,iHz*2.008,8202\n  a3 oscili .034,iHz*3.937,8202\n  a4 oscili .017,iHz*.503,8202\n  kSway lfo .007,.62\n  aMix=(a1+a2+a3+a4)*aEnv*iAmp\n  aMix butterlp aMix,2800\n  outs aMix*(.92+kSway), aMix*(.85-kSway)\nendin\n\ninstr 822\n  ; Muted single low string: a few breaths, not a repeating bassline.\n  iHz cpsmidinn p4\n  iAmp=p5\n  aBody oscili .20,iHz,8201\n  aOct oscili .09,iHz*.5,8202\n  aEnv linseg 0,.025,1,.13,.67,p3-.155,0\n  aLow butterlp (aBody+aOct)*aEnv,520\n  outs aLow*iAmp,aLow*iAmp\nendin\n\ninstr 823\n  ; Finger-brush texture (not a backbeat): short high colored noise.\n  aNoise rand .13\n  aNoise butterhp aNoise,2700\n  aNoise butterlp aNoise,7400\n  aEnv linen 1,.03,p3,.22\n  outs aNoise*aEnv*p4*.78,aNoise*aEnv*p4*.61\nendin\n\ninstr 824\n  ; Exhaled hollow tone with tiny analogue detuning.\n  iHz cpsmidinn p4\n  aA oscili .09,iHz,8201\n  aB oscili .045,iHz*1.004,8202\n  aNoise rand .004\n  aEnv linseg 0,.18,.8,p3-.85,.65,.67,0\n  aTone butterlp (aA+aB+aNoise)*aEnv,1450\n  outs aTone*p5*.82,aTone*p5*.90\nendin\n\ninstr 825\n  ; Deliberate end-to-end fade so repeated excerpts never click.\n  ; The main recording envelope is rendered here, not in the authoring source.\n  aInL,aInR monitor\nendin\n",
+  "score": [
+    "i 811 0.00000 16",
+    "i 821 3.38000 2.50 67 .54",
+    "i 821 4.92000 1.80 64 .45",
+    "i 821 6.85000 2.40 70 .43",
+    "i 821 8.67000 2.10 65 .43",
+    "i 821 10.43000 2.25 69 .35",
+    "i 822 3.22000 2.00 41 .37",
+    "i 822 7.55000 1.88 46 .31",
+    "i 823 4.12000 .25 .29",
+    "i 823 6.42000 .34 .23",
+    "i 823 9.12000 .31 .21",
+    "i 823 11.12000 .29 .16",
+    "i 824 5.57000 3.50 53 .31",
+    "i 824 9.60000 2.70 56 .23"
+  ],
+  "label": "Cinematic memory synthesizer — live original Csound voices",
+  "identity": "teatro.kino.history.memory",
+  "fidelity": "Live synthesis of original Kino air, film-dust and Midnight Cylinder; instrument voices preserved, score assembled for this audition",
+  "owner": "Fountain-Coach/teatro.fountain.coach",
+  "sources": [
+    {
+      "path": "scripts/kino-interlude/cinema-air.csd",
+      "sha256": "fc5e525de65213ee7e584d4855e7240b8becfc5815db94874ea95d712432d14b",
+      "role": "Original atmosphere and film-dust instruments"
+    },
+    {
+      "path": "scripts/kino-interlude/midnight-cylinder.csd",
+      "sha256": "6a89e4442dc666ccb11b5dfb5ebda300d9855ae13a6051ad56f4eb4fed1dcdd9",
+      "role": "Original Midnight Cylinder instruments and score"
+    }
+  ],
+  "durationSeconds": 16,
+  "engine": "@csound/browser AudioWorklet via Teatro-owned BookCsoundHost",
+  "originalBrowserCapture": false
+}
