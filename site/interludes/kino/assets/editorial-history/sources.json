@@ -1,0 +1,314 @@
+{
+  "schema": "fountain.teatro.kino-editorial-historical-reconstruction.v1",
+  "originalCapture": false,
+  "sourceStemsCsoundRendered": true,
+  "borrowedSamples": false,
+  "editorialAudioReconstructionOnly": true,
+  "sampleRate": 44100,
+  "twoHistoricalApproachesNotSameScore": true,
+  "files": [
+    {
+      "id": "kino-history-groove",
+      "sourceOwner": "Fountain-Coach/teatro.fountain.coach",
+      "description": "Editorial reconstruction of first fixed-bass/hat approach from original source Csound PCM stems; not a captured original browser-mix recording",
+      "durationSeconds": 16,
+      "mediaFile": "site/interludes/kino/assets/editorial-history/kino-history-groove.m4a",
+      "mediaSHA256": "0edefc5adc7ac0d60454fc94eedca5cd24c08162fadd0479004d689f50b52784",
+      "sourceStems": [
+        {
+          "file": "scripts/kino-interlude/source-renders/bass-d2.wav",
+          "sha256": "80ed94cf4f6481fb2d2e4a0c4b209a8cf491f597ea333b93461e679cdab65593"
+        },
+        {
+          "file": "scripts/kino-interlude/source-renders/hat-closed.wav",
+          "sha256": "1b4a8360597ba377c1ab25d82dd8806eab3b5cb7e0d2b2b752e37c2f69e5b90b"
+        },
+        {
+          "file": "scripts/kino-interlude/source-renders/hat-open.wav",
+          "sha256": "b7968a57e48090a349d7fd42823226b1dcd19eea43f431f5f11a25bb02efe7cc"
+        }
+      ],
+      "events": [
+        {
+          "stem": "bass-d2",
+          "atSeconds": 0.0,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 0.0,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 0.4018,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 0.5357,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 0.5357,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 0.9375,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 1.0714,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 1.0714,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 1.4732,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 1.6071,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 1.6071,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-open",
+          "atSeconds": 2.0089,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 2.1429,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 2.1429,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 2.5446,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 2.6786,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 2.6786,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 3.0804,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 3.2143,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 3.2143,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 3.6161,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 3.75,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 3.75,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-open",
+          "atSeconds": 4.1518,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 4.2857,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 4.2857,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 4.6875,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 4.8214,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 4.8214,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 5.2232,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 5.3571,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 5.3571,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 5.7589,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 5.8929,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 5.8929,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-open",
+          "atSeconds": 6.2946,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 6.4286,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 6.4286,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 6.8304,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 6.9643,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 6.9643,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 7.3661,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 7.5,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 7.5,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 7.9018,
+          "gain": 0.16
+        },
+        {
+          "stem": "bass-d2",
+          "atSeconds": 8.0357,
+          "gain": 0.64
+        },
+        {
+          "stem": "hat-closed",
+          "atSeconds": 8.0357,
+          "gain": 0.11
+        },
+        {
+          "stem": "hat-open",
+          "atSeconds": 8.4375,
+          "gain": 0.16
+        }
+      ]
+    },
+    {
+      "id": "kino-history-memory",
+      "sourceOwner": "Fountain-Coach/teatro.fountain.coach",
+      "description": "Editorial reconstruction of revised atmospheric approach from original Csound cinema-air, film-dust and Midnight Cylinder PCM stems; not a captured original browser-mix recording",
+      "durationSeconds": 16,
+      "mediaFile": "site/interludes/kino/assets/editorial-history/kino-history-memory.m4a",
+      "mediaSHA256": "feeaa9a898b161458c7dcde5ab7dadbaa3b4882572d3ab8a1b40746087188450",
+      "sourceStems": [
+        {
+          "file": "scripts/kino-interlude/source-renders/cinema-air.wav",
+          "sha256": "0bf1392886703a55d13d08b6c3e37c33b2ceeaaf65704a75252fe0fd41251bba"
+        },
+        {
+          "file": "scripts/kino-interlude/source-renders/film-dust.wav",
+          "sha256": "44fb5ed2fbd873791e13c5508da0fa5b25661f733611b61bc736601c3b29b30f"
+        },
+        {
+          "file": "scripts/kino-interlude/source-renders/midnight-cylinder.wav",
+          "sha256": "b9655e56de94bb5d1fbd465b381569eedec812e908094acb875970d24e8b54cd"
+        }
+      ],
+      "events": [
+        {
+          "stem": "cinema-air",
+          "atSeconds": 0,
+          "gain": 0.4
+        },
+        {
+          "stem": "film-dust",
+          "atSeconds": 0,
+          "gain": 0.31
+        },
+        {
+          "stem": "midnight-cylinder",
+          "atSeconds": 3.1,
+          "gain": 0.2
+        }
+      ]
+    }
+  ]
+}
