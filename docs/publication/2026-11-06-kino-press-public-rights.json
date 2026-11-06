@@ -1,0 +1,30 @@
+{
+  "schema": "fountain.teatro.publication-rights-attestation.v1",
+  "date": "2026-11-06",
+  "work": "A Sound Must Earn Its Place",
+  "publicationTarget": "https://fountain.coach/estate/#/read/essay--a-sound-must-earn-its-place",
+  "publicationScope": "Source-faithful Fountain Press essay with two original Kino After Dark synthesizer editions, four comparisons, two original visual figures, their required runtime and audio assets",
+  "owner": "Benedikt Eickhoff / Fountain Coach",
+  "authority": "Owner expressly confirmed ownership of the material and authorized production publication on 2026-11-06",
+  "assertionType": "first-party owner attestation",
+  "rightsDisposition": "public distribution of the specified owned material authorized by its owner",
+  "specificSample": {
+    "sourceTitle": "Shaders",
+    "track": "Track 4",
+    "artist": "Benedikt Eickhoff",
+    "sourceEdition": "published original",
+    "sourceSnapshot": "35fd6a4",
+    "excerptStartSeconds": 50,
+    "excerptDurationSeconds": 9,
+    "sampleSHA256": "eac66e8617f16cbae1c0a59cdb5cb3ec96ffd12d065babf307924383cb58bced",
+    "publicDerivativeUseAuthorizedByOwner": true
+  },
+  "originalHistoricalEditionCommits": [
+    "35fd6a4",
+    "e2f5dd2"
+  ],
+  "archivedSourceFilesRemainUnmodified": true,
+  "technicalProductionAdmission": "separate EstatePublisher source, route and receipt verification required",
+  "precedence": "This attestation supersedes private-audition-only statements solely for this owner-approved target and material; does not authorize unrelated private files or routes.",
+  "unverifiedThirdPartyClaims": "No independent audit of third-party rights is represented."
+}
