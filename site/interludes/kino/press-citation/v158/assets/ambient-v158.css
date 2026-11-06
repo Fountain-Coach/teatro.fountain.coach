@@ -1,0 +1,33 @@
+/* The cinema is a room, not a mixer. Retain its night architecture. */
+.stage .kino-window-grid{pointer-events:none;position:absolute;left:11.8%;right:11%;top:53.4%;height:20%;display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;z-index:3}
+.memory-window{height:100%;display:block;background:rgba(227,173,105,var(--window-level,.04));border:1px solid #86745126;box-shadow:0 0 18px rgba(239,177,95,.045);transition:background 2.7s ease}
+.stage[data-active=true] .memory-window{border-color:#8c78582e}
+.tempo strong{font-family:Georgia,serif;font-size:34px;color:#dfc59c}
+.rail{padding-top:25px;border-bottom:0}
+.listen-room{border-top:1px solid #374b3e;padding-bottom:10px}
+.room-leaf{margin:20px auto 27px;max-width:590px;text-align:center;padding:16px 22px}
+.leaf-kicker{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:#b5d6b5;margin:0 0 17px}
+.leaf-text{font:normal clamp(23px,3vw,37px)/1.36 Georgia,serif;color:#e9dfcb;letter-spacing:-.02em;margin:0}
+.leaf-subtext{font:normal 13px/1.75 Georgia,serif;color:#a4b1a2;max-width:455px;margin:17px auto 0}
+.acoustic-controls{max-width:665px;margin:6px auto 0;padding:19px 0;border-top:1px solid #35483c;border-bottom:1px solid #35483c;display:flex;align-items:center;flex-wrap:wrap;gap:16px 28px;justify-content:space-between}
+.acoustic-controls label{display:flex;gap:10px;align-items:center;font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#c3cdbd}
+.acoustic-controls input[type=range]{width:120px;accent-color:#aec7ad}
+.acoustic-controls output{font-size:10px;min-width:40px;color:#ddc7a1;font-variant-numeric:tabular-nums}
+.scene-change{border-color:#46574b;color:#9aac9f}
+.acoustic-footnotes{max-width:665px;margin:11px auto 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#a3afa3;font-size:9px;letter-spacing:.1em}
+.listen-room .note{font:normal 11px/1.7 Georgia,serif;margin:26px auto;max-width:665px;color:#82948a}
+.listen-room .status{color:#a1afa3;letter-spacing:.09em}
+.listen-room .status strong{font:normal 17px/1.5 Georgia,serif;color:#e2dcc8}
+@media(max-width:680px){
+ .stage .kino-window-grid{display:grid}
+ .headline{gap:14px}
+ .tempo{text-align:left;font-size:9px}
+ .tempo strong{font-size:22px}
+ .room-leaf{padding:12px 3px}
+ .leaf-text{font-size:25px}
+ .acoustic-controls{display:flex;justify-content:flex-start;gap:17px}
+ .acoustic-controls label{flex:1;min-width:100%;justify-content:space-between}
+ .acoustic-controls input[type=range]{width:45vw;max-width:200px}
+ .acoustic-footnotes{font-size:9px;line-height:1.6}
+}
+@media(prefers-reduced-motion:reduce){.memory-window{transition:none}}

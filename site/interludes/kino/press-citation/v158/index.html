@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b0d">
+<title>Kino After Dark · A Cinematic Sound Environment</title>
+<style>
+:root{color-scheme:dark;--ink:#e2e5d9;--muted:#95a39a;--jade:#93edc7;--warm:#f0b370;--line:#53655a;--ground:#080b0d}
+*{box-sizing:border-box}html{background:var(--ground);font-family:ui-sans-serif,system-ui,-apple-system,sans-serif}body{margin:0;color:var(--ink);background:radial-gradient(ellipse 80% 40% at 50% 28%,#14201d 0%,#080b0d 78%);min-height:100vh;line-height:1.45}
+a{color:inherit;text-decoration:none}a:hover{text-decoration:underline}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--jade);outline-offset:5px}
+main{max-width:1280px;margin:auto;padding:clamp(18px,4vw,56px) clamp(16px,5vw,70px) 50px}
+.topline,.closing,.headline{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.topline{font-size:10px;letter-spacing:.21em;text-transform:uppercase;color:#bbc4b8;border-bottom:1px solid #415248;padding-bottom:19px}
+.topline a{border-bottom:1px solid #70877b;padding-bottom:4px}
+.headline{padding:28px 0 18px;align-items:flex-end}
+.kicker{font-size:11px;letter-spacing:.28em;color:var(--jade);text-transform:uppercase;margin:0 0 11px}
+h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(36px,6.3vw,79px);letter-spacing:-.045em;line-height:.95;margin:0}
+h1 em{font-weight:400;color:var(--warm)}
+.sub{margin:12px 0 0;color:#a8b9ad;font-size:12px;letter-spacing:.1em}
+.tempo{font-size:11px;letter-spacing:.23em;text-align:right;color:#c4d0c4}.tempo strong{display:block;color:var(--jade);font-weight:500;font-size:31px;letter-spacing:-.04em}
+.stage{background:#060a0a;border:1px solid #31463d;box-shadow:0 14px 50px #0009;overflow:hidden;position:relative}
+.stage svg{display:block;width:100%;height:auto;aspect-ratio:1200/465}
+.stage .neon{filter:url(#lit)}.stage .window{fill:#14241e;stroke:#2a4a3e;stroke-width:2}
+.stage .panel{fill:#091210;stroke:#54715d;stroke-width:1.6}
+.stage .titleletter{font:600 27px system-ui,sans-serif;letter-spacing:8px;fill:#c9f2d3}
+.stage .scribble{font:400 12px system-ui,sans-serif;letter-spacing:3.7px;fill:#f2c891}
+.stage .lamp{fill:#fff3cc;filter:url(#glow)}.stage .signal{fill:#39c6a2;filter:url(#glow)}
+.stage .bline{stroke:#596b57;stroke-width:3}.stage .reflection{stroke:#1c4436;stroke-width:1}
+.rail{display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center;padding:18px 0 20px;border-bottom:1px solid #34443c}
+.transport{display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+.round{border:1px solid #7caa94;color:var(--jade);background:#14231c;border-radius:99px;width:64px;height:64px;display:grid;place-items:center;font-size:25px;transition:background .2s}
+.round:hover{background:#274235}
+.small{background:transparent;border:1px solid #526a5b;color:#c9d8ca;padding:11px 16px;letter-spacing:.15em;font-size:10px;text-transform:uppercase}
+.small[aria-pressed=true]{color:#07100b;background:var(--jade);border-color:var(--jade)}
+.status{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#94a69a;text-align:right;max-width:320px}
+.status strong{display:block;color:#d9e5d8;font-weight:400}
+.console{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:29px 0 12px}
+.channel{background:linear-gradient(180deg,#15211b,#0b1310 70%);border:1px solid #354c3d;min-height:260px;padding:17px 13px;display:flex;flex-direction:column;gap:11px}
+.channel-head{display:flex;justify-content:space-between;align-items:center;gap:7px}
+.number{font-size:10px;color:#819c87;letter-spacing:.13em}.mute{border:1px solid #42634e;background:#0b1913;color:#9fd5b5;padding:5px 8px;font-size:10px;letter-spacing:.09em}
+.mute[aria-pressed=true]{background:#b86d51;color:#0a0d0c;border-color:#b86d51}
+.channel h2{margin:0;font-size:clamp(13px,1.45vw,18px);font-weight:450;letter-spacing:.03em;color:#f3e2cb}
+.track-type{font-size:10px;color:#8caa99;letter-spacing:.14em;text-transform:uppercase}
+.meter{display:flex;align-items:end;gap:3px;height:18px;margin:8px 0}.meter span{flex:1;height:3px;background:#264334;border-radius:1px;transition:background .1s}.meter span.on{background:#a5ecae;box-shadow:0 0 6px #74c49288}
+.fader-area{flex:1;min-height:110px;display:flex;align-items:center;justify-content:center;position:relative}
+.fader-area:before{content:'';width:2px;height:95%;background:linear-gradient(#85927c,#263c2e);position:absolute}
+input[type=range].fader{appearance:none;-webkit-appearance:none;position:relative;background:transparent;width:138px;height:30px;transform:rotate(-90deg);cursor:pointer;touch-action:none}
+input[type=range].fader::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;background:#d2d9bb;border:1px solid #f3e4bf;border-radius:2px;width:17px;height:38px;box-shadow:0 2px 9px #0009}
+input[type=range].fader::-moz-range-thumb{background:#d2d9bb;border:1px solid #f3e4bf;border-radius:2px;width:17px;height:38px}
+input[type=range].fader::-webkit-slider-runnable-track{background:linear-gradient(90deg,#2c5440,#95cba0);height:4px}
+.readout{color:#bed7c3;text-align:center;font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:.06em}
+.presets{display:flex;gap:9px;flex-wrap:wrap;margin-top:19px;align-items:center}
+.presets>span{font-size:10px;letter-spacing:.18em;color:#8fa89b;text-transform:uppercase;margin-right:8px}
+.closing{padding:23px 0;color:#82978c;font-family:Georgia,serif;font-size:13px}
+.note{font-size:11px;color:#758b80;max-width:660px;margin-top:19px}
+@media(max-width:680px){.topline{font-size:9px}.headline{gap:10px}.tempo{text-align:left}.rail{grid-template-columns:1fr}.status{text-align:left}.console{gap:6px}.channel{padding:10px 5px;min-height:236px}.channel h2{font-size:11px;overflow-wrap:anywhere}.track-type{font-size:8px}.fader-area{min-height:102px}.fader-area input{width:113px}.number{font-size:9px}.mute{font-size:9px;padding:4px}.sub{max-width:240px}.stage{margin:0 -8px}.channel-head{flex-direction:column;align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+</style>
+<link rel="stylesheet" href="./assets/sampler-v2.css">
+<link rel="stylesheet" href="./assets/ambient-v158.css">
+</head>
+<body>
+<main>
+  <div class="topline"><span>Fountain Coach / Teatro / Interlude 01</span><a href="/estate/#/read/first-readings">← First Readings</a></div>
+  <div class="headline">
+    <div><p class="kicker">An acoustic interlude</p><h1>Kino <em>After Dark</em></h1><p class="sub">Geräuschumgebung · a cinema after its film</p></div>
+    <div class="tempo"><strong>∞</strong>NO MEASURE / ONLY TIME</div>
+  </div>
+  <div class="stage" id="cinema-room" data-active="false">
+   <svg viewBox="0 0 1200 465" role="img" aria-labelledby="stageTitle stageDesc">
+    <title id="stageTitle">Kino After Dark: glowing nighttime cinema façade in the form of a Teatro mixing desk</title>
+    <desc id="stageDesc">Original architectural SVG inspired by Kino International: a dark street, glowing jade lettering, a warm empty foyer and light from distant windows.</desc>
+    <defs>
+     <filter id="lit" x="-40%" y="-200%" width="180%" height="500%"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+     <filter id="glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+     <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#342a1e"/><stop offset=".5" stop-color="#182923"/><stop offset="1" stop-color="#172018"/></linearGradient>
+     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#07090b"/><stop offset="1" stop-color="#111e19"/></linearGradient>
+    </defs>
+    <rect width="1200" height="465" fill="url(#sky)"/>
+    <g opacity=".20" fill="#98b5a6"><rect x="41" y="127" width="6" height="11"/><rect x="41" y="159" width="6" height="11"/><rect x="41" y="192" width="6" height="11"/><rect x="41" y="225" width="6" height="11"/><rect x="41" y="258" width="6" height="11"/></g>
+    <path d="M120 157H1088V341H120Z" fill="#0b1311" stroke="#4c7461" stroke-width="2"/>
+    <rect x="140" y="246" width="928" height="93" fill="url(#glass)"/>
+    <path d="M138 250H1071M138 336H1071" stroke="#9fae86" stroke-width="5"/>
+    <g stroke="#54715f" stroke-width="3"><path d="M214 252V335M299 252V335M386 252V335M472 252V335M557 252V335M643 252V335M729 252V335M816 252V335M901 252V335M987 252V335"/></g>
+    <rect x="376" y="252" width="424" height="83" fill="#352418" opacity=".65"/>
+    <g fill="#e4ac64" opacity=".75"><rect x="392" y="256" width="35" height="69"/><rect x="437" y="256" width="35" height="69"/><rect x="567" y="256" width="35" height="69"/><rect x="613" y="256" width="35" height="69"/><rect x="711" y="256" width="35" height="69"/></g>
+    <g stroke="#d3c391" stroke-width="1" opacity=".7"><path d="M372 334V250M802 334V250M372 250H802"/></g>
+    <rect x="142" y="201" width="927" height="48" fill="#0a1510" stroke="#365343"/>
+    <text x="603" y="234" text-anchor="middle" class="titleletter neon">K I N O   I N T E R N A T I O N A L</text>
+    <g stroke="#234b3d" opacity=".6"><path d="M90 364H1128M90 392H1128M90 418H1128M90 450H1128"/><path d="M285 367L240 465M910 367L955 465"/></g>
+    <g><path d="M927 119V380" stroke="#738678" stroke-width="7"/><path d="M927 114V107" stroke="#d3d8bc" stroke-width="10"/><circle cx="927" cy="104" r="10" class="lamp"/><rect x="909" y="269" width="17" height="39" rx="4" fill="#18281d"/><circle cx="917" cy="292" r="6" class="signal"/></g>
+    <g opacity=".65"><rect x="140" y="332" width="930" height="9" fill="#d2bf8a"/><path d="M121 365H1081" stroke="#526852" stroke-width="5"/></g>
+    <g class="reflection" opacity=".6"><path d="M370 351L321 458M806 351L857 458M432 353L416 446M568 351L565 465M744 351L757 450"/></g>
+    <text x="600" y="383" class="scribble" text-anchor="middle">F I R S T  R E A D I N G　·　I N T E R L U D E　·　S E C O N D  R E A D I N G</text>
+    <g fill="#b3d7c6" font-family="system-ui" font-size="10" letter-spacing="3"><text x="147" y="439">TEATRO / SCORE 01</text><text x="1058" y="439" text-anchor="end">BERLIN / NIGHT</text></g>
+   </svg>
+   <div id="kino-windows" class="kino-window-grid" role="group" aria-label="Sixteen gently illuminated cinema windows indicating an evolving quiet sound environment"></div>
+  </div>
+  <section class="listen-room" aria-label="An acoustic room after the film">
+    <div class="rail">
+      <div class="transport">
+        <button id="toggle" type="button" class="round" aria-label="Listen to the cinema sound environment" aria-pressed="false">▶</button>
+        <button id="stop" type="button" class="small">Stop</button>
+      </div>
+      <div class="status" id="status" role="status" aria-live="polite"><strong>After the film</strong>Listen when you wish</div>
+    </div>
+    <div class="room-leaf">
+      <p class="leaf-kicker">After the last scene</p>
+      <p class="leaf-text">The film is over. The room retains something of it: an almost-kiss, a hand withdrawn, the silence before tears.</p>
+      <p class="leaf-subtext">No rhythm insists on being heard. The air moves, the old projector leaves a little dust, and fragments appear only at a distance.</p>
+    </div>
+    <div class="acoustic-controls">
+      <label>Distance <input id="distance" type="range" min="0" max="100" value="72" aria-label="Sound distance"><output id="distance-value">72%</output></label>
+      <label>Traces <input id="traces" type="range" min="0" max="45" value="0" aria-label="Optional faint archive traces"><output id="traces-value">None</output></label>
+      <label>Cylinder <input id="cylinder" type="range" min="0" max="45" value="18" aria-label="Original jazz memory loop level"><output id="cylinder-value">18%</output></label>
+      <button class="small scene-change" id="another" type="button">Another memory</button>
+    </div>
+    <div class="acoustic-footnotes"><span id="room-count">No passing sounds</span><span id="ear-summary">Ear observes the room · MIDI 2.0 carries the echo</span></div>
+    <p class="note">Original Csound cinema air, film dust, and Midnight Cylinder—a newly composed, softly looping soul-jazz memory, not a sample or transcription of Lou Donaldson. The Cylinder control sets its distance; optional Satzfunk traces stay off by default. Ear observes the dry room and returns MIDI 2.0 CC74 to the bounded echo. No programmed beat, pads, borrowed film voices or third-party recording.</p>
+  </section>
+  <div class="closing"><span>Teatro · Kino After Dark · between First and Second Readings</span><a href="/estate/#/read/first-readings">Return to the readings</a></div>
+</main>
+<script type="module" src="./assets/ambience-v158.mjs"></script>
+</body>
+</html>

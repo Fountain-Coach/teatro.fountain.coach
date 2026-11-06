@@ -1,0 +1,33 @@
+{
+  "schema": "fountain.teatro.kino-verbatim-citations.v1",
+  "purpose": "Private Fountain Press source-faithful editions of both artistically rejected Kino synthesizer versions",
+  "sourceOwner": "Fountain-Coach/teatro.fountain.coach",
+  "publicReleaseAuthorized": false,
+  "sourceUnmodified": true,
+  "editions": [
+    {
+      "id": "v156",
+      "title": "Kino After Dark — bass/hat groove instrument",
+      "designSourceCommit": "f3f7d39",
+      "exactSnapshotCommit": "35fd6a4",
+      "note": "Original f3f7d39 instrument semantics with 35fd6a4's sole preview-safe WAV-to-AAC media path update; all archived files are exact from commit 35fd6a4",
+      "sourceHtmlSHA256": "12b4613db0472293887c7a9a6f1c7e066151ef406c1632a03c3a5b37dcd360f6",
+      "plateSHA256": "f2e0dc22c01a626b184983a7d8abf94d44dddfa3c0143b834706d7ca3e258d00",
+      "sourceRuntime": "assets/sampler-v2.mjs",
+      "audio": "Csound bass/hat one-shots, original MIDI 2.0 window sequencer, sampler and Ear echo",
+      "artisticAcceptance": "rejected"
+    },
+    {
+      "id": "v158",
+      "title": "Kino After Dark — cinematic memory room",
+      "designSourceCommit": "edd6929",
+      "exactSnapshotCommit": "e2f5dd2",
+      "note": "Original Csound nonmetric cinema environment plus newly composed Midnight Cylinder; all archived files are exact from commit e2f5dd2",
+      "sourceHtmlSHA256": "293cbec0524809e432d1494c91f2c88b1457c4f44680068417408e557041a3bf",
+      "plateSHA256": "6e4ee6d8571062f9fca405b718eb1e5c561716a8f08a3d16b9cea3f89d3b9484",
+      "sourceRuntime": "assets/ambience-v158.mjs",
+      "audio": "Csound cinema air, film dust and original Midnight Cylinder through Ear/MIDI2 echo",
+      "artisticAcceptance": "rejected"
+    }
+  ]
+}

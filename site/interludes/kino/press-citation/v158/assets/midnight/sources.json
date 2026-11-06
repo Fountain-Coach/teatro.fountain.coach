@@ -1,0 +1,18 @@
+{
+  "schema": "fountain.teatro.original-acoustic-cinema-phrase.v1",
+  "title": "Midnight Cylinder",
+  "kind": "original-csound-jazz-memory",
+  "sourceRecordingUsed": false,
+  "reference": "General 1960s soul-jazz timbral sensibility, not the Lou Donaldson recording",
+  "composition": "Original non-quoting resonant notes, muted isolated bass, brush grains and hollow breath",
+  "noTranscribedMelody": true,
+  "noChords": true,
+  "tempo": "non-metric",
+  "durationSeconds": 10.3,
+  "aac": "assets/midnight/midnight-cylinder.m4a",
+  "sha256": "682d574cea17f0f89f47a76b4f215ddc2413e085826d0a31effef3a4b59fb7a4",
+  "sourceWAV": "scripts/kino-interlude/source-renders/midnight-cylinder.wav",
+  "sourceWAVSHA256": "b9655e56de94bb5d1fbd465b381569eedec812e908094acb875970d24e8b54cd",
+  "publicRights": "Original sound synthesis; no copyrighted source audio",
+  "maxIntendedRoomLevel": 0.15
+}

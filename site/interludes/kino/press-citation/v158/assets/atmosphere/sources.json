@@ -1,0 +1,22 @@
+{
+  "schema": "fountain.teatro.cinema-ambience-csound.v1",
+  "noChords": true,
+  "noBeat": true,
+  "rights": "original Csound synthesis",
+  "files": [
+    {
+      "name": "cinema-air",
+      "path": "assets/atmosphere/cinema-air.m4a",
+      "sha256": "9c9d1f9909ace597f6b98717df06900ca26dc64a1eb53db984c0ec00f739aa31",
+      "sourceWavSHA256": "0bf1392886703a55d13d08b6c3e37c33b2ceeaaf65704a75252fe0fd41251bba",
+      "bytes": 249754
+    },
+    {
+      "name": "film-dust",
+      "path": "assets/atmosphere/film-dust.m4a",
+      "sha256": "8295b0d2bb190071203ff81974292cf9858bd9a49797c7534bcd8189360fb65d",
+      "sourceWavSHA256": "44fb5ed2fbd873791e13c5508da0fa5b25661f733611b61bc736601c3b29b30f",
+      "bytes": 223865
+    }
+  ]
+}
